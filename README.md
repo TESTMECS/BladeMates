@@ -1,2 +1,2 @@
 # BladeMates
-Project from CS554
+Project for CS554
