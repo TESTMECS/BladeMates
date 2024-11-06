@@ -3,37 +3,61 @@ services:
     build:
       context: ./backend
     ports:
-      - "5000:5000" # port for api, can be any port
-    # depends_on:
-    #   - mongodb
-    #   - redis
-    #   - elasticsearch
+      - '3001:3001'
 
   frontend:
     build:
       context: ./frontend
     ports:
-      - "3000:3000" # port for frontend
-    # depends_on:
-    # - backend # seperate for now.
-#   mongodb:
-#     image: mongo:5 # may need to change
-#     ports:
-#       - "27017:27017" # port for mongodb, can be any port
-#     volumes:
-#       - mongo-data:/data/db
+      - '3000:3000'
+    depends_on:
+      - backend
 
-#   redis:
-#     image: redis:alpine
-#     ports:
-#       - "6379:6379" # port for redis, can be any port
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
 
-#   elasticsearch:
-#     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0 # may need to change
-#     environment:
-#       - discovery.type=single-node
-#     ports:
-#       - "9200:9200" # port for elasticsearch, can be any port
+  redis:
+    image: redis/redis-stack-server:latest
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
 
-# volumes: # keeps the data even if the container is removed for development
-#   mongo-data:
+  # see: https://www.elastic.co/guide/en/elasticsearch/reference/8.15/docker.html
+  # also see (for complicated setup): https://github.com/elastic/elasticsearch/blob/8.15/docs/reference/setup/install/docker/docker-compose.yml
+  # TODO: do we need user and password?
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - '9200:9200'
+    networks:
+      - elastic_net
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: 'rabbitmq'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - rabbitmq_go_net
+
+volumes:
+  mongo-data:
+  redis-data:
+
+networks:
+  elastic_net:
+    driver: bridge
+  rabbitmq_go_net:
+    driver: bridge
