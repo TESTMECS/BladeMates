@@ -1,5 +1,5 @@
 import app from "./server";
-const PORT = 5000;
+const PORT = 3001;
 app.listen(PORT, () => {
-  console.log("Server is running on http://localhost:5000");
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
