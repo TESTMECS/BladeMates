@@ -26,10 +26,6 @@ export const errIfTrue =
     } else return true;
   };
 
-export const err404IfTrue = errIfTrue(404);
-export const err400IfTrue = errIfTrue(400);
-export const err500IfTrue = errIfTrue(500);
-
 export const handleRouteError = (e: unknown, res: Response) => {
   console.error(e);
   if (!res.status) return;

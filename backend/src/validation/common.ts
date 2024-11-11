@@ -24,6 +24,12 @@ export const nameSchema = z
   .max(25)
   .refine((name) => /^[a-z A-Z-0-9]+$/.test(name)); // Checks if the name contains only letters, numbers, spaces and dashes
 
+export const usernameSchema = z
+  .string()
+  .min(2)
+  .max(20)
+  .refine((name) => /^[a-zA-Z0-9]+$/.test(name)); // Checks if the username contains only letters and numbers
+
 export const integerSchema = z.number().int();
 
 export const nonNegativeIntegerSchema = z.number().int().gte(0);
