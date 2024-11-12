@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "node dist/app.js",
     "buildnstart": "tsc && node dist/app.js",
-    "dev": "nodemon --exec ts-node --transpileOnly app.ts"
+    "dev": "nodemon --exec ts-node --transpileOnly ./src/app.ts"
   },
   "author": "TODO",
   "license": "ISC",
