@@ -35,10 +35,23 @@ services:
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
     ports:
       - '9200:9200'
     networks:
       - elastic_net
+  
+  # ONLY enable if you have spare ram
+  # kibana:
+  #   image: kibana:8.15.3
+  #   container_name: kibana
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200 
+  #     - xpack.security.enabled=false
+  #   ports:
+  #     - "5601:5601"
+  #   depends_on:
+  #     - elasticsearch
 
   rabbitmq:
     image: rabbitmq:latest
