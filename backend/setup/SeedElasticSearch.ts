@@ -35,7 +35,7 @@ interface NewsApiResponse {
 
 async function requestAndExtract() {
     const apiKey = process.env.NEWSAPI_KEY;
-    const url = `https://newsapi.org/v2/top-headlines?country=us&category=technology&apiKey=${apiKey}`;
+    const url = `https://newsapi.org/v2/everything?apiKey=${apiKey}&q="technology"&searchIn=title,description`;
     const response = await axios.get<NewsApiResponse>(url); //might have to try catch this in the event of a type error
     if (response.data.status !== 'ok') {
         console.error('Error getting news');
@@ -84,6 +84,32 @@ async function grabbingText(newsApiResponse: NewsApiResponse) {
     return resultDump;
 }
 
+function validateArticle(article: Article): boolean {
+    if (!article.source || !article.source.name || article.source.name === "[Removed]") {
+        return false;
+    }
+    if (!article.title || article.title === "[Removed]") {
+        return false;
+    }
+    if (!article.description || article.description === "[Removed]") {
+        return false;
+    }
+    if (!article.url || article.url === "https://removed.com") {
+        return false;
+    }
+    if (!article.urlToImage || article.urlToImage === null) {
+        return false;
+    }
+    if (!article.author || article.author === null) {
+        return false;
+    }
+
+
+    return true;
+}
+
+
+
 async function insertIntoIndex(ArticlesArray: Article[]) {
     const client = new Client({ node: 'http://localhost:9200' });
     try {
@@ -104,6 +130,9 @@ async function insertIntoIndex(ArticlesArray: Article[]) {
         // insert articles
         console.log('Inserting articles into index');
         for (let article of ArticlesArray) {
+            if (!validateArticle(article)) {
+                continue
+            }
             await client.index({
                 index: 'articles',
                 body: article
@@ -114,6 +143,22 @@ async function insertIntoIndex(ArticlesArray: Article[]) {
     }
 
 }
+
+function addTagsToArticle(article: Article): String[] {
+    // todo: this function takes in the article, returns a string of tags that could be in the article
+    // adjust the insertIntoIndex function to take request tags from this function and add it to the document before inserting into index
+    let possibleTags = ["video games", "artificial intelligence", "cryptocurrency", "cybersecurity", "samsung", "google", "metaverse", "facebook", "facial recognition", "microsoft", "blockchain", "internet of things"]
+    let tags: String[] = [];
+    for (let tag of possibleTags) {
+        if (article.content && article.title && article.description) {
+            if (article.content.toLowerCase().includes(tag) || article.title.toLowerCase().includes(tag) || article.description.toLowerCase().includes(tag)) {
+                tags.push(tag);
+            }
+        }
+    }
+    return tags;
+}
+
 
 async function fullAttempt() {
     const articles = await requestAndExtract();
