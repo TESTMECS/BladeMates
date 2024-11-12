@@ -1,7 +1,7 @@
 import express from 'express';
 import { handleRouteError, validate } from '../utils/Error';
-import { authSchema } from 'validation/auth';
-import { login, register } from 'data/auth';
+import { authSchema } from '../validation/auth';
+import { login, register } from '../data/auth';
 
 declare module 'express-session' {
   interface SessionData {

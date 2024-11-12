@@ -1,6 +1,6 @@
 import { Collection, OptionalId } from 'mongodb';
 import { dbConnection } from './mongoConnection.js';
-import { User } from 'data/auth.js';
+import { User } from '../data/auth.js';
 
 const getCollectionFn = <T>(collection: string) => {
   let _col: Collection<OptionalId<T>> | undefined = undefined;

@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 import { users } from '../config/mongoCollections';
-import { StatusError } from 'utils/Error';
+import { StatusError } from '../utils/Error';
 
 // There is no need to check parameter for error because typescript checks it for us. The only time we need to check parameter for error if it is a runtime type error (e.g. user entering wrong values) instead of a type error that occurs during development (since typescript guards against that).
 
