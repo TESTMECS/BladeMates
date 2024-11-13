@@ -57,6 +57,7 @@ export async function register(
     favoriteArticles: [],
     friends: [],
     trends: [],
+    notifications: [],
   };
 
   const insertedInfo = await usersCollection.insertOne(newUser);
