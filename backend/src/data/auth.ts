@@ -24,10 +24,13 @@ export async function login(
   const usersCollection = await users();
   const user = await usersCollection.findOne({
     username: username,
-    password: encryptedPassword, // TODO: you sure this is how you check password?
   });
 
-  if (user === null) {
+  if (
+    user === null ||
+    (await bcrypt.compare(password, user.hashedPassword)) === false
+  ) {
+    console.error(user?.hashedPassword, encryptedPassword);
     throw new StatusError(404, 'Invalid username or password');
   }
   return user._id.toString();

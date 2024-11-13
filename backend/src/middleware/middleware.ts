@@ -6,6 +6,7 @@ import session from 'express-session';
  * @param {express.Express} app
  */
 export function createMiddlewaresWith(app: express.Express) {
+  app.use(express.json());
   app.use(
     session({
       secret: 'Unemployment-Gang',
