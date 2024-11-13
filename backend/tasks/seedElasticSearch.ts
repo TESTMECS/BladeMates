@@ -1,36 +1,15 @@
 // added mozilla readability, axios, jsdom, dotenv, and types as needed
 
-import { Client } from '@elastic/elasticsearch';
+import { elasticConnection, closeElasticConnection } from '../src/config/elasticConnection';
 import axios from 'axios';
 import { JSDOM } from 'jsdom';
 import { Readability } from '@mozilla/readability';
+import {
+    NewsApiResponse,
+    Article,
+} from '../src/types/newsApiTypes';
 import dotenv from 'dotenv';
-dotenv.config({ path: `../../.env` }); //this is the path it would need from the dist folder. not current folder
-
-interface Source {
-    id: string | null;
-    name: string;
-}
-// unsure if we'll be needing this
-
-interface Article {
-    source: Source;
-    author: string;
-    title: string;
-    description: string;
-    url: string;
-    urlToImage: string;
-    publishedAt: string;
-    content: string | null;
-}
-
-interface NewsApiResponse {
-    status: 'ok' | 'error';
-    totalResults: number;
-    articles: Article[];
-}
-
-
+dotenv.config({ path: '' }); //this is the path it would need from the dist folder. not current folder
 
 
 async function requestAndExtract() {
@@ -44,7 +23,6 @@ async function requestAndExtract() {
     let result = await grabbingText(response.data);
     return result;
 }
-
 
 async function grabbingText(newsApiResponse: NewsApiResponse) {
     let resultDump: Article[] = [];
@@ -108,10 +86,8 @@ function validateArticle(article: Article): boolean {
     return true;
 }
 
-
-
 async function insertIntoIndex(ArticlesArray: Article[]) {
-    const client = new Client({ node: 'http://localhost:9200' });
+    const client = await elasticConnection();
     try {
         // check if articles index exists
         const indexExists = await client.indices.exists({ index: 'articles' });
@@ -142,6 +118,9 @@ async function insertIntoIndex(ArticlesArray: Article[]) {
         console.error('Error during Elasticsearch operation:');
     }
 
+    await closeElasticConnection();
+
+    console.log('ElasticSearch Connection closed!');
 }
 
 function addTagsToArticle(article: Article): String[] {
@@ -158,7 +137,6 @@ function addTagsToArticle(article: Article): String[] {
     }
     return tags;
 }
-
 
 async function fullAttempt() {
     const articles = await requestAndExtract();
