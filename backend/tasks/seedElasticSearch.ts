@@ -1,5 +1,5 @@
 // added mozilla readability, axios, jsdom, dotenv, and types as needed
-
+// run this bad boy with ts-node .\tasks\seedElasticSearch.ts from the backend directory 
 import { elasticConnection, closeElasticConnection } from '../src/config/elasticConnection';
 import axios from 'axios';
 import { JSDOM } from 'jsdom';
@@ -9,7 +9,7 @@ import {
     Article,
 } from '../src/types/newsApiTypes';
 import dotenv from 'dotenv';
-dotenv.config({ path: '' }); //this is the path it would need from the dist folder. not current folder
+dotenv.config({ path: '../.env' }); //this is the path it would need from the dist folder. not current folder
 
 
 async function requestAndExtract() {
