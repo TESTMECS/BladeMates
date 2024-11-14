@@ -1,5 +1,5 @@
 import { elasticConnection, closeElasticConnection } from "../config/elasticConnection";
-
+import { ObjectId } from "mongodb";
 
 
 // query articles published within last 5 daysday
@@ -157,14 +157,36 @@ async function searchAcrossFields(query: string, fields: string[]) {
     await closeElasticConnection();
 }
 
+// ID could be an objectID or a string
+async function getDocumentByID(id: string) {
+    const client = await elasticConnection();
+    try {
+        const result = await client.get({
+            index: 'articles',
+            id: id
+        });
+        // throws an error if nothing found. possibly consult if we want this behaior?
+        // console.log(result._source.title);
+        return result._source;
+    } catch (error) {
+        console.error('Error during Elasticsearch operation:', error);
+    }
+    await closeElasticConnection();
+    
+}
 
 
+// async function test() {
+//     // let doc = getArticlesPast5Days();
+//     // let doc = getArticlesDaysAgoRange(10, 5);
+//     // let doc = getArticlesPastDay();
+//     // let doc = searchHeadlines("AI");
+//     // let doc = searchHeadlinesAndDesc("AI");
+//     // let doc = searchAcrossFields("Apple", ["title", "description"]);
+//     let doc = await getDocumentByID("Ujv3KJMB7K6Xl8-Q8UXs");
+//     console.log(doc);
+// }
 
-// getArticlesPast5Days();
-// getArticlesDaysAgoRange(10, 5);
-// getArticlesPastDay();
-// searchHeadlines("AI");
-// searchHeadlinesAndDesc("AI");
-searchAcrossFields("Apple", ["title", "description"]);
+// test();
 
-export default { getArticlesPast5Days, getArticlesDaysAgoRange, getArticlesPastDay };
+export default { getArticlesPast5Days, getArticlesDaysAgoRange, getArticlesPastDay, getDocumentByID, searchHeadlines, searchHeadlinesAndDesc, searchAcrossFields };
