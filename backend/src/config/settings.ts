@@ -1,8 +1,8 @@
 export const mongoConfig = {
-  serverUrl: 'mongodb://localhost:27017/',
+  serverUrl: process.env.MONGO_SERVER_URL || 'mongodb://localhost:27017/',
   database: 'TechTrends',
 };
 
 export const redisConfig = {
-  url: 'redis://localhost:6379',
+  url: process.env.REDIS_SERVER_URL || 'redis://localhost:6379',
 };

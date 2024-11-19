@@ -48,5 +48,14 @@ export function validate(schema: Schema, unk: unknown, errStatus = 400) {
       2
     )}.\n${inputError}`
   );
+
   return inputData;
+}
+
+export function validateWithType<T>(
+  schema: Schema,
+  unk: unknown,
+  errStatus = 400
+): T {
+  return validate(schema, unk, errStatus) as T;
 }
