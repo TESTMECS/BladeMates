@@ -1,10 +1,10 @@
-import { dbConnection, closeConnection } from '../src/config/mongoConnection';
-import { register } from '../src/data/auth';
+import { dbConnection, closeConnection } from "../config/mongoConnection";
+import { register } from "../data/auth";
 
 (async () => {
   const db = await dbConnection();
   if (!db) {
-    throw new Error('Error: No database connection created');
+    throw new Error("Error: No database connection created");
   }
 
   await db.dropDatabase();

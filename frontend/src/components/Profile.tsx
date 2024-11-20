@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/userContext";
 
-const Profile = () => {
+const Profile: React.FC = () => {
   const { user, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
