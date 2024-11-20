@@ -1,6 +1,6 @@
 enum Trends {
   AI = "AI",
   BLOCKCHAIN = "Blockchain",
-  IoT = "IoT",
+  IOT = "IoT",
 }
 export default Trends;

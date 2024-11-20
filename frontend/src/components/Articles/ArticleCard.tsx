@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Article from "../types/Article";
-import { useAuth } from "../context/userContext";
+import Article from "../../types/Article";
+import { useAuth } from "../../context/userContext";
 import { StarIcon } from "@heroicons/react/outline";
-import "../App.css";
-
 interface ArticlesPageProps {
   article: Article;
   isLive?: boolean;
 }
-
 const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
   const [toggleFavorite, setToggleFavorite] = useState<boolean>(false);
   const { isAuthenticated, user } = useAuth(); // Make sure you have user info
   const [loading, setLoading] = useState<boolean>(false);
-
   // On component mount, check if the article is already a favorite
   useEffect(() => {
     const checkFavorite = async () => {
@@ -79,11 +75,7 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
       <button
         onClick={handleFavorite}
         className={`ml-4 pr-6 ${
-          loading
-            ? "text-yellow-400"
-            : toggleFavorite
-            ? "text-yellow-500"
-            : "text-gray-500"
+          loading ? "text-yellow" : toggleFavorite ? "text-yellow" : "text-gray"
         }`}
         disabled={loading}
       >
@@ -92,7 +84,7 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
       <Link
         to={`/articles/${article.id}`}
         className={`w-9/12 rounded-lg overflow-hidden shadow-lg m-4 transform transition-transform duration-200 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 ${
-          isLive ? "border-2 border-yellow-500" : "border border-gray-300"
+          isLive ? "border-2 border-yellow" : "border border-lightblue"
         }`}
       >
         <div
@@ -101,11 +93,11 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
           aria-label={article.title}
         ></div>
         <div className="px-6 py-4">
-          <div className="font-bold text-xl mb-2 text-black">
+          <div className="font-bold text-xl mb-2 ">
             {article.title}
             {isLive && <span className="ml-2 text-red-500">LIVE</span>}
           </div>
-          <p className="text-gray-700 text-base">{article.summary}</p>
+          <p className="text-gray text-base">{article.summary}</p>
         </div>
       </Link>
     </div>

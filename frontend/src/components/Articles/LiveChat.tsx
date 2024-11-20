@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import socket from "../hooks/socket";
+import socket from "../../hooks/socket";
 
 const LiveChat: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([]);

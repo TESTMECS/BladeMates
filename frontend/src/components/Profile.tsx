@@ -28,12 +28,12 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-2xl mx-auto p-6 rounded-lg shadow-md h-screen">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
+        <h1 className="text-3xl font-bold ">My Profile</h1>
         <button
           onClick={() => setIsEditing(!isEditing)}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-200"
+          className="px-4 py-2 bg-lightpink text-black dark:bg-purple dark:text-white dark:hover:bg-green hover:bg-lightblue rounded-md hover:bg-indigo-700 transition-colors duration-200"
         >
           {isEditing ? "Cancel Edit" : "Edit Profile"}
         </button>
@@ -48,10 +48,8 @@ const Profile: React.FC = () => {
           />
           {!isEditing ? (
             <div>
-              <h2 className="text-2xl font-semibold text-gray-800">
-                {formData.name}
-              </h2>
-              <p className="text-gray-600">@{user?.username || "johndoe"}</p>
+              <h2 className="text-2xl font-semibold ">{formData.name}</h2>
+              <p className="text-gray">@{user?.username || "johndoe"}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -60,14 +58,14 @@ const Profile: React.FC = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="border border-gray-300 rounded-md p-2 w-full"
+                className="border border-gray rounded-md p-2 w-full"
                 placeholder="Name"
               />
               <textarea
                 name="bio"
                 value={formData.bio}
                 onChange={handleChange}
-                className="border border-gray-300 rounded-md p-2 w-full"
+                className="border border-gray rounded-md p-2 w-full"
                 placeholder="Bio"
               />
               <div className="flex items-center space-x-4">
@@ -96,7 +94,7 @@ const Profile: React.FC = () => {
                 />
                 <label
                   htmlFor="profileImageUpload"
-                  className="cursor-pointer px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors duration-200"
+                  className="cursor-pointer px-4 py-2 rounded-md hover:bg-gray transition-colors duration-200"
                 >
                   Choose Image
                 </label>
@@ -111,7 +109,7 @@ const Profile: React.FC = () => {
 
               <button
                 type="submit"
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200"
+                className="px-4 py-2 bg-green text-black rounded-md hover:bg-purple transition-colors duration-200"
               >
                 Save Changes
               </button>

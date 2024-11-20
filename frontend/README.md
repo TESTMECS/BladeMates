@@ -2,7 +2,8 @@
 
 Frontend for our application.
 
-- src/components : webpages.
+- src/components/Articles : Webpages related to article data
+- src/components/Landing : Webpages related to the landing page.
 - src/App.tsx : Main app
 - src/ main.tsx : entry point for react app
 
@@ -10,51 +11,8 @@ Frontend for our application.
 - Docker runs the built files. Make sure to run npm run build before building the docker image.
 - .dockerignore : uncomment node_modules for a faster docker build time if no changes to it. (docker will use the cached node_modules)
 
-- Idea is to have others favorites on their profile.
-- The main feed will have the articles and then a favorite icon.
-- Make sure the navbar, is to the left of the feed.
-- Have live view on top.
-  - make it hideable.
-- Have a filter for the feed with your favorites.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from "eslint-plugin-react";
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: "18.3" } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs["jsx-runtime"].rules,
-  },
-});
-```
+- User lands on /login which has the login and the welcome content.
+- User logs in or registers and lands on /home
+- /home show the FeedSelector, used to change Feed, and the navbar.
+- The user opens the trendslist and can add feeds to their feed selector.
+- Can use the navbar to go the the profile.

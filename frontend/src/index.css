@@ -7,9 +7,10 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  background-color: #1f2430;
-  --highlight: "#39bae6";
-  --highlight2: "#707A8C";
+  --bglight: #faf7f0;
+  --highlight: "#8B93FF";
+  --highlight2: "#5755FE";
+  --highlight3: "#FF71CD";
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

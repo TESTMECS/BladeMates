@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Article from "../types/Article";
+import Article from "../../types/Article";
 import ArticleCard from "./ArticleCard";
 
 const ArticlesFeed: React.FC = () => {

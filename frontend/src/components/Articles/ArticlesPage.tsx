@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Article from "../types/Article";
+import Article from "../../types/Article";
 import { useParams } from "react-router-dom";
 
 const ArticlesPage: React.FC = () => {
