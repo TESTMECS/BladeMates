@@ -15,7 +15,7 @@ services:
     environment: # edit the environment variables as needed
       - MONGO_SERVER_URL=mongodb://techtrends-mongodb.techtrends_techtrends:27017
       - REDIS_SERVER_URL=redis://techtrends-redis.techtrends_techtrends:6379
-      # - RABBITMQ_URL=amqp://rabbitmq:5672
+      - RABBITMQ_URL=amqp://techtrends-rabbitmq.techtrends_techtrends:5672
       # - ELASTICSEARCH_URL=http://elasticsearch:9200
 
   frontend:
@@ -30,6 +30,7 @@ services:
       - techtrends
     environment:
       - REACT_APP_BACKEND_URL=http://techtrends-frontend.techtrends_techtrends:3001
+      - RABBITMQ_URL=amqp://techtrends-rabbitmq.techtrends_techtrends:5672
 
   mongodb:
     container_name: 'techtrends-mongodb'
@@ -62,11 +63,11 @@ services:
     ports:
       - '9200:9200'
     networks:
-      - elastic_net
+      - techtrends
 
   rabbitmq:
     image: rabbitmq:latest
-    container_name: 'rabbitmq'
+    container_name: 'techtrends-rabbitmq'
     ports:
       - '5672:5672'
       - '15672:15672'
@@ -74,16 +75,12 @@ services:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     networks:
-      - rabbitmq_go_net
+      - techtrends
 
 volumes:
   mongo-data:
   redis-data:
 
 networks:
-  elastic_net:
-    driver: bridge
-  rabbitmq_go_net:
-    driver: bridge
   techtrends:
     driver: bridge

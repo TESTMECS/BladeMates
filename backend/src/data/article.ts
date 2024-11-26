@@ -5,6 +5,16 @@ import { ObjectId } from 'mongodb';
 import { userSchema } from '../validation/user';
 
 import { User } from '../types/mongo';
+import { sendNotification } from '../services/rabbitmqProducer';
+
+/**
+ * A function that adds a notification to all users who have friended the user with id `userId`
+ * @param userId
+ * @param articleId
+ */
+const addNotifications = async (userId: string, articleId: string) => {
+  sendNotification('Article favorited');
+};
 
 export async function favoriteArticle(
   userId: string,
@@ -44,6 +54,8 @@ export async function favoriteArticle(
       },
     }
   );
+
+  addNotifications(userId, articleId);
 
   return favoriteArticles.map((value) => value.toHexString());
 }
