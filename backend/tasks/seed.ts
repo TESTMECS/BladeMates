@@ -1,7 +1,6 @@
 import { dbConnection, closeConnection } from '../src/config/mongoConnection';
 import { register } from '../src/data/auth';
 
-
 (async () => {
   const db = await dbConnection();
   if (!db) {
@@ -18,4 +17,3 @@ import { register } from '../src/data/auth';
 
   await closeConnection();
 })();
-
