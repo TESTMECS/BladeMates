@@ -22,7 +22,7 @@ router.route('/login').post(async (req, res) => {
 
     if (userId) {
       req.session.userId = userId;
-      res.status(200).send('Login Successful');
+      res.json({ userId });
     } else {
       res.status(500).send('Login Failed');
     }
@@ -43,7 +43,7 @@ router.route('/register').post(async (req, res) => {
 
     if (userId) {
       req.session.userId = userId;
-      res.status(200).send('Register Successful');
+      res.json({ userId });
     } else {
       res.status(500).send('Register Failed');
     }

@@ -12,7 +12,7 @@ declare module 'express-session' {
 
 const router = express.Router();
 
-router.route('/notifications').get(async (req, res) => {
+router.route('/notifications').post(async (req, res) => {
   try {
     const userIdData = validate(stringObjectIdSchema, req.session.userId);
     const notifications = await getNotifications(userIdData);

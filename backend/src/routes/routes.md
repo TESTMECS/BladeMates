@@ -34,3 +34,11 @@
   "articleId": string
 }
 ```
+
+## /api/user/notifications
+
+### POST - Body
+```typescript
+{}
+```
+

@@ -1,19 +1,55 @@
 import { users } from '../config/mongoCollections';
 import { validateWithType, StatusError, validate } from '../utils/Error';
 
-import { ObjectId } from 'mongodb';
+import { ObjectId, PushOperator } from 'mongodb';
 import { userSchema } from '../validation/user';
 
 import { User } from '../types/mongo';
 import { sendNotification } from '../services/rabbitmqProducer';
 
 /**
- * A function that adds a notification to all users who have friended the user with id `userId`
+ * A function that adds a notification to all users who have followed the user with id `userId`
  * @param userId
  * @param articleId
  */
 const addNotifications = async (userId: string, articleId: string) => {
-  sendNotification('Article favorited');
+  // sendNotification(userId);
+
+  const usersCollection = await users();
+
+  const followers = await usersCollection
+    .find({
+      friends: { $elemMatch: { _id: new ObjectId(userId) } },
+    })
+    .toArray();
+
+  for (const follower of followers) {
+    const followerData = validateWithType<User>(userSchema, follower, 500);
+
+    const notification = {
+      _id: new ObjectId(),
+      friendId: new ObjectId(userId),
+      articleId: new ObjectId(articleId),
+      read: false,
+    };
+
+    const insertedInfo = await usersCollection.updateOne(
+      {
+        _id: followerData._id,
+      },
+      {
+        $push: {
+          notifications: notification,
+        } as unknown as PushOperator<User>,
+      }
+    );
+
+    if (insertedInfo.modifiedCount === 0) {
+      throw new StatusError(500, 'Failed to add notification');
+    }
+
+    sendNotification(followerData._id.toHexString());
+  }
 };
 
 export async function favoriteArticle(
@@ -54,6 +90,10 @@ export async function favoriteArticle(
       },
     }
   );
+
+  if (insertedInfo.modifiedCount === 0) {
+    throw new StatusError(500, 'Failed to favorite article');
+  }
 
   addNotifications(userId, articleId);
 
@@ -98,6 +138,10 @@ export async function unfavoriteArticle(
       },
     }
   );
+
+  if (insertedInfo.modifiedCount === 0) {
+    throw new StatusError(500, 'Failed to unfavorite article');
+  }
 
   return favoriteArticles.map((value) => value.toHexString());
 }
