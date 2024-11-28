@@ -24,7 +24,7 @@ const addNotifications = async (userId: string, articleId: string) => {
     .toArray();
 
   const notification = {
-    _id: new ObjectId(),
+    _id: ObjectId.createFromTime(Date.now() / 1000),
     friendId: new ObjectId(userId),
     articleId: new ObjectId(articleId),
     read: false,
@@ -32,7 +32,7 @@ const addNotifications = async (userId: string, articleId: string) => {
 
   const followerIds = followers.map((follower) => {
     const followerData = validateWithType<User>(userSchema, follower, 500);
-    return followerData._id;
+    return ObjectId.createFromHexString(followerData._id);
   });
 
   const insertedInfo = await usersCollection.updateMany(
@@ -62,7 +62,7 @@ export async function favoriteArticle(
   const usersCollection = await users();
 
   const user = await usersCollection.findOne({
-    _id: new ObjectId(userId),
+    _id: ObjectId.createFromHexString(userId),
   });
 
   if (user === null) {
@@ -78,14 +78,14 @@ export async function favoriteArticle(
   );
 
   if (articleExists === -1) {
-    favoriteArticles.push(new ObjectId(articleId));
+    favoriteArticles.push(ObjectId.createFromHexString(articleId));
   } else {
     throw new StatusError(400, 'Article already favorited');
   }
 
   const insertedInfo = await usersCollection.updateOne(
     {
-      _id: new ObjectId(userId),
+      _id: ObjectId.createFromHexString(userId),
     },
     {
       $set: {
@@ -110,7 +110,7 @@ export async function unfavoriteArticle(
   const usersCollection = await users();
 
   const user = await usersCollection.findOne({
-    _id: new ObjectId(userId),
+    _id: ObjectId.createFromHexString(userId),
   });
 
   if (user === null) {
@@ -133,7 +133,7 @@ export async function unfavoriteArticle(
 
   const insertedInfo = await usersCollection.updateOne(
     {
-      _id: new ObjectId(userId),
+      _id: ObjectId.createFromHexString(userId),
     },
     {
       $set: {

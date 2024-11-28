@@ -1,4 +1,4 @@
-import { ObjectId, PushOperator } from 'mongodb';
+import { ObjectId, PullOperator, PushOperator } from 'mongodb';
 
 import { users } from '../config/mongoCollections';
 import { StatusError } from '../utils/Error';
@@ -7,10 +7,10 @@ import { User } from '../types/mongo';
 export async function follow(userId: string, friendId: string): Promise<void> {
   const usersCollection = await users();
   const user = await usersCollection.findOne({
-    _id: userId,
+    _id: ObjectId.createFromHexString(userId),
   });
   const friend = await usersCollection.findOne({
-    _id: friendId,
+    _id: ObjectId.createFromHexString(friendId),
   });
 
   if (user === null) {
@@ -34,12 +34,12 @@ export async function follow(userId: string, friendId: string): Promise<void> {
 
   const insertedInfo = await usersCollection.updateOne(
     {
-      _id: userId,
+      _id: ObjectId.createFromHexString(userId),
     },
     {
       $push: {
         friends: {
-          _id: new ObjectId(friendId),
+          _id: ObjectId.createFromHexString(friendId),
           username: friend.username,
         },
       } as unknown as PushOperator<User>,
@@ -47,7 +47,7 @@ export async function follow(userId: string, friendId: string): Promise<void> {
   );
 
   if (insertedInfo.modifiedCount === 0) {
-    throw new StatusError(500, 'Failed to add notification');
+    throw new StatusError(500, 'Failed to add follow');
   }
 }
 
@@ -57,10 +57,10 @@ export async function unfollow(
 ): Promise<void> {
   const usersCollection = await users();
   const user = await usersCollection.findOne({
-    _id: userId,
+    _id: ObjectId.createFromHexString(userId),
   });
   const friend = await usersCollection.findOne({
-    _id: friendId,
+    _id: ObjectId.createFromHexString(friendId),
   });
 
   if (user === null) {
@@ -82,18 +82,19 @@ export async function unfollow(
   }
 
   const insertedInfo = await usersCollection.updateOne(
-    { _id: userId },
+    { _id: ObjectId.createFromHexString(userId) },
     {
       $pull: {
         friends: {
-          _id: new ObjectId(friendId),
-          name: friend.username,
+          _id: ObjectId.createFromHexString(friendId),
         },
-      } as unknown as PushOperator<User>,
+      } as unknown as PullOperator<User>,
     }
   );
 
   if (insertedInfo.modifiedCount === 0) {
-    throw new StatusError(500, 'Failed to add notification');
+    throw new StatusError(500, 'Failed to unfollow');
   }
+
+  console.log(`Unfollowed ${friendId}`);
 }

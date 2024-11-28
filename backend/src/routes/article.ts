@@ -17,7 +17,6 @@ router
   .route('/favorite')
   .post(async (req, res) => {
     try {
-      console.log(req.session.userId);
       const userId = validateWithType<string>(
         stringObjectIdSchema,
         req.session.userId

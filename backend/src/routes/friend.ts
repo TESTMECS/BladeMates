@@ -13,16 +13,17 @@ const router = express.Router();
 
 router.route('/follow').post(async (req, res) => {
   try {
-    const userToFollow = validate(stringObjectIdSchema, req.body);
+    const userToFollow = validate(stringObjectIdSchema, req.body.userId);
     console.log(userToFollow);
+    console.log(req.session.userId);
 
     if (req.session.userId === undefined) {
-      res.status(500).send('User not logged in');
+      res.status(400).send('User not logged in');
       return;
     }
 
     if (req.session.userId === userToFollow) {
-      res.status(500).send('Cannot follow yourself');
+      res.status(400).send('Cannot follow yourself');
       return;
     }
 
@@ -37,10 +38,20 @@ router.route('/follow').post(async (req, res) => {
 
 router.route('/unfollow').post(async (req, res) => {
   try {
-    const unfollowInformation = validate(stringObjectIdSchema, req.body);
-    console.log(unfollowInformation);
+    const userToUnfollow = validate(stringObjectIdSchema, req.body.userId);
+    console.log(userToUnfollow);
 
-    await unfollow(unfollowInformation.userID, unfollowInformation.friendID);
+    if (req.session.userId === undefined) {
+      res.status(400).send('User not logged in');
+      return;
+    }
+
+    if (req.session.userId === userToUnfollow) {
+      res.status(400).send('Cannot unfollow yourself');
+      return;
+    }
+
+    await unfollow(req.session.userId, userToUnfollow);
 
     res.status(200).send('Unfollow Successful');
   } catch (error) {

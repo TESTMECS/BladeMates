@@ -8,7 +8,7 @@ export async function getNotifications(userId: string) {
   const usersCollection = await users();
 
   const user = await usersCollection.findOne({
-    _id: new ObjectId(userId),
+    _id: ObjectId.createFromHexString(userId),
   });
 
   if (user === null) {
@@ -24,7 +24,7 @@ export async function getNotifications(userId: string) {
 
   await usersCollection.updateOne(
     {
-      _id: new ObjectId(userId),
+      _id: ObjectId.createFromHexString(userId),
     },
     {
       $set: {
