@@ -23,32 +23,35 @@ const addNotifications = async (userId: string, articleId: string) => {
     })
     .toArray();
 
-  for (const follower of followers) {
+  const notification = {
+    _id: new ObjectId(),
+    friendId: new ObjectId(userId),
+    articleId: new ObjectId(articleId),
+    read: false,
+  };
+
+  const followerIds = followers.map((follower) => {
     const followerData = validateWithType<User>(userSchema, follower, 500);
+    return followerData._id;
+  });
 
-    const notification = {
-      _id: new ObjectId(),
-      friendId: new ObjectId(userId),
-      articleId: new ObjectId(articleId),
-      read: false,
-    };
-
-    const insertedInfo = await usersCollection.updateOne(
-      {
-        _id: followerData._id,
-      },
-      {
-        $push: {
-          notifications: notification,
-        } as unknown as PushOperator<User>,
-      }
-    );
-
-    if (insertedInfo.modifiedCount === 0) {
-      throw new StatusError(500, 'Failed to add notification');
+  const insertedInfo = await usersCollection.updateMany(
+    {
+      _id: { $in: followerIds },
+    },
+    {
+      $push: {
+        notifications: notification,
+      } as unknown as PushOperator<User>,
     }
+  );
 
-    sendNotification(followerData._id.toHexString());
+  if (insertedInfo.modifiedCount === 0) {
+    throw new StatusError(500, 'Failed to add notifications to database.');
+  }
+
+  for (const follower of followers) {
+    sendNotification(follower._id.toHexString());
   }
 };
 
