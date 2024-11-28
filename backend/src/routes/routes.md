@@ -56,4 +56,16 @@
 
 ## /api/friend/follow
 
-## /api/friend/unfollow
+### POST - Body
+```typescript
+{
+  "userId": string
+}
+```
+
+### /api/friend/unfollow
+```typescript
+{
+  "userId": string
+}
+```
