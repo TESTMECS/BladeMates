@@ -30,10 +30,9 @@ const addNotifications = async (userId: string, articleId: string) => {
     read: false,
   };
 
-  const followerIds = followers.map((follower) => {
-    const followerData = validateWithType<User>(userSchema, follower, 500);
-    return ObjectId.createFromHexString(followerData._id);
-  });
+  const followerIds = followers.map((follower) => follower._id);
+
+  console.log(followerIds);
 
   const insertedInfo = await usersCollection.updateMany(
     {
