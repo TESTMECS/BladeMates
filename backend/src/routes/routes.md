@@ -19,6 +19,9 @@
 }
 ```
 
+
+
+
 ## /api/article/favorite
 
 ### POST - Body
@@ -35,6 +38,10 @@
 }
 ```
 
+
+
+
+
 ## /api/user/notifications
 
 ### POST - Body
@@ -42,3 +49,11 @@
 {}
 ```
 
+
+
+
+
+
+## /api/friend/follow
+
+## /api/friend/unfollow
