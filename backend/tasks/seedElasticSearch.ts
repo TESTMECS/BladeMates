@@ -9,10 +9,12 @@ import {
     Article,
 } from '../src/types/newsApiTypes';
 import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' }); //this is the path it would need from the dist folder. not current folder
+import { articleSchema } from '../src/validation/newsApi';
+import { tags } from '../src/utils/tagsData';
+dotenv.config(); //this is the path it would need from the dist folder. not current folder
 
 
-async function requestAndExtract() {
+async function getArticlesWithFullContent() {
     const apiKey = process.env.NEWSAPI_KEY;
     const url = `https://newsapi.org/v2/everything?apiKey=${apiKey}&q="technology"&searchIn=title,description`;
     const response = await axios.get<NewsApiResponse>(url); //might have to try catch this in the event of a type error
@@ -20,22 +22,26 @@ async function requestAndExtract() {
         console.error('Error getting news');
         return;
     }
-    let result = await grabbingText(response.data);
+    let result = await getFullContentForArticles(response.data);
     return result;
 }
 
-async function grabbingText(newsApiResponse: NewsApiResponse) {
+async function getFullContentForArticles(newsApiResponse: NewsApiResponse) {
     let resultDump: Article[] = [];
-    let tempResponseIndiv
+
     for (let article of newsApiResponse.articles) {
         let articleUrl = article.url;
+        let tempResponseIndiv;
+
         try {
             tempResponseIndiv = await axios.get(articleUrl);
         } catch (error) {
             console.error(`Error grabbing ${article.url}. not adding to resultDump`)
             continue;
         }
+
         let dom, readerArticle;
+
         try {
             dom = new JSDOM(tempResponseIndiv.data, { url: articleUrl });
             readerArticle = new Readability(dom.window.document).parse();
@@ -43,10 +49,12 @@ async function grabbingText(newsApiResponse: NewsApiResponse) {
             console.error(`Error parsing article ${article.url}`)
             continue;
         }
+
         if (!readerArticle || typeof readerArticle.textContent !== 'string') {
             console.error(`Error processing ${article.url}. not adding to resultDump`);
             continue;
         }
+
         let updatedArticle: Article = {
             source: article.source,
             author: article.author,
@@ -57,36 +65,14 @@ async function grabbingText(newsApiResponse: NewsApiResponse) {
             publishedAt: article.publishedAt,
             content: readerArticle.textContent,
         };
+
         resultDump.push(updatedArticle);
     }
+
     return resultDump;
 }
 
-function validateArticle(article: Article): boolean {
-    if (!article.source || !article.source.name || article.source.name === "[Removed]") {
-        return false;
-    }
-    if (!article.title || article.title === "[Removed]") {
-        return false;
-    }
-    if (!article.description || article.description === "[Removed]") {
-        return false;
-    }
-    if (!article.url || article.url === "https://removed.com") {
-        return false;
-    }
-    if (!article.urlToImage || article.urlToImage === null) {
-        return false;
-    }
-    if (!article.author || article.author === null) {
-        return false;
-    }
-
-
-    return true;
-}
-
-async function insertIntoIndex(ArticlesArray: Article[]) {
+async function indexAndTagArticles(ArticlesArray: Article[]) {
     const client = await elasticConnection();
     try {
         // check if articles index exists
@@ -102,51 +88,71 @@ async function insertIntoIndex(ArticlesArray: Article[]) {
             console.log('Index already exists');
         }
 
-
-        // insert articles
-        console.log('Inserting articles into index');
         for (let article of ArticlesArray) {
-            if (!validateArticle(article)) {
-                continue
-            }
+            const res = await articleSchema.spa(article);
+
+            if (!res.success)
+                continue;
+
+            console.log('Inserting article:', article.title);
+
             await client.index({
                 index: 'articles',
-                body: article
+                document: { ...article, tags: [] }
+            });
+
+        }
+
+        await client.indices.refresh({ index: 'articles' });
+
+        console.log('Tagging articles');
+
+        for (const tag in tags) {
+            const queryString = tags[tag].map(
+                (tagVal) => `(${tagVal})`
+            ).join(' OR ');
+
+            const result = await client.search({
+                index: 'articles',
+                query: {
+                    multi_match: {
+                        query: queryString,
+                        fields: ['title', 'description', 'content']
+                    }
+                }
+            });
+
+            await client.updateByQuery({
+                index: 'articles',
+                refresh: true,
+                script: {
+                    source: 'ctx._source.tags.add(params.tag)',
+                    params: { tag }
+                },
+                query: {
+                    multi_match: {
+                        query: queryString,
+                        fields: ['title', 'description', 'content']
+                    }
+                }
             });
         }
     } catch (error) {
-        console.error('Error during Elasticsearch operation:');
+        console.error('Error during Elasticsearch operation:', error);
     }
 
     await closeElasticConnection();
-
     console.log('ElasticSearch Connection closed!');
 }
 
-function addTagsToArticle(article: Article): String[] {
-    // todo: this function takes in the article, returns a string of tags that could be in the article
-    // adjust the insertIntoIndex function to take request tags from this function and add it to the document before inserting into index
-    let possibleTags = ["video games", "artificial intelligence", "cryptocurrency", "cybersecurity", "samsung", "google", "metaverse", "facebook", "facial recognition", "microsoft", "blockchain", "internet of things"]
-    let tags: String[] = [];
-    for (let tag of possibleTags) {
-        if (article.content && article.title && article.description) {
-            if (article.content.toLowerCase().includes(tag) || article.title.toLowerCase().includes(tag) || article.description.toLowerCase().includes(tag)) {
-                tags.push(tag);
-            }
-        }
-    }
-    return tags;
-}
+async function seedElasticSearch() {
+    const articles = await getArticlesWithFullContent();
 
-async function fullAttempt() {
-    const articles = await requestAndExtract();
-    // console.log(articles);
     if (articles) {
-        await insertIntoIndex(articles);
+        await indexAndTagArticles(articles);
     } else {
         console.error('No articles to insert');
     }
 }
 
-fullAttempt();
-// console.log(process.env);
+await seedElasticSearch();
