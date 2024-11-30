@@ -17,10 +17,11 @@ router
   .route('/favorite')
   .post(async (req, res) => {
     try {
-      const userId = validateWithType<string>(
-        stringObjectIdSchema,
-        req.session.userId
-      );
+      if (req.session.userId === undefined) {
+        res.status(400).send('User not logged in');
+        return;
+      }
+      const userId = req.session.userId;
       const articleId = validateWithType<string>(
         stringObjectIdSchema,
         req.body.articleId
@@ -36,7 +37,11 @@ router
   })
   .delete(async (req, res) => {
     try {
-      const userId = validate(stringObjectIdSchema, req.session.userId);
+      if (req.session.userId === undefined) {
+        res.status(400).send('User not logged in');
+        return;
+      }
+      const userId = req.session.userId;
       const articleId = validate(stringObjectIdSchema, req.body.articleId);
 
       const articles = await unfavoriteArticle(userId, articleId);
