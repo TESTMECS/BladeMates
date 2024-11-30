@@ -4,7 +4,6 @@ import ArticleCard from "./ArticleCard";
 
 const ArticlesFeed: React.FC = () => {
   const [trends, setTrends] = useState<Article[]>([]);
-  const liveTrend = trends[0]; // One article is Live.
   // Change this function to get articles from the backend
   async function fetchTrends() {
     setTrends([
@@ -28,6 +27,7 @@ const ArticlesFeed: React.FC = () => {
             userId: "1",
           },
         ],
+        isLive: true, // set the first article as live. 
       },
       {
         id: "2",
@@ -73,6 +73,7 @@ const ArticlesFeed: React.FC = () => {
       },
     ]);
   }
+  const liveTrend: Article = trends.filter((article) => article.isLive)[0] || trends[0];
   useEffect(() => {
     fetchTrends();
   }, []);

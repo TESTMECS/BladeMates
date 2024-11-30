@@ -5,6 +5,7 @@ import LoginPage from "./components/Landing/LoginPage";
 import Profile from "./components/Profile";
 import { AuthProvider } from "./context/userContext";
 import ArticlesPage from "./components/Articles/ArticlesPage";
+import LiveChat from "./components/Articles/LiveChat";
 import { useState } from "react";
 
 const App: React.FC = () => {
@@ -34,6 +35,7 @@ const App: React.FC = () => {
               <Route path="/home" element={<MainFeed />} />
               <Route path="/profile/:username" element={<Profile />} />
               <Route path="/articles/:id" element={<ArticlesPage />} />
+              <Route path="/live/:id" element={<LiveChat />} />
             </Route>
           </Routes>
         </div>
