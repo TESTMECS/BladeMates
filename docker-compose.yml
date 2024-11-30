@@ -1,31 +1,56 @@
 services:
   backend:
+    container_name: 'techtrends-backend'
     build:
       context: ./backend
     ports:
       - '3001:3001'
+    networks:
+      - techtrends
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+      - elasticsearch
+    environment: # edit the environment variables as needed
+      - MONGO_SERVER_URL=mongodb://techtrends-mongodb.techtrends_techtrends:27017
+      - REDIS_SERVER_URL=redis://techtrends-redis.techtrends_techtrends:6379
+      - RABBITMQ_URL=amqp://techtrends-rabbitmq.techtrends_techtrends:5672
+      # - ELASTICSEARCH_URL=http://elasticsearch:9200
 
   frontend:
+    container_name: 'techtrends-frontend'
     build:
       context: ./frontend
     ports:
       - '3000:3000'
     depends_on:
       - backend
+    networks:
+      - techtrends
+    environment:
+      - REACT_APP_BACKEND_URL=http://techtrends-frontend.techtrends_techtrends:3001
+      - RABBITMQ_URL=amqp://techtrends-rabbitmq.techtrends_techtrends:5672
 
   mongodb:
+    container_name: 'techtrends-mongodb'
     image: mongo:latest
     ports:
       - '27017:27017'
     volumes:
       - mongo-data:/data/db
+    networks:
+      - techtrends
 
   redis:
+    container_name: 'techtrends-redis'
     image: redis/redis-stack-server:latest
     ports:
       - '6379:6379'
     volumes:
       - redis-data:/data
+    networks:
+      - techtrends
 
   # see: https://www.elastic.co/guide/en/elasticsearch/reference/8.15/docker.html
   # also see (for complicated setup): https://github.com/elastic/elasticsearch/blob/8.15/docs/reference/setup/install/docker/docker-compose.yml
@@ -38,11 +63,12 @@ services:
     ports:
       - '9200:9200'
     networks:
-      - elastic_net
+      - techtrends
 
+  # 15672 management credentials (username/password): guest/guest
   rabbitmq:
-    image: rabbitmq:latest
-    container_name: 'rabbitmq'
+    image: rabbitmq:management
+    container_name: 'techtrends-rabbitmq'
     ports:
       - '5672:5672'
       - '15672:15672'
@@ -50,14 +76,12 @@ services:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     networks:
-      - rabbitmq_go_net
+      - techtrends
 
 volumes:
   mongo-data:
   redis-data:
 
 networks:
-  elastic_net:
-    driver: bridge
-  rabbitmq_go_net:
+  techtrends:
     driver: bridge
