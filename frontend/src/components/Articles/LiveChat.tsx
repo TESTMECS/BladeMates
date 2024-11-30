@@ -77,7 +77,7 @@ const LiveChat: React.FC = () => {
       <div className="pt-6 p-4 bg-gray-100 rounded-lg shadow-md">
         <div className="mb-4">
           <h2 className="text-xl font-bold mb-2">Live Chat</h2>
-          <div className="h-64 overflow-y-scroll p-2 bg-white rounded-lg shadow-inner border-lightblue border">
+          <div className="h-64 overflow-y-scroll p-2 bg-gray dark:bg-darkgray rounded-lg shadow-inner border-lightblue border text-white">
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -101,11 +101,11 @@ const LiveChat: React.FC = () => {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="input-field flex-grow p-2 border border-lightblue rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:text-black"
+            className="input-field flex-grow p-2 text-white border border-lightblue rounded-l-lg focus:outline-none focus:ring-2 focus:ring-lightblue bg-gray dark:bg-darkgray pr-6"
           />
           <button
             onClick={sendMessage}
-            className="p-2 rounded-r-lg bg-lightpink hover:bg-lightblue dark:bg-purple dark:hover:bg-green"
+            className="p-2 text-2xl rounded-r-lg bg-lightpink hover:bg-lightblue dark:bg-purple dark:hover:bg-green w-60"
           >
             Send
           </button>
