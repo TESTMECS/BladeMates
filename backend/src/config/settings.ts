@@ -10,3 +10,7 @@ export const redisConfig = {
 export const rabbitMQConfig = {
   url: process.env.RABBITMQ_SERVER_URL || 'amqp://localhost:5672',
 };
+
+export const elasticConfig = {
+  node: 'http://localhost:9200',
+}
