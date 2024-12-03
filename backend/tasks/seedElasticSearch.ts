@@ -16,14 +16,29 @@ dotenv.config(); //this is the path it would need from the dist folder. not curr
 
 async function getArticlesWithFullContent() {
     const apiKey = process.env.NEWSAPI_KEY;
-    const url = `https://newsapi.org/v2/everything?apiKey=${apiKey}&q="technology"&searchIn=title,description`;
-    const response = await axios.get<NewsApiResponse>(url); //might have to try catch this in the event of a type error
-    if (response.data.status !== 'ok') {
-        console.error('Error getting news');
-        return;
+    let allArticles: Article[] = [];
+
+    for (let i = 1; i <= 5; i++) {
+        const url = `https://newsapi.org/v2/everything?apiKey=${apiKey}&q=technology&searchIn=title,description,content&page=${i}&language=en`;
+        let response;
+
+        try {
+            response = await axios.get<NewsApiResponse>(url);
+        } catch (error) {
+            console.error('Error getting news:', error);
+            continue;
+        }
+
+        if (response.data.status !== 'ok') {
+            console.error('Error getting news');
+            continue;
+        }
+
+        let result = await getFullContentForArticles(response.data);
+        allArticles = allArticles.concat(result);
     }
-    let result = await getFullContentForArticles(response.data);
-    return result;
+
+    return allArticles;
 }
 
 async function getFullContentForArticles(newsApiResponse: NewsApiResponse) {
@@ -108,33 +123,27 @@ async function indexAndTagArticles(ArticlesArray: Article[]) {
         console.log('Tagging articles');
 
         for (const tag in tags) {
-            const queryString = tags[tag].map(
-                (tagVal) => `(${tagVal})`
-            ).join(' OR ');
-
-            const result = await client.search({
-                index: 'articles',
-                query: {
-                    multi_match: {
-                        query: queryString,
-                        fields: ['title', 'description', 'content']
-                    }
-                }
-            });
-
+            // NOT vibing with ELS scoring
+            const shouldClauses = tags[tag]
+                .flatMap(tagVal => [
+                    { match_phrase: { title: tagVal } },
+                    { match_phrase: { description: tagVal } },
+                    { match_phrase: { content: tagVal } },
+                ]);
+            const query = {
+                bool: {
+                    should: shouldClauses,
+                    minimum_should_match: 1,
+                },
+            };
             await client.updateByQuery({
                 index: 'articles',
                 refresh: true,
                 script: {
-                    source: 'ctx._source.tags.add(params.tag)',
-                    params: { tag }
+                    source: 'if (!ctx._source.tags.contains(params.tag)) { ctx._source.tags.add(params.tag); }',
+                    params: { tag },
                 },
-                query: {
-                    multi_match: {
-                        query: queryString,
-                        fields: ['title', 'description', 'content']
-                    }
-                }
+                query,
             });
         }
     } catch (error) {
@@ -155,4 +164,4 @@ async function seedElasticSearch() {
     }
 }
 
-await seedElasticSearch();
+seedElasticSearch();
