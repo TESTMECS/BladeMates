@@ -1,5 +1,71 @@
 
 ## /api/auth/login
 
+### POST - Body
+```typescript
+{
+  "username": string,
+  "password": string
+}
+```
+
 ## /api/auth/register
 
+### POST - Body
+```typescript
+{
+  "username": string,
+  "password": string
+}
+```
+
+
+
+
+## /api/article/favorite
+
+### POST - Body
+```typescript
+{
+  "articleId": string
+}
+```
+
+### Delete - Body
+```typescript
+{
+  "articleId": string
+}
+```
+
+
+
+
+
+## /api/user/notifications
+
+### POST - Body
+```typescript
+{}
+```
+
+
+
+
+
+
+## /api/friend/follow
+
+### POST - Body
+```typescript
+{
+  "userId": string
+}
+```
+
+### /api/friend/unfollow
+```typescript
+{
+  "userId": string
+}
+```

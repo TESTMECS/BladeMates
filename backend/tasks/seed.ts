@@ -9,9 +9,11 @@ import { register } from '../src/data/auth';
 
   await db.dropDatabase();
 
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 10; i++) {
     const res = await register(`User${i}`, `Password@${i}`);
   }
+
+  console.log('Seed complete');
 
   await closeConnection();
 })();

@@ -11,10 +11,15 @@
     "dev": "nodemon --exec ts-node --transpileOnly ./src/app.ts",
     "seed:mongo": "ts-node ./tasks/seed.ts",
     "seed:elastic": "ts-node ./tasks/seedElasticSearch.ts"
+    "seed": "ts-node ./tasks/seed.ts",
+    "follow": "ts-node ./tasks/follow.ts"
+
   },
   "author": "TODO",
   "license": "ISC",
   "dependencies": {
+    "@types/amqplib": "^0.10.5",
+    "amqplib": "^0.10.5",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "@elastic/elasticsearch": "^8.15.2",
@@ -37,6 +42,7 @@
     "@types/elasticsearch": "^5.0.43",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.0",
+    "@types/ramda": "^0.30.2",
     "@types/validator": "^13.12.2",
     "@types/jsdom": "^21.1.7",
     "@types/mozilla-readability": "^0.2.1",
