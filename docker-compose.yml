@@ -12,7 +12,8 @@ services:
       - redis
       - rabbitmq
       - elasticsearch
-    environment: # edit the environment variables as needed
+    environment:
+      # edit the environment variables as needed
       - MONGO_SERVER_URL=mongodb://techtrends-mongodb.techtrends_techtrends:27017
       - REDIS_SERVER_URL=redis://techtrends-redis.techtrends_techtrends:6379
       - RABBITMQ_URL=amqp://techtrends-rabbitmq.techtrends_techtrends:5672
@@ -65,7 +66,7 @@ services:
     ports:
       - '9200:9200'
     networks:
-      - elastic_net
+      # - elastic_net
       - techtrends
   # ONLY enable if you have spare ram
   # kibana:
@@ -97,6 +98,7 @@ services:
 volumes:
   mongo-data:
   redis-data:
+
 
 networks:
   techtrends:
