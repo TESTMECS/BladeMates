@@ -30,7 +30,7 @@ services:
     networks:
       - techtrends
     environment:
-      - REACT_APP_BACKEND_URL=http://techtrends-frontend.techtrends_techtrends:3001
+      - REACT_APP_BACKEND_URL=http://techtrends-backend.techtrends_techtrends:3001
       - RABBITMQ_URL=amqp://techtrends-rabbitmq.techtrends_techtrends:5672
 
   mongodb:
