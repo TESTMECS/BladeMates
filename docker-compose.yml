@@ -17,7 +17,7 @@ services:
       - MONGO_SERVER_URL=mongodb://techtrends-mongodb.techtrends_techtrends:27017
       - REDIS_SERVER_URL=redis://techtrends-redis.techtrends_techtrends:6379
       - RABBITMQ_URL=amqp://techtrends-rabbitmq.techtrends_techtrends:5672
-      # - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTIC_SERVER_URL=http://techtrends-elasticsearch.techtrends_techtrends:9200
 
   frontend:
     container_name: 'techtrends-frontend'
@@ -58,7 +58,7 @@ services:
   # TODO: do we need user and password?
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
-    container_name: elasticsearch
+    container_name: techtrends-elasticsearch
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
@@ -73,7 +73,7 @@ services:
   #   image: kibana:8.15.3
   #   container_name: kibana
   #   environment:
-  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200 
+  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
   #     - xpack.security.enabled=false
   #   ports:
   #     - '5601:5601'
@@ -98,7 +98,6 @@ services:
 volumes:
   mongo-data:
   redis-data:
-
 
 networks:
   techtrends:

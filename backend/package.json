@@ -9,9 +9,9 @@
     "start": "node dist/app.js",
     "buildnstart": "tsc && node dist/app.js",
     "dev": "nodemon --exec ts-node --transpileOnly ./src/app.ts",
-    "seed:mongo": "ts-node ./tasks/seed.ts",
+    "seed:mongo": "ts-node ./tasks/mongo.ts",
     "seed:elastic": "ts-node ./tasks/seedElasticSearch.ts",
-    "seed": "ts-node ./tasks/seed.ts",
+    "seed": "npm run seed:mongo && npm run seed:elastic",
     "follow": "ts-node ./tasks/follow.ts"
   },
   "author": "TODO",

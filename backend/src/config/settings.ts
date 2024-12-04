@@ -12,5 +12,5 @@ export const rabbitMQConfig = {
 };
 
 export const elasticConfig = {
-  node: 'http://localhost:9200',
-}
+  node: process.env.ELASTIC_SERVER_URL || 'http://localhost:9200',
+};

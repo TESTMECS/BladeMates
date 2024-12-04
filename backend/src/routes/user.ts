@@ -16,7 +16,7 @@ router.route('/notifications').post(async (req, res) => {
   try {
     const userIdData = validate(stringObjectIdSchema, req.session.userId);
     const notifications = await getNotifications(userIdData);
-    res.status(200).send(notifications);
+    res.status(200).send({ notifications });
   } catch (error) {
     handleRouteError(error, res);
   }

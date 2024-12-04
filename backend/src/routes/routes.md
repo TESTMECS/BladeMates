@@ -9,6 +9,13 @@
 }
 ```
 
+#### Response
+```typescript
+{
+  "userId": string
+}
+```
+
 ## /api/auth/register
 
 ### POST - Body
@@ -16,6 +23,13 @@
 {
   "username": string,
   "password": string
+}
+```
+
+#### Response
+```typescript
+{
+  "userId": string
 }
 ```
 
@@ -31,6 +45,13 @@
 }
 ```
 
+#### Response
+```typescript
+{
+  "data": string[]
+}
+```
+
 ### Delete - Body
 ```typescript
 {
@@ -38,7 +59,12 @@
 }
 ```
 
-
+#### Response
+```typescript
+{
+  "data": string[]
+}
+```
 
 
 
@@ -48,6 +74,14 @@
 ```typescript
 {}
 ```
+
+#### Response
+```typescript
+{
+  "notifications": string[]
+}
+```
+
 
 
 
@@ -63,9 +97,19 @@
 }
 ```
 
+#### Response
+```typescript
+'Follow Successful'
+```
+
 ### /api/friend/unfollow
 ```typescript
 {
   "userId": string
 }
+```
+
+#### Response
+```typescript
+'Unfollow Successful'
 ```

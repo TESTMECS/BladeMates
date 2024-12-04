@@ -19,4 +19,4 @@ RUN npm run build
 EXPOSE 3001
 
 # command to run 
-CMD ["npm", "start"]
+CMD ["npm", "run", "seed", "&&", "npm", "start"]
