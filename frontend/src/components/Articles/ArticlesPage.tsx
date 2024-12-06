@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Article from "../../types/Article";
 import { useParams } from "react-router-dom";
 
