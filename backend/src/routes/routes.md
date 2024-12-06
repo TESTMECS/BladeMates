@@ -77,15 +77,16 @@
 
 #### Response
 ```typescript
+type Notification = {
+  _id: string,
+  friendId: string,
+  articleId: string,
+  read: boolean
+}
 {
-  "notifications": string[]
+  "notifications": Notification[]
 }
 ```
-
-
-
-
-
 
 
 ## /api/friend/follow
