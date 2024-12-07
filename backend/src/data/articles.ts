@@ -1,8 +1,8 @@
-import { elasticConnection, closeElasticConnection } from "../config/elasticConnection";
-import { ObjectId } from "mongodb";
-
+import { elasticConnection } from "../config/elasticConnection";
+import { Article } from "../types/newsApiTypes";
 
 // query articles published within last 5 daysday
+
 async function getArticlesPast5Days() {
     const client = await elasticConnection();
     try {
@@ -120,14 +120,12 @@ async function searchHeadlinesAndDesc(query: string) {
     await closeElasticConnection();
 }
 
-
-
 // options field is an array that can contain any of the following strings:
 // title, description, content
 // if options is empty, searchAcrossFields will search only the title field
 
 /**
- * 
+ *
  * @param {string} query - the search query
  * @param {string[]} fields - the fields to search in. array can contain: title, description, content
  */

@@ -1,3 +1,4 @@
+
 FROM node:21.6.0
 
 # Set the working directory in the container
@@ -20,3 +21,5 @@ EXPOSE 3001
 
 # command to run 
 CMD ./dockerscript.sh
+
+

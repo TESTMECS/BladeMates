@@ -17,6 +17,7 @@ export default {
       green: "#9CB380",
       purple: "#7B506F",
       transparent: "transparent",
+      darkgray: "#424242",
     },
     extend: {},
   },

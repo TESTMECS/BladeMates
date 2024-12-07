@@ -7,5 +7,6 @@ type Article = {
   image: string;
   summary?: string;
   comments: Comment[];
+  isLive?: boolean;
 };
 export default Article;

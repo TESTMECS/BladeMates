@@ -1,4 +1,4 @@
-import redis from 'redis';
+import * as redis from 'redis';
 import { redisConfig } from './settings';
 
 // let client = null;
@@ -21,6 +21,7 @@ const redisConnection = async () => {
 };
 
 const closeRedisConnection = async () => {
+  connected = false;
   await client.quit();
 };
 

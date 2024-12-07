@@ -33,5 +33,12 @@ export async function getNotifications(userId: string) {
     }
   );
 
-  return user.notifications;
+  return user.notifications.map((notif) => {
+    return {
+      _id: notif._id.toString(),
+      friendId: notif.friendId.toString(),
+      articleId: notif.friendId.toString(),
+      read: notif.read,
+    };
+  });
 }

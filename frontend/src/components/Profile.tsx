@@ -58,14 +58,14 @@ const Profile: React.FC = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="border border-gray rounded-md p-2 w-full"
+                className="border border-lightblue text-white rounded-md p-2 w-full "
                 placeholder="Name"
               />
               <textarea
                 name="bio"
                 value={formData.bio}
                 onChange={handleChange}
-                className="border border-gray rounded-md p-2 w-full"
+                className="border border-lightblue text-white rounded-md p-2 w-full"
                 placeholder="Bio"
               />
               <div className="flex items-center space-x-4">
