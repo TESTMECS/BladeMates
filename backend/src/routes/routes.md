@@ -114,3 +114,30 @@ type Notification = {
 ```typescript
 'Unfollow Successful'
 ```
+
+
+## /api/tag-search?tags=tag1,tag2,tag3
+
+### GET - Params
+```
+tags: comma separated strings. case sensitive
+
+```
+#### Response
+```typescript
+{
+  "data": [
+    {
+      "_id": string,
+      "title": string,
+      "author": string,
+      "publishedAt": string,
+      "url": string,
+      "imageUrl": string,
+      "sourceName": string,
+      "tags": string[],
+      "description": string
+    }
+  ]
+}
+```
