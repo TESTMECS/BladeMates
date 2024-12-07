@@ -11,7 +11,7 @@ export const articleSchema = z.object({
     url: z.string().trim(),
     urlToImage: z.string().trim(),
     publishedAt: z.string().trim(),
-    content: z.string().trim().nullable(),
+    content: z.string().trim(),
 })
 .refine(article => {
     if (article.source.name === "[Removed]") return false;
