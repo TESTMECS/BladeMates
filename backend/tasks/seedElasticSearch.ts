@@ -98,7 +98,16 @@ async function indexAndTagArticles(ArticlesArray: Article[]) {
     // if not, create it
     if (!indexExists) {
       console.log('Creating index');
-      await client.indices.create({ index: 'articles' });
+      await client.indices.create({
+        index: 'articles',
+        mappings: {
+          properties: {
+            tags: {
+              type: 'keyword'
+            }
+          }
+        }
+      });
       console.log('Index created');
     } else {
       console.log('Index already exists');
@@ -122,7 +131,6 @@ async function indexAndTagArticles(ArticlesArray: Article[]) {
     console.log('Tagging articles');
 
     for (const tag in tags) {
-      // NOT vibing with ELS scoring
       const shouldClauses = tags[tag].flatMap((tagVal) => [
         { match_phrase: { title: tagVal } },
         { match_phrase: { description: tagVal } },
@@ -138,8 +146,10 @@ async function indexAndTagArticles(ArticlesArray: Article[]) {
         index: 'articles',
         refresh: true,
         script: {
-          source:
-            'if (!ctx._source.tags.contains(params.tag)) { ctx._source.tags.add(params.tag); }',
+          source: `
+          if (ctx._source.tags == null) { ctx._source.tags = [];}
+          if (!ctx._source.tags.contains(params.tag)) {ctx._source.tags.add(params.tag);}
+        `,
           params: { tag },
         },
         query,
