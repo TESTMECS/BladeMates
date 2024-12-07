@@ -1,8 +1,8 @@
 import Article from "./Article";
 import Comment from "./Comment";
 import Trends from "./Trends";
-type User = {
-  id: number;
+export type User = {
+  id: string;
   name: string;
   username: string;
   bio?: string;
@@ -13,4 +13,4 @@ type User = {
   Trends?: Trends[];
   // Notifications: Notifications[]; maybe use this later
 };
-export default User;
+

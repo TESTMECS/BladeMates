@@ -14,17 +14,17 @@ export class StatusError extends Error {
 
 export const errIfTrue =
   (errN: number) =>
-  (condition: boolean, errMsg: string, ...msgDataArr: unknown[]) => {
-    if (condition) {
-      throw new StatusError(
-        errN,
-        `
+    (condition: boolean, errMsg: string, ...msgDataArr: unknown[]) => {
+      if (condition) {
+        throw new StatusError(
+          errN,
+          `
           ${errMsg}
           ${msgDataArr.map((d) => `  ${d}\n`)}
         `
-      );
-    } else return true;
-  };
+        );
+      } else return true;
+    };
 
 export const handleRouteError = (e: unknown, res: Response) => {
   console.error(e);
@@ -40,15 +40,24 @@ export const handleRouteError = (e: unknown, res: Response) => {
 
 export function validate(schema: Schema, unk: unknown, errStatus = 400) {
   const { data: inputData, error: inputError } = schema.safeParse(unk);
-  errIfTrue(errStatus)(
-    inputError ? true : false,
-    `Error: Invalid input provided for schema: ${JSON.stringify(
-      schema,
-      undefined,
-      2
-    )}.\n${inputError}`
-  );
-
+  // Check if there were any validation errors
+  // Changed to better throw errors for Frontend. Use JSON.parse to convert from string.
+  if (inputError) {
+    const structuredErrors = inputError.errors.map((err) => ({
+      field: err.path.join(' > '), // Error path (field name, for nested fields use >)
+      message: err.message,         // The error message
+      code: err.code || 'unknown',  // Error code (e.g., too_small, custom, etc.)
+    }));
+    // Throw a StatusError with the structured error information
+    errIfTrue(errStatus)(
+      true,
+      JSON.stringify({
+        status: errStatus,
+        message: 'Invalid input provided',
+        errors: structuredErrors,
+      }, null, 2)
+    );
+  }
   return inputData;
 }
 
