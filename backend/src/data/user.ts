@@ -42,3 +42,17 @@ export async function getNotifications(userId: string) {
     };
   });
 }
+
+export async function getUserById(id: string) {
+  const usersCollection = await users();
+
+  const user = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(id),
+  });
+
+  if (user === null) {
+    throw new StatusError(404, 'User not found');
+  }
+
+  return user;
+}

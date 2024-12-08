@@ -157,7 +157,6 @@ export async function searchAcrossFields(query: string, fields: string[]) {
     }
 }
 
-// ID could be an objectID or a string
 export async function getDocumentByID(id: string) {
     const client = await elasticConnection();
 
@@ -219,7 +218,16 @@ export async function getArticlesByTag(tag: string) {
                 }
             }
         })
-        return result.hits.hits.map(hit => hit._source)
+        return result.hits.hits.map(hit => {
+          if (hit._source) {
+            return {
+              _id: hit._id,
+              title: hit._source.title,
+              author: hit._source.author,
+              publishedAt: hit._source.publishedAt
+            }
+          }
+        })
     } catch (error) {
         console.error('Error during Elasticsearch operation:', error)
     }
@@ -252,11 +260,6 @@ export async function getArticlesByTags(tags: string[]) {
                     title: hit._source.title,
                     author: hit._source.author,
                     publishedAt: hit._source.publishedAt,
-                    url: hit._source.url,
-                    imageUrl: hit._source.urlToImage,
-                    sourceName: hit._source.source.name,
-                    tags: (hit._source as any).tags,
-                    description: hit._source.description
                 };
             }
         })
