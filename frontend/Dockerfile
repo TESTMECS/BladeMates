@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose the port your frontend development server will run on
-EXPOSE 3000
+EXPOSE 3000 
 
 # Define the command to start the frontend
 CMD ["npm", "run", "serve"]

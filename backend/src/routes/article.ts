@@ -22,6 +22,7 @@ router
         return;
       }
       const userId = req.session.userId;
+
       const articleId = validateWithType<string>(
         stringObjectIdSchema,
         req.body.articleId

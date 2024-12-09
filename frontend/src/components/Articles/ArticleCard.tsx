@@ -16,17 +16,26 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
     const checkFavorite = async () => {
       if (isAuthenticated && user) {
         const response = await fetch(
-          `http://localhost:8000/users/${user.id}/favorites`
+          `http://localhost:3001/api/user/favorites/${user.id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
         if (response.ok) {
           const favorites = await response.json();
-          // Check if the article ID is in the favorites list
-          setToggleFavorite(favorites.includes(article.id));
+          // console.log(favorites);
+          // Check if the article ID is in the favorites list 
+          setToggleFavorite(favorites.articles.includes(article.id));
         }
+
       }
     };
 
     checkFavorite();
+
   }, [isAuthenticated, user, article.id]);
 
   async function handleFavorite() {
@@ -35,7 +44,7 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
     try {
       if (toggleFavorite) {
         const response = await fetch(
-          `http://localhost:8000/api/articles/favorites/${user.id}`,
+          `http://localhost:3001/api/article/favorite`,
           {
             method: "DELETE",
             headers: {
@@ -44,13 +53,15 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
             body: JSON.stringify({ articleId: article.id }),
           }
         );
-
         if (response.ok) {
+          // console.log("Favorite removed successfully");
           setToggleFavorite(false);
         }
+        // console.log(response);
       } else {
+        // console.log("Article ID:", article.id);
         const response = await fetch(
-          `http://localhost:8000/api/articles/favorites/${user.id}`,
+          `http://localhost:3001/api/article/favorite`,
           {
             method: "POST",
             headers: {
@@ -60,8 +71,10 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
           }
         );
         if (response.ok) {
+          // console.log("Favorite added successfully");
           setToggleFavorite(true);
         }
+        // console.log(response);
       }
     } catch (error) {
       console.error("Error updating favorite status:", error);

@@ -19,9 +19,9 @@ router.route('/login').post(async (req, res) => {
       loginCredentials.username,
       loginCredentials.password
     );
-
     if (userId) {
       req.session.userId = userId;
+
       res.json({ userId });
     } else {
       res.status(500).send('Login Failed');
@@ -29,6 +29,7 @@ router.route('/login').post(async (req, res) => {
   } catch (error) {
     handleRouteError(error, res);
   }
+
   return;
 });
 
@@ -43,6 +44,7 @@ router.route('/register').post(async (req, res) => {
 
     if (userId) {
       req.session.userId = userId;
+
       res.json({ userId });
     } else {
       res.status(500).send('Register Failed');

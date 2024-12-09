@@ -18,8 +18,7 @@ RUN npm run build
 
 # Expose the port the backend server will run on
 EXPOSE 3001
+EXPOSE 4000
 
 # command to run 
 CMD ./dockerscript.sh
-
-

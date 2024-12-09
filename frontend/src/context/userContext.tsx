@@ -4,11 +4,11 @@ import { userIdResponse, customError, thrownError, isCustomError, isThrownError 
 
 interface AuthContextProps {
   isAuthenticated: boolean;
-  loginUser: (username: string, password: string) => Promise<userIdResponse | customError | thrownError>;
+  loginUser: (username: string, password: string) => Promise<userIdResponse | customError | thrownError | undefined>;
   logoutUser: () => void;
   user: UserType;
   updateUser: (user: any) => void;
-  registerUser: (username: string, password: string) => Promise<userIdResponse | customError | thrownError>;
+  registerUser: (username: string, password: string) => Promise<userIdResponse | customError | thrownError | undefined>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -27,6 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await fetch("http://localhost:3001/api/auth/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -55,7 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }
     } catch (err) {
-      console.log("Error logging in: " + err);
+      alert("Error logging in, request failed : " + err);
     }
   };
   const logoutUser = () => {
@@ -76,6 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           username,
           password,
@@ -100,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }
     } catch (err) {
-      console.log("Error registering user: " + err);
+      console.log("Error registering user, request failed: " + err);
     }
   }
   return (

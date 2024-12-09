@@ -52,5 +52,7 @@ export async function register(
 
   const insertedInfo = await usersCollection.insertOne(newUser);
 
+
+
   return insertedInfo.insertedId.toString();
 }

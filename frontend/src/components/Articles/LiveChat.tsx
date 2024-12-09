@@ -39,8 +39,12 @@ const LiveChat: React.FC = () => {
 
   const sendMessage = () => {
     // validate the user input.
-    const isValid: boolean = validateUserInput(newMessage);
-    if (isValid && isAuthenticated) {
+    const result: {
+      isValid: boolean;
+      message: string
+    } = validateUserInput(newMessage);
+    if (result.isValid && isAuthenticated) {
+      // Send the new message
       const message_json = {
         userId: user?.id,
         username: user.username,
@@ -49,7 +53,7 @@ const LiveChat: React.FC = () => {
       socket.emit("send_message", message_json); // Emit the new message
       setNewMessage(""); // Clear input field
     } else {
-      alert("Invalid input, avoid using only special characters or spaces.");
+      alert(result.message);
     }
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

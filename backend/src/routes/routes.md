@@ -141,3 +141,33 @@ tags: comma separated strings. case sensitive
   ]
 }
 ```
+## /api/global/articles
+
+### GET - no parms  
+#### Response
+```typescript
+{
+    _id: string
+    title: string
+    author: string
+    publishedAt: string
+}
+```
+
+## /api/global/articles/:id
+
+### GET - no parms
+
+#### Response
+```typescript
+{
+      title: string
+      author: string 
+      publishedAt: string 
+      description: string 
+      url: string 
+      imageUrl: string 
+      sourceName: string 
+}
+```
+

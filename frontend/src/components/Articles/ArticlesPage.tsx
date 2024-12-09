@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Article from "../../types/Article";
 import { useParams } from "react-router-dom";
 
@@ -8,7 +7,7 @@ const ArticlesPage: React.FC = () => {
   const [article, setArticle] = useState<Article | null>(null);
   useEffect(() => {
     const fetchArticle = async () => {
-      const res = await fetch(`http://localhost:8000/articles/${id}`);
+      const res = await fetch(`http://localhost:3001/articles/${id}`);
       const data = await res.json();
       setArticle(data);
     };

@@ -8,7 +8,8 @@ export const initializeSocket = (app: express.Application) => {
   const io = new Server(server);
 
   io.on("connection", (socket) => {
-    console.log("User connected");
+    console.log("User connected to socket");
+
 
     socket.on("send_message", (message) => {
       // receiving message from client.

@@ -13,7 +13,9 @@ const router = express.Router();
 
 router.route("/articles").get(async (req, res) => {
   try {
+    console.log("This is the req.session.userId", req.session.userId);
     if (req.session.userId === undefined) {
+
       res.status(400).send("User not logged in");
       return;
     }
