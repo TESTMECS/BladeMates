@@ -6,6 +6,7 @@ import { userRouter } from './user';
 import { friendRouter } from './friend';
 import { globalArticlesRouter } from './globalArticles';
 import { tagSearchRouter } from './tagSearch';
+import { articleOTWRouter } from './articleOfTheWeek';
 
 export function createRoutesWith(app: Express) {
   // app.use('/api/example', exampleRouter);
@@ -18,6 +19,7 @@ export function createRoutesWith(app: Express) {
   app.use('/api/user', userRouter);
   app.use('/api/global', globalArticlesRouter);
   app.use('/api/tag-search', tagSearchRouter);
+  app.use('/api/article-of-the-week', articleOTWRouter);
   app.use('*', (_, res) => {
     res.status(404).json({ error: 'Not found' });
   });

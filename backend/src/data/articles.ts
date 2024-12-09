@@ -1,6 +1,7 @@
 import { tryCatch } from "ramda";
 import { elasticConnection } from "../config/elasticConnection";
 import { Article } from "../types/newsApiTypes";
+import seedrandom from 'seedrandom';
 
 // query articles published within last 5 daysday
 export async function getArticlesPast5Days() {
@@ -264,3 +265,47 @@ export async function getArticlesByTags(tags: string[]) {
         console.error('Error during Elasticsearch operation:', error)
     }
 }
+
+export async function getArticlesBetweenMondays(): Promise<Article[]> {
+    const client = await elasticConnection();
+    // this SHOULD get articles published between last Monday and this Monday
+    try {
+        const result = await client.search<Article>({
+            index: "articles",
+            body: {
+                query: {
+                    range: {
+                        publishedAt: {
+                            gte: "now/w-7d",
+                            lte: "now/w",
+                        },
+                    },
+                },
+                sort: {
+                    publishedAt: {
+                        order: "desc",
+                    },
+                },
+            },
+        });
+
+        return result.hits.hits.map((hit) => hit._source as Article);
+    } catch (error) {
+        console.error("Error during Elasticsearch operation:", error);
+        return [];
+    }
+}
+
+// getArticlesBetweenMondays().then((res) => console.log(res));
+
+export async function getArticleOfTheWeek() {
+    const seed = "Don't let yourself get attached to anything you are not willing to walk out on in 30 seconds flat if you feel the heat around the corne";
+    const rng = seedrandom(seed);
+    const THE_RANDOM_NUMBER = rng();
+    console.log(THE_RANDOM_NUMBER);
+    const weekArticles = await getArticlesBetweenMondays();
+    const randomIndex = Math.floor(THE_RANDOM_NUMBER * weekArticles.length);
+    console.log(weekArticles[randomIndex].title);
+    return weekArticles[randomIndex];
+}
+
