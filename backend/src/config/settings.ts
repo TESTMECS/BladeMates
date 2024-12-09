@@ -16,5 +16,5 @@ export const elasticConfig = {
 };
 
 export const frontendConfig = {
-  url: process.env.FRONTEND_SERVER_URL || 'http://localhost:3000',
+  url: 'http://localhost:3000',
 };

@@ -1,14 +1,26 @@
-import React, { createContext, useContext, useState } from "react";
-import { User as UserType } from "../types/User";
-import { userIdResponse, customError, thrownError, isCustomError, isThrownError } from "../utils/errors";
+import React, { createContext, useContext, useState } from 'react';
+import { User as UserType } from '../types/User';
+import {
+  userIdResponse,
+  customError,
+  thrownError,
+  isCustomError,
+  isThrownError,
+} from '../utils/errors';
 
 interface AuthContextProps {
   isAuthenticated: boolean;
-  loginUser: (username: string, password: string) => Promise<userIdResponse | customError | thrownError | undefined>;
+  loginUser: (
+    username: string,
+    password: string
+  ) => Promise<userIdResponse | customError | thrownError | undefined>;
   logoutUser: () => void;
   user: UserType;
   updateUser: (user: any) => void;
-  registerUser: (username: string, password: string) => Promise<userIdResponse | customError | thrownError | undefined>;
+  registerUser: (
+    username: string,
+    password: string
+  ) => Promise<userIdResponse | customError | thrownError | undefined>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -25,11 +37,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const loginUser = async (username: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:3001/api/auth/login", {
-        method: "POST",
-        credentials: "include",
+      const response = await fetch('http://localhost:3001/api/auth/login', {
+        method: 'POST',
+        credentials: 'include',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
+          Origin: 'http://localhost:3000',
         },
         body: JSON.stringify({
           username,
@@ -56,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }
     } catch (err) {
-      alert("Error logging in, request failed : " + err);
+      alert('Error logging in, request failed : ' + err);
     }
   };
   const logoutUser = () => {
@@ -72,12 +85,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   const registerUser = async (username: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:3001/api/auth/register", {
-        method: "POST",
+      const response = await fetch('http://localhost:3001/api/auth/register', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
-        credentials: "include",
+        credentials: 'include',
         body: JSON.stringify({
           username,
           password,
@@ -102,18 +116,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }
     } catch (err) {
-      console.log("Error registering user, request failed: " + err);
+      console.log('Error registering user, request failed: ' + err);
     }
-  }
+  };
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
         loginUser,
         logoutUser,
-        user: user ? user : {} as UserType, // If user is null, set it to an empty object
+        user: user ? user : ({} as UserType), // If user is null, set it to an empty object
         updateUser,
-        registerUser
+        registerUser,
       }}
     >
       {children}
@@ -124,7 +138,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAuth = (): AuthContextProps => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
