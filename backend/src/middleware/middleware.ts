@@ -1,5 +1,6 @@
 import express from 'express';
 import session from 'express-session';
+import { redisConnection } from '../config/redisConnection';
 
 /**
  *
@@ -21,3 +22,24 @@ export function createMiddlewaresWith(app: express.Express) {
     next();
   });
 }
+
+// export const redisTagSearch = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+//   let client = await redisConnection();
+//   let exists = await client?.exists(`articleWithTag:${req.query.tags}`);
+//   if (exists) {
+//     let cachedArticle = await client?.get(
+//       `articleWithTag:${req.query.tags}`
+//     );
+//     if (cachedArticle) {
+
+//       res.status(200).send({ data: JSON.parse(cachedArticle) });
+//     }
+//     else{
+//       next();
+//     }
+//   }
+//   else{
+//     next();
+//   }
+// }
+
