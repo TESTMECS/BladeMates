@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
 import Article from "../../types/Article";
 import { useParams } from "react-router-dom";
-type apiArticlePageResponse = {
-  title: string
-  author: string
-  publishedAt: string
-  description: string
-  url: string
-  imageUrl: string
-  sourceName: string
-}
+import apiArticlePageResponse from "../../types/apiArticlePageResponse";
+
 const ArticlesPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [article, setArticle] = useState<Article>();
   useEffect(() => {
-    console.log("This is the id from params", id);
     if (!id) return;
     const fetchArticle = async () => {
       try {
@@ -24,7 +16,6 @@ const ArticlesPage: React.FC = () => {
         });
         if (!res.ok) alert("Article not found.");
         const data: apiArticlePageResponse = await res.json();
-        console.log("This is the article data in page component.", data);
         const article: Article = {
           id,
           author: data.author,
@@ -41,11 +32,10 @@ const ArticlesPage: React.FC = () => {
     };
     fetchArticle();
   }, []);
-
   if (!article) return <div>Loading article...</div>;
   return (
-    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 h-full">
-      <div className="rounded-lg shadow-lg p-8 border border-lightblue">
+    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 h-fit">
+      <div className="rounded-lg shadow-lg p-8 pt-6 border border-lightblue">
         {article && (
           <div>
             <h1

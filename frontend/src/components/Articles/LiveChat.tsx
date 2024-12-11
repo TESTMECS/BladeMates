@@ -5,19 +5,8 @@ import Article from "../../types/Article";
 import Message from "../../types/Message";
 import { useAuth } from "../../context/userContext";
 import { validateUserInput } from "../../utils/validation";
-type apiArticleOfTheWeekResponse = {
-  data: {
-    author: string;
-    publishedAt: string; // ISO 8601 format
-    content: string;
-    description: string;
-    source?: { id?: string, name?: string };
-    tags: string[];
-    title: string;
-    url: string;
-    urlToImage: string;
-  }
-}
+import apiArticleOfTheWeekResponse from "../../types/apiArticleOfTheWeekResponse";
+
 const LiveChat: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth();
@@ -90,10 +79,16 @@ const LiveChat: React.FC = () => {
     }
   };
   return (
-    <div className="h-full">
+    <div
+      className="h-fit"
+    >
       {/* Article Information */}
-      <div className="pt-16 p-4 border border-lightblue rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-4">
+      <div
+        className="pt-16 p-4 border-b border-lightblue shadow-md"
+      >
+        <h1
+          className="text-3xl font-bold mb-4"
+        >
           {article?.title}
         </h1>
         <p className="text-lg "> By: {article?.author}</p>

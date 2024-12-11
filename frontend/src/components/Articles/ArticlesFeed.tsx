@@ -2,26 +2,9 @@ import { useState, useEffect } from "react";
 import Article from "../../types/Article";
 import ArticleCard from "./ArticleCard";
 import uuid from "react-uuid";
+import apiArticleOfTheWeekResponse from "../../types/apiArticleOfTheWeekResponse";
+import apiArticlesListResponse from "../../types/apiArticlesListResponse";
 
-type apiArticlesResponse = {
-  _id: string;
-  author: string;
-  publishedAt: string; // 2024-12-04T09:00:00Z  ISO 8601 format
-  title: string;
-}
-type apiArticleOfTheWeekResponse = {
-  data: {
-    author: string;
-    publishedAt: string; // ISO 8601 format
-    content: string;
-    description: string;
-    source?: { id?: string, name?: string };
-    tags: string[];
-    title: string;
-    url: string;
-    urlToImage: string;
-  }
-}
 const ArticlesFeed: React.FC = () => {
   const [trends, setTrends] = useState<Article[]>([]);
   const [articleOfTheWeek, setArticleOfTheWeek] = useState<Article>();
@@ -32,7 +15,7 @@ const ArticlesFeed: React.FC = () => {
       credentials: 'include',
     });
     if (response.ok) {
-      const data: apiArticlesResponse[] = await response.json();
+      const data: apiArticlesListResponse[] = await response.json();
       setTrends(data.map((article) => ({
         id: article._id,
         author: article.author,
@@ -65,12 +48,12 @@ const ArticlesFeed: React.FC = () => {
       console.error("Error fetching article of the week:", error);
     }
   }
-
   useEffect(() => {
     // ON COMPONENT MOUNT, FETCH ARTICLES and ARTICLE OF THE WEEK
     fetchTrends();
     fetchArticleOfTheWeek();
-  }, []);
+  },
+    []);
   if (!trends.length) return <p>Loading articles...</p>;
   return (
     <div>
