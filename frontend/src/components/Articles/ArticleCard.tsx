@@ -45,7 +45,6 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
         setPublishedAt(new Date(article.publishedAt).toLocaleString());
         setTitle(article.title);
       }
-      console.log("this is the article", articleId, author, publishedAt, title);
     };
     setFields();
     checkFavorite();

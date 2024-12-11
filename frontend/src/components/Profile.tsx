@@ -8,7 +8,6 @@ type apiResponse = {
   friends: string[], // List of friend usernames 
   trends: string[] // List of trend names
 }
-
 const Profile: React.FC = () => {
   const { user } = useAuth();
   const [username, setUsername] = useState<string>("");

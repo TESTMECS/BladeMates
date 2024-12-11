@@ -45,26 +45,26 @@ const ArticlesFeed: React.FC = () => {
   }
   async function fetchArticleOfTheWeek() {
     // FETCH OF THE WEEK 
-    const response = await fetch("http://localhost:3001/api/article-of-the-week", {
-      method: "GET",
-      credentials: 'include',
-    });
-    if (response.ok) {
-      const data: apiArticleOfTheWeekResponse = await response.json();
-
-      console.log("react-uuid", uuid());
-      setArticleOfTheWeek({
-        id: uuid(), // generate unique id
-        author: data.data.author,
-        publishedAt: data.data.publishedAt,
-        title: data.data.title,
-        image: data.data.urlToImage,
-        description: data.data.description,
-        url: data.data.url
+    try {
+      const response = await fetch("http://localhost:3001/api/article-of-the-week", {
+        method: "GET",
+        credentials: 'include',
       });
-      console.log("this is the article of the week", articleOfTheWeek);
+      if (response.ok) {
+        const data: apiArticleOfTheWeekResponse = await response.json();
+        setArticleOfTheWeek({
+          id: uuid(), // generate unique id
+          author: data.data.author,
+          publishedAt: data.data.publishedAt,
+          title: data.data.title,
+          image: data.data.urlToImage,
+          description: data.data.description,
+          url: data.data.url
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching article of the week:", error);
     }
-    // console.log("this is the response from article of the week", response);
   }
 
   useEffect(() => {

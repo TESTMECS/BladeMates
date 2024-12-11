@@ -12,6 +12,7 @@ const Feed: React.FC<FeedProps> = ({
   setSelectedFeed,
 }) => {
   // TODO: add rendering based on the feed type
+  // feed = trends.enum
   return (
     <div>
       {/* Display the ArticlesFeed component if feed is "discover" or default */}
