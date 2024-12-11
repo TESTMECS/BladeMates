@@ -82,7 +82,7 @@ services:
   #   depends_on:
   #     - elasticsearch
   #   networks:
-  #     - elastic_net
+  #     - techtrends
 
   # 15672 management credentials (username/password): guest/guest
   rabbitmq:
