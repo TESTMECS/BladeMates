@@ -24,7 +24,6 @@ const LiveChat: React.FC = () => {
   const [article, setArticle] = useState<Article>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
-
   useEffect(() => {
     const fetchArticle = async () => {
       if (!id) return;
@@ -51,7 +50,6 @@ const LiveChat: React.FC = () => {
       }
     }
     fetchArticle();
-
     // Listen for incoming messages
     socket.on("receive_message", (message: Message) => {
       const newMessage: Message = {
@@ -62,13 +60,11 @@ const LiveChat: React.FC = () => {
       };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
-
     // Cleanup on component unmount
     return () => {
       socket.off("receive_message");
     };
   }, []);
-
   const sendMessage = () => {
     // validate the user input.
     const result: {
@@ -93,9 +89,7 @@ const LiveChat: React.FC = () => {
       sendMessage();
     }
   };
-
   return (
-
     <div className="h-full">
       {/* Article Information */}
       <div className="pt-16 p-4 border border-lightblue rounded-lg shadow-md">
@@ -110,7 +104,6 @@ const LiveChat: React.FC = () => {
           className="w-full h-auto mb-4"
         />
         <p className="text-lg font-bold mb-4"> Preview: {article?.description}</p>
-        <p className="text-lg">{article?.content}</p>
         <a
           href={article?.url}
           target="_blank"

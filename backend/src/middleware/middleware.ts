@@ -26,7 +26,7 @@ export function createMiddlewaresWith(app: express.Express) {
 
   // Middleware to log the requester's URL
   app.use((req, res, next) => {
-    console.log(`Request URL: ${req.url}`);
+    // console.log(`Request URL: ${req.url}`);
     next();
   });
 

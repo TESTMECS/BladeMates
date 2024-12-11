@@ -25,7 +25,6 @@ type apiArticleOfTheWeekResponse = {
 const ArticlesFeed: React.FC = () => {
   const [trends, setTrends] = useState<Article[]>([]);
   const [articleOfTheWeek, setArticleOfTheWeek] = useState<Article>();
-
   async function fetchTrends() {
     // FETCH ARTICLES
     const response = await fetch("http://localhost:3001/api/global/articles", {
