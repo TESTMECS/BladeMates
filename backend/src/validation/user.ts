@@ -18,7 +18,7 @@ export const userSchema = z.object({
   hashedPassword: stringSchema,
 
   comments: z.array(objectIdSchema),
-  favoriteArticles: z.array(objectIdSchema),
+  favoriteArticles: z.array(stringSchema),
   friends: z.array(
     z.object({
       _id: objectIdSchema,

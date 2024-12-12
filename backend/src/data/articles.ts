@@ -266,7 +266,7 @@ export async function getArticlesByTags(tags: string[]) {
   }
 }
 
-export async function getArticlesBetweenMondays(): Promise<Article[]> {
+export async function getArticlesBetweenMondays(): Promise<any> {
   const client = await elasticConnection();
   // this SHOULD get articles published between last Monday and this Monday
   try {
@@ -288,24 +288,29 @@ export async function getArticlesBetweenMondays(): Promise<Article[]> {
         },
       },
     });
-
-    return result.hits.hits.map((hit) => hit._source as Article);
+    return result.hits.hits.map((hit) => {
+      return {
+        _id: hit._id,
+        title: hit._source?.title,
+        author: hit._source?.author,
+        publishedAt: hit._source?.publishedAt,
+        description: hit._source?.description,
+        url: hit._source?.url,
+        urlToImage: hit._source?.urlToImage,
+        source: hit._source?.source.name,
+      }
+    });
   } catch (error) {
     console.error("Error during Elasticsearch operation:", error);
     return [];
   }
 }
-
-// getArticlesBetweenMondays().then((res) => console.log(res));
-
 export async function getArticleOfTheWeek() {
   const seed = "Don't let yourself get attached to anything you are not willing to walk out on in 30 seconds flat if you feel the heat around the corne";
   const rng = seedrandom(seed);
   const THE_RANDOM_NUMBER = rng();
-  console.log(THE_RANDOM_NUMBER);
   const weekArticles = await getArticlesBetweenMondays();
   const randomIndex = Math.floor(THE_RANDOM_NUMBER * weekArticles.length);
-  console.log(weekArticles[randomIndex].title);
   return weekArticles[randomIndex];
 }
 

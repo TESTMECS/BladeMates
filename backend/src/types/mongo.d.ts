@@ -9,9 +9,8 @@ export type User = {
   _id: ObjectId;
   username: string;
   hashedPassword: string;
-
   comments: ObjectId[];
-  favoriteArticles: ObjectId[];
+  favoriteArticles: string[];
   friends: { _id: ObjectId; name: string }[];
   trends: string[];
   notifications: Notification[];
