@@ -1,8 +1,9 @@
 import { z } from 'zod';
+import { stringSchema } from './common';
 import { stringObjectIdSchema } from './mongo';
 
 export const addNewCommentSchema = z.object({
-  articleId: stringObjectIdSchema,
+  articleId: stringSchema,
   content: z.string().trim().min(1),
 });
 

@@ -22,7 +22,7 @@ export async function addComment(
 
   const newComment = {
     articleId,
-    userId,
+    userId: ObjectId.createFromHexString(userId),
 
     username: existingUser.username,
     content,
@@ -50,7 +50,6 @@ export async function addComment(
   }
 
   insertedDocument._id = insertedDocument._id.toString();
-  insertedDocument.articleId = insertedDocument.articleId.toString();
   insertedDocument.userId = insertedDocument.userId.toString();
 
   return insertedDocument;
@@ -90,7 +89,6 @@ export async function editComment(
   }
 
   updatedComment._id = updatedComment._id.toString();
-  updatedComment.articleId = updatedComment.articleId.toString();
   updatedComment.userId = updatedComment.userId.toString();
 
   return updatedComment;

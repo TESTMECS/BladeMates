@@ -11,7 +11,7 @@ export async function getComments(articleId: string) {
 
   return commentsArray.map((comment) => {
     comment._id = comment._id.toString();
-    comment.articleId = comment.articleId.toString();
+    comment.articleId = comment.articleId;
     comment.userId = comment.userId.toString();
 
     return comment;

@@ -1,7 +1,7 @@
 export type Notification = {
   _id: ObjectId;
   friendId: ObjectId;
-  articleId: ObjectId;
+  articleId: string;
   read: boolean;
 };
 
@@ -19,7 +19,7 @@ export type User = {
 
 export type Comment = {
   _id: ObjectId;
-  articleId: ObjectId;
+  articleId: string;
   userId: ObjectId;
 
   username: string;

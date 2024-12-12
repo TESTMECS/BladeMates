@@ -4,6 +4,7 @@ import express from 'express';
 import { handleRouteError, validate, validateWithType } from '../utils/Error';
 import { stringObjectIdSchema } from '../validation/mongo';
 import { favoriteArticle, unfavoriteArticle } from '../data/article';
+import { stringSchema } from '../validation/common';
 
 declare module 'express-session' {
   interface SessionData {
@@ -24,7 +25,7 @@ router
       const userId = req.session.userId;
 
       const articleId = validateWithType<string>(
-        stringObjectIdSchema,
+        stringSchema,
         req.body.articleId
       );
 
@@ -43,7 +44,7 @@ router
         return;
       }
       const userId = req.session.userId;
-      const articleId = validate(stringObjectIdSchema, req.body.articleId);
+      const articleId = validate(stringSchema, req.body.articleId);
 
       const articles = await unfavoriteArticle(userId, articleId);
 

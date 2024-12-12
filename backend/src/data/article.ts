@@ -26,7 +26,7 @@ const addNotifications = async (userId: string, articleId: string) => {
   const notification = {
     _id: ObjectId.createFromTime(Date.now() / 1000),
     friendId: new ObjectId(userId),
-    articleId: new ObjectId(articleId),
+    articleId: articleId,
     read: false,
   };
 
@@ -73,11 +73,11 @@ export async function favoriteArticle(
   const favoriteArticles = userData.favoriteArticles;
 
   const articleExists = favoriteArticles.findIndex(
-    (value) => value.toString() === articleId
+    (value) => value === articleId
   );
 
   if (articleExists === -1) {
-    favoriteArticles.push(ObjectId.createFromHexString(articleId));
+    favoriteArticles.push(articleId);
   } else {
     throw new StatusError(400, 'Article already favorited');
   }
@@ -99,7 +99,7 @@ export async function favoriteArticle(
 
   addNotifications(userId, articleId);
 
-  return favoriteArticles.map((value) => value.toHexString());
+  return favoriteArticles;
 }
 
 export async function unfavoriteArticle(
@@ -121,7 +121,7 @@ export async function unfavoriteArticle(
   const favoriteArticles = userData.favoriteArticles;
 
   const articleExists = favoriteArticles.findIndex(
-    (value) => value.toString() === articleId
+    (value) => value === articleId
   );
 
   if (articleExists === -1) {
@@ -145,5 +145,5 @@ export async function unfavoriteArticle(
     throw new StatusError(500, 'Failed to unfavorite article');
   }
 
-  return favoriteArticles.map((value) => value.toHexString());
+  return favoriteArticles;
 }
