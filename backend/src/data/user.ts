@@ -37,11 +37,7 @@ export async function getNotifications(userId: string) {
     return {
       _id: notif._id.toString(),
       friendId: notif.friendId.toString(),
-<<<<<<< HEAD
       articleId: notif.articleId,
-=======
-      articleId: notif.articleId.toString(),
->>>>>>> main
       read: notif.read,
     };
   });
@@ -92,11 +88,5 @@ export async function getFavoriteArticles(userId: string) {
     throw new StatusError(404, 'User not found');
   }
 
-<<<<<<< HEAD
   return user.favoriteArticles;
-=======
-  return user.favoriteArticles.map((article) => {
-    return article;
-  });
->>>>>>> main
 }
