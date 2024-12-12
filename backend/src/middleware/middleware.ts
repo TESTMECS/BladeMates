@@ -2,6 +2,7 @@ import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import { frontendConfig } from '../config/settings';
+import { credentials } from 'amqplib';
 /**
  *
  * @param {express.Express} app
@@ -55,4 +56,3 @@ export function createMiddlewaresWith(app: express.Express) {
 //     next();
 //   }
 // }
-
