@@ -1,7 +1,7 @@
 export type Notification = {
   _id: ObjectId;
   friendId: ObjectId;
-  articleId: ObjectId;
+  articleId: string;
   read: boolean;
 };
 
@@ -9,9 +9,8 @@ export type User = {
   _id: ObjectId;
   username: string;
   hashedPassword: string;
-
   comments: ObjectId[];
-  favoriteArticles: ObjectId[];
+  favoriteArticles: string[];
   friends: { _id: ObjectId; name: string }[];
   trends: string[];
   notifications: Notification[];

@@ -38,7 +38,7 @@ export async function getNotifications(userId: string) {
     return {
       _id: notif._id.toString(),
       friendId: notif.friendId.toString(),
-      articleId: notif.friendId.toString(),
+      articleId: notif.articleId.toString(),
       read: notif.read,
     };
   });
@@ -90,6 +90,6 @@ export async function getFavoriteArticles(userId: string) {
   }
 
   return user.favoriteArticles.map((article) => {
-    return article.toString();
+    return article;
   });
 }

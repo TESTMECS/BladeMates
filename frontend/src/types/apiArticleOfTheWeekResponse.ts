@@ -1,5 +1,6 @@
 type apiArticleOfTheWeekResponse = {
   data: {
+    _id: string;
     author: string;
     publishedAt: string; // ISO 8601 format
     content: string;

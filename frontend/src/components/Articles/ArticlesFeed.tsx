@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Article from "../../types/Article";
 import ArticleCard from "./ArticleCard";
-import uuid from "react-uuid";
 import apiArticleOfTheWeekResponse from "../../types/apiArticleOfTheWeekResponse";
 import apiArticlesListResponse from "../../types/apiArticlesListResponse";
 
@@ -23,7 +22,6 @@ const ArticlesFeed: React.FC = () => {
         title: article.title
       })));
     }
-    // console.log("this is the response", response);
   }
   async function fetchArticleOfTheWeek() {
     // FETCH OF THE WEEK 
@@ -35,7 +33,7 @@ const ArticlesFeed: React.FC = () => {
       if (response.ok) {
         const data: apiArticleOfTheWeekResponse = await response.json();
         setArticleOfTheWeek({
-          id: uuid(), // generate unique id
+          id: data.data._id,
           author: data.data.author,
           publishedAt: data.data.publishedAt,
           title: data.data.title,
