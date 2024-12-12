@@ -1,9 +1,12 @@
 import * as redis from 'redis';
-import { redisConfig } from './settings';
+import { redisConfigV2 } from './settings';
+import Redis from 'ioredis';
 
 // let client = null;
 
-const client = redis.createClient(redisConfig);
+const client = new Redis(
+  redisConfigV2.url,
+);
 let connected = false;
 
 const redisConnection = async () => {
