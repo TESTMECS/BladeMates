@@ -4,7 +4,7 @@ import { HomeIcon, UserIcon } from "@heroicons/react/outline";
 interface NavbarProps {
   setCurrentFeed: (feed: string) => void;
 }
-const Navbar: React.FC<NavbarProps> = ({ setCurrentFeed }) => {
+const Navbar: React.FC<NavbarProps> = () => {
   const { isAuthenticated, user } = useAuth();
 
   return (
