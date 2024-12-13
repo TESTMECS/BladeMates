@@ -2,10 +2,17 @@ import { Server } from "socket.io";
 import { createServer } from "node:http";
 import express from "express";
 import message from "./types/message";
+import { frontendConfig } from "./config/settings";
 
 export const initializeSocket = (app: express.Application) => {
   const server = createServer(app);
-  const io = new Server(server);
+  const io = new Server(server, {
+    cors: {
+      origin: frontendConfig.url,
+      methods: ['GET', 'POST'],
+      credentials: true,
+    },
+  });
 
   io.on("connection", (socket) => {
     console.log("User connected to socket");
