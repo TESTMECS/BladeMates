@@ -25,10 +25,10 @@ const NewComment: React.FC<NewCommentProps> = ({
         <textarea
           placeholder="Add a comment"
           ref={ref}
-          className="p-3 bg-transparent border border-gray/50 rounded-md text-black h-[50px] w-full resize-none outline outline-0 mr-2 md:mr-4 lg:mr-8"
+          className="h-[50px] w-full resize-none outline outline-0 flex-grow p-2 text-white border border-lightblue rounded-l-lg focus:outline-none focus:ring-2 focus:ring-lightblue bg-gray dark:bg-darkgray pr-6"
         ></textarea>
         <button
-          className="px-8 py-3 bg-darkblue text-white dark:bg-purple dark:text-white border dark:border-purple rounded-md"
+          className="p-2 text-2xl rounded-r-lg bg-lightpink hover:bg-lightblue dark:bg-purple dark:hover:bg-green w-60"
           onClick={() => createCommentHelper(ref.current?.value || '')}
         >
           Submit
