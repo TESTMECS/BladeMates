@@ -1,4 +1,3 @@
-import { tryCatch } from "ramda";
 import { elasticConnection } from "../config/elasticConnection";
 import { Article } from "../types/newsApiTypes";
 import seedrandom from 'seedrandom';

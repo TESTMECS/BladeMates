@@ -30,6 +30,7 @@ router.route('/').get(async (req, res) => {
         let cachedArticle = await client?.get(`articleWithTag:${req.query.tags}`);
         if (cachedArticle) {
             res.status(200).send({ data: JSON.parse(cachedArticle) });
+            return;
         }
     }
     
@@ -56,6 +57,7 @@ router.route('/').get(async (req, res) => {
         const articles = await getArticlesByTags(tags);
         let cachedArticle = await client?.set(`articleWithTag:${tags}`, JSON.stringify(articles));
         res.status(200).send({ data: articles });
+        return;
     } catch (error) {
         handleRouteError(error, res);
     }
