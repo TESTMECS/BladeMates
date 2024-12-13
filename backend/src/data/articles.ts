@@ -244,7 +244,7 @@ export async function getArticlesByTags(tags: string[]) {
         }
       }
     })
-    console.log('Elasticsearch query result:', result.hits.hits);
+    // console.log('Elasticsearch query result:', result.hits.hits);
     return result.hits.hits.map(hit => {
       if (hit._source) {
         return {

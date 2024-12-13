@@ -25,14 +25,20 @@ router.route('/').get(async (req, res) => {
   if (exists) {
       let cachedArticle = await client?.get('articleOTW');
       if (cachedArticle) {
+          console.log('articleOTW found in cache');
           res.status(200).send({ data: JSON.parse(cachedArticle) });
           return;
       }
+  } else{
+    console.log('articleOTW not found in cache');
   }
 
 
   try {
     const article = await getArticleOfTheWeek();
+    if(!exists){
+      await client?.set('articleOTW', JSON.stringify(article), 'EX', 3600);
+    }
     res.status(200).send({ data: article });
   } catch (error) {
     handleRouteError(error, res);
