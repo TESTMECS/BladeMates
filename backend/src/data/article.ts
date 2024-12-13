@@ -17,8 +17,8 @@ const addNotifications = async (userId: string, articleId: string) => {
       friends: { $elemMatch: { _id: new ObjectId(userId) } },
     })
     .toArray();
-  console.log("userId", userId);
-  console.log("articleId", articleId);
+  console.log('userId', userId);
+  console.log('articleId', articleId);
   const notification = {
     _id: new ObjectId(),
     friendId: new ObjectId(userId),
@@ -80,8 +80,9 @@ export async function favoriteArticle(
   if (insertedInfo.modifiedCount === 0) {
     throw new StatusError(500, 'Failed to favorite article');
   }
-  console.log("adding articleId");
+  console.log('adding articleId');
   addNotifications(userId, articleId);
+
   return favoriteArticles;
 }
 export async function unfavoriteArticle(
@@ -118,5 +119,6 @@ export async function unfavoriteArticle(
   if (insertedInfo.modifiedCount === 0) {
     throw new StatusError(500, 'Failed to unfavorite article');
   }
+
   return favoriteArticles;
 }

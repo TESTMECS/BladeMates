@@ -8,6 +8,9 @@ import { globalArticlesRouter } from './globalArticles';
 import { tagSearchRouter } from './tagSearch';
 import { articleOTWRouter } from './articleOfTheWeek';
 
+import { commentRouter } from './comment';
+import { commentsRouter } from './comments';
+
 export function createRoutesWith(app: Express) {
   // app.use('/api/example', exampleRouter);
   app.use('/api/auth', authRouter);
@@ -17,6 +20,9 @@ export function createRoutesWith(app: Express) {
   app.use('/api/global', globalArticlesRouter);
   app.use('/api/tag-search', tagSearchRouter);
   app.use('/api/article-of-the-week', articleOTWRouter);
+  app.use('/api/comment', commentRouter);
+  app.use('/api/comments', commentsRouter);
+
   app.use('*', (_, res) => {
     res.status(404).json({ error: 'Not found' });
   });

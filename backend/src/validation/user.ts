@@ -8,7 +8,7 @@ import { objectIdSchema } from './mongo';
 export const notificationSchema = z.object({
   _id: objectIdSchema,
   friendId: objectIdSchema,
-  articleId: objectIdSchema,
+  articleId: stringSchema,
   read: z.boolean(),
 });
 

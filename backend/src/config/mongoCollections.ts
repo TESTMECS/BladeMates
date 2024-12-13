@@ -1,6 +1,6 @@
 import { Collection, OptionalId } from 'mongodb';
 import { dbConnection } from './mongoConnection';
-import { UserOptionalId } from '../types/mongo';
+import { CommentOptionalId, UserOptionalId } from '../types/mongo';
 
 const getCollectionFn = <T>(collection: string) => {
   let _col: Collection<OptionalId<T>> | undefined = undefined;
@@ -29,5 +29,5 @@ export const dropCollectionFn = async (collection: string) => {
 // Note: You will need to change the code below to have the collection required by the assignment!
 
 // TODO: Need to specify type for comments
-export const comments = getCollectionFn('comments');
+export const comments = getCollectionFn<CommentOptionalId>('comments');
 export const users = getCollectionFn<UserOptionalId>('users');
