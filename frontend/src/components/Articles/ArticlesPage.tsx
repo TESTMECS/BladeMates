@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import Article from "../../types/Article";
-import { useParams } from "react-router-dom";
-import apiArticlePageResponse from "../../types/apiArticlePageResponse";
+import { useEffect, useState } from 'react';
+import Article from '../../types/Article';
+import { useParams } from 'react-router-dom';
+import apiArticlePageResponse from '../../types/apiArticlePageResponse';
+import Comments from './comments/Comments';
 
 const ArticlesPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,11 +11,14 @@ const ArticlesPage: React.FC = () => {
     if (!id) return;
     const fetchArticle = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/api/global/article/${id}`, {
-          method: "GET",
-          credentials: 'include',
-        });
-        if (!res.ok) alert("Article not found.");
+        const res = await fetch(
+          `http://localhost:3001/api/global/article/${id}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
+        if (!res.ok) alert('Article not found.');
         const data: apiArticlePageResponse = await res.json();
         const article: Article = {
           id,
@@ -23,11 +27,11 @@ const ArticlesPage: React.FC = () => {
           title: data.title,
           description: data.description,
           url: data.url,
-          image: data.imageUrl
-        }
+          image: data.imageUrl,
+        };
         setArticle(article);
       } catch (error) {
-        console.error("Error fetching article:", error);
+        console.error('Error fetching article:', error);
       }
     };
     fetchArticle();
@@ -38,26 +42,28 @@ const ArticlesPage: React.FC = () => {
       <div className="rounded-lg shadow-lg p-8 pt-6 border border-lightblue">
         {article && (
           <div>
-            <h1
-              className="text-3xl font-bold mb-4">
-              {article.title}
-            </h1>
-            <p>
-              By {article.author}
-              Published: {article.publishedAt}
-            </p>
-            <p className="mb-4">{article.description}</p>
-            <img
-              src={article.image}
-              alt={article.title}
-              className="border border-lightblue rounded mb-4 w-full h-auto"
-            />
-            <a
-              className="mb-4 text-3xl font-bold underline pointer text-lightblue"
-              href={article.url}
-              target="_blank">
-              {article.url}
-            </a>
+            <div>
+              <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
+              <p>
+                By {article.author}
+                Published: {article.publishedAt}
+              </p>
+              <p className="mb-4">{article.description}</p>
+              <img
+                src={article.image}
+                alt={article.title}
+                className="border border-lightblue rounded mb-4 w-full h-auto"
+              />
+              <a
+                className="mb-4 text-3xl font-bold underline pointer text-lightblue"
+                href={article.url}
+                target="_blank"
+              >
+                {article.url}
+              </a>
+            </div>
+            <div className="p-[1px] border border-black/0 rounded-lg bg-black/10 dark:bg-white/10 my-8"></div>
+            <Comments articleId={article.id} />
           </div>
         )}
       </div>
