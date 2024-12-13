@@ -1,6 +1,6 @@
 import ArticlesFeed from "./Articles/ArticlesFeed";
 import ListOfTrends from "./ListOfTrends";
-import TrendList from "./TrendList";
+import FollowingFeed from "./FollowingFeed";
 interface FeedProps {
   currentFeed: string;
   selectedFeed: string[];
@@ -18,12 +18,7 @@ const Feed: React.FC<FeedProps> = ({
       {/* Display the ArticlesFeed component if feed is "discover" or default */}
       {currentFeed === "Discover" && <ArticlesFeed />}
       {/* Add other conditional components based on the feed type */}
-      {currentFeed === "Following" && <TrendList />}
-      {currentFeed === "AI" && <p>Showing Articles with AI Trend Tag...</p>}
-      {currentFeed === "IoT" && <p>Showing Articles with IoT Trend Tag...</p>}
-      {currentFeed === "Blockchain" && (
-        <p>Showing Articles with Blockchain Trend Tag...</p>
-      )}
+      {currentFeed === "Following" && <FollowingFeed />}
       {currentFeed === "ListOfTrends" && (
         <ListOfTrends
           selectedFeed={selectedFeed}

@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 
 
 import * as R from 'ramda';
+import { getArticlesByTags, getDocumentByID } from './articles';
 
 export async function getNotifications(userId: string) {
   const usersCollection = await users();
@@ -92,4 +93,115 @@ export async function getFavoriteArticles(userId: string) {
   return user.favoriteArticles.map((article) => {
     return article;
   });
+}
+
+export async function getUserById(id: string) {
+  const usersCollection = await users();
+
+  const user = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(id),
+  });
+
+  if (user === null) {
+    throw new StatusError(404, 'User not found');
+  }
+
+  return user;
+}
+
+export async function addTrend(userId: string, trend: string) {
+  const usersCollection = await users();
+
+  const user = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(userId),
+  });
+
+  if (user === null) {
+    throw new StatusError(404, 'User not found');
+  }
+
+  if (user.trends.includes(trend))
+    throw 'Trend already exists';
+
+  user.trends.push(trend);
+
+  await usersCollection.updateOne(
+    {
+      _id: ObjectId.createFromHexString(userId),
+    },
+    {
+      $set: {
+        trends: user.trends,
+      },
+    }
+  );
+
+  return user.trends;
+}
+
+export async function removeTrend(userId: string, trend: string) {
+  const usersCollection = await users();
+
+  const user = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(userId),
+  });
+
+  if (user === null) {
+    throw new StatusError(404, 'User not found');
+  }
+
+  if (!user.trends.includes(trend))
+    throw 'Trend not found';
+
+  user.trends = user.trends.filter((t) => t !== trend);
+
+  await usersCollection.updateOne(
+    {
+      _id: ObjectId.createFromHexString(userId),
+    },
+    {
+      $set: {
+        trends: user.trends,
+      },
+    }
+  );
+
+  return user.trends;
+}
+
+export async function getFollowingFeed(userId: string) {
+  const usersCollection = await users();
+
+  const user = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(userId),
+  });
+
+  if (user === null) {
+    throw new StatusError(404, 'User not found');
+  }
+
+  let articles = (await getArticlesByTags(user.trends))?.map((article) => {
+    return {
+      _id: article?._id,
+      title: article?.title,
+      author: article?.author,
+      publishedAt: article?.publishedAt
+    }
+  });
+
+  for (const friend of user.friends) {
+    const friendArticles = await getFavoriteArticles(friend._id.toString());
+
+    for (const article of friendArticles) {
+      const fullArticle = await getDocumentByID(article);
+      articles?.push({
+        _id: article,
+        title: fullArticle?.title,
+        author: fullArticle?.author,
+        publishedAt: fullArticle?.publishedAt
+      });
+    }
+  }
+
+  return articles;
 }
