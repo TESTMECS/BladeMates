@@ -8,6 +8,7 @@ const MainFeed: React.FC = () => {
     "Discover",
     "Following",
   ]);
+
   return (
     <div className="grid grid-cols-5 h-full">
       <div className="col-span-1 md:fixed md:h-full flex items-center justify-center">

@@ -1,6 +1,6 @@
 import { elasticConnection } from "../config/elasticConnection";
 import { Article } from "../types/newsApiTypes";
-import seedrandom from 'seedrandom';
+import seedrandom from "seedrandom";
 
 // query articles published within last 5 daysday
 export async function getArticlesPast5Days() {
@@ -30,7 +30,7 @@ export async function getArticlesPast5Days() {
 
 export async function getArticlesDaysAgoRange(
   daysAgoStart: number,
-  daysAgoEnd: number
+  daysAgoEnd: number,
 ) {
   const client = await elasticConnection();
 
@@ -159,14 +159,12 @@ export async function searchAcrossFields(query: string, fields: string[]) {
 
 // ID could be an objectID or a string
 export async function getDocumentByID(id: string) {
-  const client = await elasticConnection();
-
+  const client = elasticConnection();
   try {
     const result = await client.get<Article>({
       index: "articles",
       id: id,
     });
-
     return {
       title: result._source?.title,
       author: result._source?.author,
@@ -174,7 +172,7 @@ export async function getDocumentByID(id: string) {
       description: result._source?.description,
       url: result._source?.url,
       imageUrl: result._source?.urlToImage,
-      sourceName: result._source?.source.name
+      sourceName: result._source?.source.name,
     };
   } catch (error) {
     console.error("Error during Elasticsearch operation:", error);
@@ -182,8 +180,7 @@ export async function getDocumentByID(id: string) {
 }
 
 export async function getAllDocuments() {
-  const client = await elasticConnection();
-
+  const client = elasticConnection();
   try {
     const result = await client.search<Article>({
       index: "articles",
@@ -194,7 +191,6 @@ export async function getAllDocuments() {
       },
       size: 1000,
     });
-
     return result.hits.hits.map((hit) => ({
       _id: hit._id,
       title: hit._source?.title,
@@ -207,35 +203,34 @@ export async function getAllDocuments() {
 }
 
 export async function getArticlesByTag(tag: string) {
-  const client = await elasticConnection()
+  const client = await elasticConnection();
   try {
     const result = await client.search<Article>({
-      index: 'articles',
+      index: "articles",
       body: {
         query: {
           match: {
-            tags: tag
-          }
-        }
-      }
-    })
-    return result.hits.hits.map(hit => hit._source)
+            tags: tag,
+          },
+        },
+      },
+    });
+    return result.hits.hits.map((hit) => hit._source);
   } catch (error) {
-    console.error('Error during Elasticsearch operation:', error)
+    console.error("Error during Elasticsearch operation:", error);
   }
-
 }
 
 export async function getArticlesByTags(tags: string[]) {
-  const client = await elasticConnection()
+  const client = await elasticConnection();
   try {
     const result = await client.search<Article>({
-      index: 'articles',
+      index: "articles",
       body: {
         query: {
           terms: {
-            tags: tags
-          }
+            tags: tags,
+          },
         },
         sort: {
           publishedAt: {
@@ -256,12 +251,12 @@ export async function getArticlesByTags(tags: string[]) {
           imageUrl: hit._source.urlToImage,
           sourceName: hit._source.source.name,
           tags: (hit._source as any).tags,
-          description: hit._source.description
+          description: hit._source.description,
         };
       }
-    })
+    });
   } catch (error) {
-    console.error('Error during Elasticsearch operation:', error)
+    console.error("Error during Elasticsearch operation:", error);
   }
 }
 
@@ -297,7 +292,7 @@ export async function getArticlesBetweenMondays(): Promise<any> {
         url: hit._source?.url,
         urlToImage: hit._source?.urlToImage,
         source: hit._source?.source.name,
-      }
+      };
     });
   } catch (error) {
     console.error("Error during Elasticsearch operation:", error);
@@ -305,11 +300,11 @@ export async function getArticlesBetweenMondays(): Promise<any> {
   }
 }
 export async function getArticleOfTheWeek() {
-  const seed = "Don't let yourself get attached to anything you are not willing to walk out on in 30 seconds flat if you feel the heat around the corne";
+  const seed =
+    "Don't let yourself get attached to anything you are not willing to walk out on in 30 seconds flat if you feel the heat around the corne";
   const rng = seedrandom(seed);
   const THE_RANDOM_NUMBER = rng();
   const weekArticles = await getArticlesBetweenMondays();
   const randomIndex = Math.floor(THE_RANDOM_NUMBER * weekArticles.length);
   return weekArticles[randomIndex];
 }
-

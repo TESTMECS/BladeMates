@@ -3,14 +3,14 @@
 import {
   elasticConnection,
   closeElasticConnection,
-} from '../src/config/elasticConnection';
-import axios from 'axios';
-import { JSDOM } from 'jsdom';
-import { Readability } from '@mozilla/readability';
-import { NewsApiResponse, Article } from '../src/types/newsApiTypes';
-import dotenv from 'dotenv';
-import { articleSchema } from '../src/validation/newsApi';
-import { tags } from '../src/utils/tagsData';
+} from "../src/config/elasticConnection";
+import axios from "axios";
+import { JSDOM } from "jsdom";
+import { Readability } from "@mozilla/readability";
+import { NewsApiResponse, Article } from "../src/types/newsApiTypes";
+import dotenv from "dotenv";
+import { articleSchema } from "../src/validation/newsApi";
+import { tags } from "../src/utils/tagsData";
 dotenv.config(); //this is the path it would need from the dist folder. not current folder
 
 async function getArticlesWithFullContent() {
@@ -24,12 +24,12 @@ async function getArticlesWithFullContent() {
     try {
       response = await axios.get<NewsApiResponse>(url);
     } catch (error) {
-      console.error('Error getting news:', error);
+      console.error("Error getting news:", error);
       continue;
     }
 
-    if (response.data.status !== 'ok') {
-      console.error('Error getting news');
+    if (response.data.status !== "ok") {
+      console.error("Error getting news");
       continue;
     }
 
@@ -64,9 +64,9 @@ async function getFullContentForArticles(newsApiResponse: NewsApiResponse) {
       continue;
     }
 
-    if (!readerArticle || typeof readerArticle.textContent !== 'string') {
+    if (!readerArticle || typeof readerArticle.textContent !== "string") {
       console.error(
-        `Error processing ${article.url}. not adding to resultDump`
+        `Error processing ${article.url}. not adding to resultDump`,
       );
       continue;
     }
@@ -92,25 +92,24 @@ async function indexAndTagArticles(ArticlesArray: Article[]) {
   const client = await elasticConnection();
   try {
     // check if articles index exists
-    const indexExists = await client.indices.exists({ index: 'articles' });
-    console.log(indexExists);
+    const indexExists = await client.indices.exists({ index: "articles" });
 
     // if not, create it
     if (!indexExists) {
-      console.log('Creating index');
+      console.log("Creating index");
       await client.indices.create({
-        index: 'articles',
+        index: "articles",
         mappings: {
           properties: {
             tags: {
-              type: 'keyword'
-            }
-          }
-        }
+              type: "keyword",
+            },
+          },
+        },
       });
-      console.log('Index created');
+      console.log("Index created");
     } else {
-      console.log('Index already exists');
+      console.log("Index already exists");
     }
 
     for (let article of ArticlesArray) {
@@ -118,17 +117,17 @@ async function indexAndTagArticles(ArticlesArray: Article[]) {
 
       if (!res.success) continue;
 
-      console.log('Inserting article:', article.title);
+      console.log("Inserting article:", article.title);
 
       await client.index({
-        index: 'articles',
+        index: "articles",
         document: { ...article, tags: [] },
       });
     }
 
-    await client.indices.refresh({ index: 'articles' });
+    await client.indices.refresh({ index: "articles" });
 
-    console.log('Tagging articles');
+    console.log("Tagging articles");
 
     for (const tag in tags) {
       const shouldClauses = tags[tag].flatMap((tagVal) => [
@@ -143,7 +142,7 @@ async function indexAndTagArticles(ArticlesArray: Article[]) {
         },
       };
       await client.updateByQuery({
-        index: 'articles',
+        index: "articles",
         refresh: true,
         script: {
           source: `
@@ -156,11 +155,11 @@ async function indexAndTagArticles(ArticlesArray: Article[]) {
       });
     }
   } catch (error) {
-    console.error('Error during Elasticsearch operation:', error);
+    console.error("Error during Elasticsearch operation:", error);
   }
 
   await closeElasticConnection();
-  console.log('ElasticSearch Connection closed!');
+  console.log("ElasticSearch Connection closed!");
 }
 
 async function seedElasticSearch() {
@@ -169,7 +168,7 @@ async function seedElasticSearch() {
   if (articles) {
     await indexAndTagArticles(articles);
   } else {
-    console.error('No articles to insert');
+    console.error("No articles to insert");
   }
 }
 

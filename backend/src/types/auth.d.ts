@@ -13,5 +13,5 @@ export type User = {
   favoriteArticles: string[];
   friends: User[];
   trends: string[];
-  notifications: Notification[];
+  // notifications: Notification[];
 };

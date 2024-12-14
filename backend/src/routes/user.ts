@@ -1,29 +1,25 @@
-import express from 'express';
-import { handleRouteError, validate } from '../utils/Error';
-// import { authSchema } from '../validation/auth';
-import { getNotifications, getUserProfileData, getFavoriteArticles } from '../data/user';
-import { stringObjectIdSchema } from '../validation/mongo';
-
-declare module 'express-session' {
+import express from "express";
+import { handleRouteError, validate } from "../utils/Error";
+import { getUserProfileData, getFavoriteArticles } from "../data/user";
+import { stringObjectIdSchema } from "../validation/mongo";
+declare module "express-session" {
   interface SessionData {
     userId: string;
   }
 }
-
 const router = express.Router();
-
-router.route('/notifications').post(async (req, res) => {
-  try {
-    const userIdData = validate(stringObjectIdSchema, req.session.userId);
-    const notifications = await getNotifications(userIdData);
-    res.status(200).send({ notifications });
-  } catch (error) {
-    handleRouteError(error, res);
-  }
-  return;
-});
-
-router.route('/profileData/:id').get(async (req, res) => {
+// maybe should be GET?
+// router.route("/notifications").post(async (req, res) => {
+//   try {
+//     const userIdData = validate(stringObjectIdSchema, req.session.userId);
+//     const notifications = await getNotifications(userIdData);
+//     res.status(200).send({ notifications });
+//   } catch (error) {
+//     handleRouteError(error, res);
+//   }
+//   return;
+// });
+router.route("/profileData/:id").get(async (req, res) => {
   try {
     const userIdData = validate(stringObjectIdSchema, req.params.id);
     const user = await getUserProfileData(userIdData);
@@ -32,9 +28,8 @@ router.route('/profileData/:id').get(async (req, res) => {
     handleRouteError(error, res);
   }
   return;
-})
-
-router.route('/favorites/:id').get(async (req, res) => {
+});
+router.route("/favorites/:id").get(async (req, res) => {
   try {
     const userId = validate(stringObjectIdSchema, req.params.id);
     const articles: string[] = await getFavoriteArticles(userId);

@@ -5,7 +5,7 @@ services:
       context: ./backend
     ports:
       - '3001:3001'
-      - '4000:4000'
+      - '4001:4001'
     networks:
       - techtrends
     depends_on:
@@ -19,7 +19,7 @@ services:
       - REDIS_SERVER_URL=redis://techtrends-redis.techtrends_techtrends:6379
       - RABBITMQ_SERVER_URL=amqp://techtrends-rabbitmq.techtrends_techtrends:5672
       - ELASTIC_SERVER_URL=http://techtrends-elasticsearch.techtrends_techtrends:9200
-      - FRONTEND_SERVER_URL=http://techtrends-frontend.techtrends_techtrends:3000 
+      - FRONTEND_SERVER_URL=http://techtrends-frontend.techtrends_techtrends:3000
 
   frontend:
     container_name: 'techtrends-frontend'
