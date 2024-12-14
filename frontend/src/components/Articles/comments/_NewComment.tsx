@@ -14,6 +14,13 @@ const NewComment: React.FC<NewCommentProps> = ({
 
   const createCommentHelper = async (comment: string) => {
     // Add comment
+    const check = comment.trim();
+
+    if (check.length === 0) {
+      window.alert('Comment cannot be empty');
+      return;
+    }
+
     const commentObj = await createComment(articleId, comment);
     addCommentToState(commentObj);
   };

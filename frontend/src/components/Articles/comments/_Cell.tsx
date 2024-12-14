@@ -60,6 +60,14 @@ const Cell: React.FC<CellProps> = ({
 
   const editCommentHelper = async (comment: string) => {
     // Update comment
+
+    const check = comment.trim();
+
+    if (check.length === 0) {
+      window.alert('Comment cannot be empty');
+      return;
+    }
+
     await editComment(articleId, commentId, comment);
     setIsOpen(false);
     editCommentFromState(commentId, comment);
