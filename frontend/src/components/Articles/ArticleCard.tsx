@@ -26,11 +26,11 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
           {
             method: "GET",
             credentials: "include",
-          }
+          },
         );
         if (response.ok) {
           const favorites = await response.json();
-          // Check if the article ID is in the favorites list 
+          // Check if the article ID is in the favorites list
           setToggleFavorite(favorites.articles.includes(article?.id));
         }
       }
@@ -53,7 +53,7 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
     setLoading(true);
     try {
       if (toggleFavorite) {
-        console.log("deleting favorite", article?.id);
+        // console.log("deleting favorite", article?.id);
         const response = await fetch(
           `http://localhost:3001/api/article/favorite`,
           {
@@ -63,15 +63,15 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
             },
             credentials: "include",
             body: JSON.stringify({ articleId: article?.id }),
-          }
+          },
         );
         if (response.ok) {
-          console.log("Favorite removed successfully");
+          // console.log("Favorite removed successfully");
           setToggleFavorite(false);
         }
-        console.log("this is the response from DELETE /api/article/favorite", response);
+        // console.log("this is the response from DELETE /api/article/favorite", response);
       } else {
-        console.log("posting favorite", article?.id);
+        // console.log("posting favorite", article?.id);
         const response = await fetch(
           `http://localhost:3001/api/article/favorite`,
           {
@@ -81,13 +81,13 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
             },
             credentials: "include",
             body: JSON.stringify({ articleId: article?.id }),
-          }
+          },
         );
         if (response.ok) {
-          console.log("Favorite added successfully");
+          // console.log("Favorite added successfully");
           setToggleFavorite(true);
         }
-        console.log("this is the response from POST /api/article/favorite", response);
+        // console.log("this is the response from POST /api/article/favorite", response);
       }
     } catch (error) {
       console.error("Error updating favorite status:", error);
@@ -97,19 +97,18 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
   }
 
   return (
-    <div
-      className="flex justify-center items-center p-4 shadow-sm"
-    >
+    <div className="flex justify-center items-center p-4 shadow-sm">
       <button
         onClick={handleFavorite}
-        className={`ml-4 pr-6 ${loading ? "text-yellow" : toggleFavorite ? "text-yellow" : "text-gray"
-          }`}
+        className={`ml-4 pr-6 ${
+          loading ? "text-yellow" : toggleFavorite ? "text-yellow" : "text-gray"
+        }`}
         disabled={loading}
       >
         <StarIcon className="h-6 w-6" aria-hidden="true" />
       </button>
       {/* LIVE ARTICLE CARD */}
-      {isLive &&
+      {isLive && (
         <Link
           to={`/live/${articleId}`}
           className="w-9/12 rounded-lg overflow-hidden shadow-lg m-4 transform transition-transform duration-200 
@@ -125,35 +124,26 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
               {author && <span className="ml-2">{author}</span>}
               {publishedAt && <span className="ml-2">{publishedAt}</span>}
             </div>
-            <p className="text-gray text-base">
-              {article?.description}
-            </p>
+            <p className="text-gray text-base">{article?.description}</p>
           </div>
         </Link>
-      }
-      {!isLive &&
+      )}
+      {!isLive && (
         <Link
           to={`/articles/${articleId}`}
           className="w-9/12 rounded-lg overflow-hidden shadow-lg m-4 transform transition-transform duration-200 
-          hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2  border border-lightblue">
+          hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2  border border-lightblue"
+        >
           <div className="px-6 py-4">
             <div className="font-bold text-xl mb-2 ">
               {title && <span>{title}</span>}
               {author && <span className="ml-2">{author}</span>}
-              {isLive &&
-                <span className="ml-2 text-red-500">
-                  LIVE
-                </span>
-              }
+              {isLive && <span className="ml-2 text-red-500">LIVE</span>}
             </div>
-            <p>
-              {
-                publishedAt && <span>{publishedAt}</span>
-              }
-            </p>
+            <p>{publishedAt && <span>{publishedAt}</span>}</p>
           </div>
         </Link>
-      }
+      )}
     </div>
   );
 };

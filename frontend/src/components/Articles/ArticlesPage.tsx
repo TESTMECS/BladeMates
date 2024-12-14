@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import Article from '../../types/Article';
-import { useParams } from 'react-router-dom';
-import apiArticlePageResponse from '../../types/apiArticlePageResponse';
-import Comments from './comments/Comments';
+import { useEffect, useState } from "react";
+import Article from "../../types/Article";
+import { useParams } from "react-router-dom";
+import apiArticlePageResponse from "../../types/apiArticlePageResponse";
+import Comments from "./comments/Comments";
 
 const ArticlesPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,11 +14,11 @@ const ArticlesPage: React.FC = () => {
         const res = await fetch(
           `http://localhost:3001/api/global/article/${id}`,
           {
-            method: 'GET',
-            credentials: 'include',
-          }
+            method: "GET",
+            credentials: "include",
+          },
         );
-        if (!res.ok) alert('Article not found.');
+        if (!res.ok) alert("Article not found.");
         const data: apiArticlePageResponse = await res.json();
         const article: Article = {
           id,
@@ -31,7 +31,7 @@ const ArticlesPage: React.FC = () => {
         };
         setArticle(article);
       } catch (error) {
-        console.error('Error fetching article:', error);
+        console.error("Error fetching article:", error);
       }
     };
     fetchArticle();

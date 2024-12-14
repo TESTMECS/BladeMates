@@ -1,35 +1,31 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import PrivateRoute from './components/PrivateRoute';
-import MainFeed from './components/MainFeed';
-import LoginPage from './components/Landing/LoginPage';
-import Profile from './components/Profile';
-import { AuthProvider } from './context/userContext';
-import ArticlesPage from './components/Articles/ArticlesPage';
-import LiveChat from './components/Articles/LiveChat';
-import { useEffect, useState } from 'react';
-import { MoonIcon, SunIcon } from '@heroicons/react/outline';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
+import MainFeed from "./components/MainFeed";
+import LoginPage from "./components/Landing/LoginPage";
+import Profile from "./components/Profile";
+import { AuthProvider } from "./context/userContext";
+import ArticlesPage from "./components/Articles/ArticlesPage";
+import LiveChat from "./components/Articles/LiveChat";
+import { useEffect, useState } from "react";
+import { MoonIcon, SunIcon } from "@heroicons/react/outline";
 
 const App: React.FC = () => {
   const [darkMode, setDarkMode] = useState<boolean>(false);
-
   useEffect(() => {
-    // need this in order for it to work with Headless UI as Headless UI inserts components in body rather than the root div below.
-
     if (darkMode) {
-      document.body.classList.add('dark');
+      document.body.classList.add("dark");
     } else {
-      document.body.classList.remove('dark');
+      document.body.classList.remove("dark");
     }
   }, [darkMode]);
-
   return (
     <AuthProvider>
       <Router>
         <div
           className={
             darkMode
-              ? 'dark dark:bg-darkblue dark:text-white'
-              : 'bg-beige text-black'
+              ? "dark dark:bg-darkblue dark:text-white"
+              : "bg-beige text-black"
           }
         >
           <button
@@ -49,7 +45,7 @@ const App: React.FC = () => {
             {/* Private route using PrivateRoute component */}
             <Route path="/" element={<PrivateRoute />}>
               <Route path="/home" element={<MainFeed />} />
-              <Route path="/profile/:username" element={<Profile />} />
+              <Route path="/profile/:id" element={<Profile />} />
               <Route path="/articles/:id" element={<ArticlesPage />} />
               <Route path="/live/:id" element={<LiveChat />} />
             </Route>
