@@ -1,87 +1,72 @@
 import { useState, useEffect } from "react";
 import Article from "../../types/Article";
 import ArticleCard from "./ArticleCard";
+import apiArticleOfTheWeekResponse from "../../types/apiArticleOfTheWeekResponse";
+import apiArticlesListResponse from "../../types/apiArticlesListResponse";
 
 const ArticlesFeed: React.FC = () => {
   const [trends, setTrends] = useState<Article[]>([]);
-  // Change this function to get articles from the backend
+  const [articleOfTheWeek, setArticleOfTheWeek] = useState<Article>();
+
   async function fetchTrends() {
-    setTrends([
-      {
-        id: "1",
-        title: "Lorem ipsum dolor sit amet",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://placehold.co/600x400",
-        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        comments: [
-          {
-            id: "1",
-            content: "Lorem ipsum dolor sit amet",
-            articleId: "1",
-            userId: "1",
-          },
-          {
-            id: "2",
-            content: "Lorem ipsum dolor sit amet",
-            articleId: "1",
-            userId: "1",
-          },
-        ],
-        isLive: true, // set the first article as live. 
-      },
-      {
-        id: "2",
-        title: "Lorem ipsum dolor sit amet",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://placehold.co/600x400",
-        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        comments: [
-          {
-            id: "1",
-            content: "Lorem ipsum dolor sit amet",
-            articleId: "2",
-            userId: "1",
-          },
-          {
-            id: "2",
-            content: "Lorem ipsum dolor sit amet",
-            articleId: "2",
-            userId: "1",
-          },
-        ],
-      },
-      {
-        id: "3",
-        title: "Lorem ipsum dolor sit amet",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        image: "https://placehold.co/600x400",
-        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        comments: [
-          {
-            id: "1",
-            content: "Lorem ipsum dolor sit amet",
-            articleId: "3",
-            userId: "1",
-          },
-          {
-            id: "2",
-            content: "Lorem ipsum dolor sit amet",
-            articleId: "3",
-            userId: "1",
-          },
-        ],
-      },
-    ]);
+    // FETCH ARTICLES
+    const response = await fetch("http://localhost:3001/api/global/articles", {
+      method: "GET",
+      credentials: "include",
+    });
+    if (response.ok) {
+      const data: apiArticlesListResponse[] = await response.json();
+
+      setTrends(
+        data.map((article) => ({
+          id: article._id,
+          author: article.author,
+          publishedAt: article.publishedAt,
+          title: article.title,
+        })),
+      );
+    }
   }
-  const liveTrend: Article = trends.filter((article) => article.isLive)[0] || trends[0];
+  async function fetchArticleOfTheWeek() {
+    // FETCH OF THE WEEK
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/article-of-the-week",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+      if (response.ok) {
+        const data: apiArticleOfTheWeekResponse = await response.json();
+        setArticleOfTheWeek({
+          id: data.data._id,
+          author: data.data.author,
+          publishedAt: data.data.publishedAt,
+          title: data.data.title,
+          image: data.data.urlToImage,
+          description: data.data.description,
+          url: data.data.url,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching article of the week:", error);
+    }
+  }
   useEffect(() => {
+    // ON COMPONENT MOUNT, FETCH ARTICLES and ARTICLE OF THE WEEK
     fetchTrends();
+    fetchArticleOfTheWeek();
   }, []);
   if (!trends.length) return <p>Loading articles...</p>;
   return (
     <div>
       <div>
-        <ArticleCard key={liveTrend.id} article={liveTrend} isLive />
+        <ArticleCard
+          key={articleOfTheWeek?.id}
+          article={articleOfTheWeek}
+          isLive
+        />
       </div>
       <div>
         {trends.map((article) => (

@@ -7,6 +7,7 @@ const ListOfTrends: React.FC<ListOfTrendsProps> = ({
   selectedFeed,
   setSelectedFeed,
 }) => {
+  // trneds = trends.enum
   const handleClick = (selection: string) => {
     if (selectedFeed.length === 5) {
       setSelectedFeed(selectedFeed.slice(0, 4));

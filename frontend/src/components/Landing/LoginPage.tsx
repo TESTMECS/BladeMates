@@ -30,11 +30,12 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     if (isRegistering) {
       //REGISTER
-      const response: userIdResponse | customError | thrownError = await registerUser(username, password);
+      const response: userIdResponse | customError | thrownError | undefined = await registerUser(username, password);
       if (isUserIdResponse(response)) {
+        // SUCCESS
         const userId: string = response.userId;
         setIsLoading(false);
-        updateUser({ id: userId })
+        updateUser({ id: userId, username: username })
         navigate("/home");
       } else {
         //ERROR
@@ -54,11 +55,12 @@ const LoginPage: React.FC = () => {
       }
     } else {
       //LOGIN
-      const response: userIdResponse | customError | thrownError = await loginUser(username, password);
+      const response: userIdResponse | customError | thrownError | undefined = await loginUser(username, password);
       if (isUserIdResponse(response)) {
+        // SUCCESS
         const userId: string = response.userId;
         setIsLoading(false);
-        updateUser({ id: userId })
+        updateUser({ id: userId, username: username })
         navigate("/home");
       } else {
         // ERROR

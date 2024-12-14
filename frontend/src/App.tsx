@@ -6,11 +6,18 @@ import Profile from "./components/Profile";
 import { AuthProvider } from "./context/userContext";
 import ArticlesPage from "./components/Articles/ArticlesPage";
 import LiveChat from "./components/Articles/LiveChat";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MoonIcon, SunIcon } from "@heroicons/react/outline";
 
 const App: React.FC = () => {
   const [darkMode, setDarkMode] = useState<boolean>(false);
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [darkMode]);
   return (
     <AuthProvider>
       <Router>
@@ -38,7 +45,7 @@ const App: React.FC = () => {
             {/* Private route using PrivateRoute component */}
             <Route path="/" element={<PrivateRoute />}>
               <Route path="/home" element={<MainFeed />} />
-              <Route path="/profile/:username" element={<Profile />} />
+              <Route path="/profile/:id" element={<Profile />} />
               <Route path="/articles/:id" element={<ArticlesPage />} />
               <Route path="/live/:id" element={<LiveChat />} />
             </Route>

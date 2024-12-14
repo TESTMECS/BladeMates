@@ -1,17 +1,14 @@
 import express from 'express';
-import { handleRouteError, validate, validateWithType } from '../utils/Error';
+import { handleRouteError } from '../utils/Error';
 import { getArticleOfTheWeek } from '../data/articles';
-import { redisConnection } from '../config/redisConnection';
 declare module 'express-session' {
-    interface SessionData {
-        userId: string;
-    }
+  interface SessionData {
+    userId: string;
+  }
 }
-
-
 const router = express.Router();
-
 router.route('/').get(async (req, res) => {
+
     // maybe redisify to expire at the next monday 12AM?
     try {
         const client = await redisConnection();
@@ -32,5 +29,5 @@ router.route('/').get(async (req, res) => {
     }
     return;
 })
-
 export { router as articleOTWRouter };
+

@@ -1,6 +1,7 @@
 import ArticlesFeed from "./Articles/ArticlesFeed";
 import ListOfTrends from "./ListOfTrends";
 import TrendList from "./TrendList";
+import Notifications from "./Notifications";
 interface FeedProps {
   currentFeed: string;
   selectedFeed: string[];
@@ -29,6 +30,7 @@ const Feed: React.FC<FeedProps> = ({
           setSelectedFeed={setSelectedFeed}
         />
       )}
+      {currentFeed === "Notifications" && <Notifications />}
     </div>
   );
 };

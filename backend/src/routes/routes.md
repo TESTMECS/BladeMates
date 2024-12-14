@@ -141,3 +141,109 @@ tags: comma separated strings. case sensitive
   ]
 }
 ```
+## /api/global/articles
+
+### GET - no parms  
+#### Response
+```typescript
+{
+    _id: string
+    title: string
+    author: string
+    publishedAt: string
+}
+```
+
+## /api/global/articles/:id
+
+### GET - no parms
+
+#### Response
+```typescript
+{
+      title: string
+      author: string 
+      publishedAt: string 
+      description: string 
+      url: string 
+      imageUrl: string 
+      sourceName: string 
+}
+```
+
+## /api/comments/:articleId
+
+### GET
+
+#### Response
+```typescript
+{
+  "data": {
+    "_id": string,
+    "articleId": string,
+    "userId": string,
+    "username": string,
+    "content": string,
+    "datePosted": string // iso-format
+  }[]
+}
+```
+
+## /api/comment/:articleId
+
+### POST
+```typescript
+{
+  "content": string,
+}
+```
+
+#### Response
+```typescript
+{
+  "data": {
+    "_id": string,
+    "articleId": string,
+    "userId": string,
+    "username": string,
+    "content": string,
+    "datePosted": string // iso-format
+  }
+}
+```
+
+### PUT
+```typescript
+{
+  "content": string,
+  "commentId": string
+}
+```
+
+#### Response
+```typescript
+{
+  "data": {
+    "_id": string,
+    "articleId": string,
+    "userId": string,
+    "username": string,
+    "content": string,
+    "datePosted": string // iso-format
+  }
+}
+```
+
+### DELETE
+```typescript
+{
+  "commentId": string
+}
+```
+
+#### Response
+```typescript
+{
+  "commentId": string
+}
+```

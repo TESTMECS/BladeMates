@@ -1,24 +1,27 @@
-export function validateUserInput(input: string): boolean {
-  // Check if the input is not empty
-  // If the input is null, undefined, or only contains whitespace, return false
+export function validateUserInput(input: string): { isValid: boolean; message: string } {
+  // Check if the input is null, undefined, or only contains whitespace
   if (!input || input.trim().length === 0) {
-    return false;
+    return { isValid: false, message: "Input cannot be empty or whitespace only." };
   }
 
-  // minimum and maximum length for the input
+  // Minimum and maximum length for the input
   const minLength = 3;
   const maxLength = 20;
 
-  // allows only alphanumeric characters
-  const validPattern = /^[a-zA-Z0-9]+$/;
-
-  if (input.length < minLength || input.length > maxLength) {
-    return false;
+  if (input.length < minLength) {
+    return { isValid: false, message: `Input must be at least ${minLength} characters long.` };
   }
+
+  if (input.length > maxLength) {
+    return { isValid: false, message: `Input must not exceed ${maxLength} characters.` };
+  }
+
+  // Allow alphanumeric characters and spaces
+  const validPattern = /^[a-zA-Z0-9 ]+$/;
 
   if (!validPattern.test(input)) {
-    return false;
+    return { isValid: false, message: "Input can only contain letters, numbers, and spaces." };
   }
 
-  return true;
+  return { isValid: true, message: "Valid input." };
 }

@@ -21,7 +21,7 @@ import { ObjectId } from 'mongodb';
     for (let j = 0; j < idsArray.length; j++) {
       if (i !== j) {
         //console.log(await usersCollection.findOne({ _id: idsArray[i] }));
-        await follow(idsArray[i], idsArray[j]);
+        await follow(idsArray[i].toString(), idsArray[j].toString());
       }
     }
   }
@@ -29,7 +29,7 @@ import { ObjectId } from 'mongodb';
   for (let i = 0; i < idsArray.length; i++) {
     const randomIndex = Math.floor(Math.random() * idsArray.length);
     if (randomIndex !== i) {
-      await unfollow(idsArray[i], idsArray[randomIndex]);
+      await unfollow(idsArray[i].toString(), idsArray[randomIndex].toString());
     }
   }
 
