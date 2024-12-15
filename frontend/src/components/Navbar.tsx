@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/userContext";
-import { UserIcon, TrendingUpIcon, BellIcon } from "@heroicons/react/outline";
+import { UserIcon, BellIcon } from "@heroicons/react/outline";
+
 interface NavbarProps {
   setCurrentFeed: (feed: string) => void;
 }
@@ -28,14 +29,6 @@ const Navbar: React.FC<NavbarProps> = ({ setCurrentFeed }) => {
                   <UserIcon className="h-5 w-5 mr-1" aria-hidden="true" />
                   Profile
                 </Link>
-
-                <button
-                  onClick={() => setCurrentFeed("ListOfTrends")}
-                  className="flex items-center hover:text-lightblue dark:hover:text-purple px-3 py-2 rounded-md text-lg font-semibold transition-colors duration-200"
-                >
-                  <TrendingUpIcon className="h-5 w-5 mr-1" aria-hidden="true" />
-                  Trends
-                </button>
 
                 {/* Notifications */}
                 <button

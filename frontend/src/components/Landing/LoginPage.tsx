@@ -3,7 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/userContext";
 import Spinner from "../../assets/Spinner";
 import WelcomeContent from "./WelcomeContent";
-import { thrownError, customError, userIdResponse, isCustomError, isThrownError, createErrorDisplay, isUserIdResponse } from "../../utils/errors";
+import {
+  thrownError,
+  customError,
+  userIdResponse,
+  isCustomError,
+  isThrownError,
+  createErrorDisplay,
+  isUserIdResponse,
+} from "../../utils/errors";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -30,12 +38,13 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     if (isRegistering) {
       //REGISTER
-      const response: userIdResponse | customError | thrownError | undefined = await registerUser(username, password);
+      const response: userIdResponse | customError | thrownError | undefined =
+        await registerUser(username, password);
       if (isUserIdResponse(response)) {
         // SUCCESS
         const userId: string = response.userId;
         setIsLoading(false);
-        updateUser({ id: userId, username: username })
+        updateUser({ id: userId, username: username, friends: [] });
         navigate("/home");
       } else {
         //ERROR
@@ -51,22 +60,22 @@ const LoginPage: React.FC = () => {
           setError(errorObject.error);
           return;
         }
-
       }
     } else {
       //LOGIN
-      const response: userIdResponse | customError | thrownError | undefined = await loginUser(username, password);
+      const response: userIdResponse | customError | thrownError | undefined =
+        await loginUser(username, password);
       if (isUserIdResponse(response)) {
         // SUCCESS
         const userId: string = response.userId;
         setIsLoading(false);
-        updateUser({ id: userId, username: username })
+        updateUser({ id: userId, username: username, friends: [] });
         navigate("/home");
       } else {
         // ERROR
         if (isCustomError(response)) {
           const errorObject: customError = response;
-          //specific errors 
+          //specific errors
           setIsLoading(false);
           setError("");
           setCustomError(createErrorDisplay(errorObject));
@@ -129,13 +138,13 @@ const LoginPage: React.FC = () => {
             </div>
             {isLoading && <Spinner />}
             {error && <p className="text-red">{error}</p>}
-            {customError && customError.length > 0 ? (
-              customError?.map((error, index) => (
-                <p key={index} className="text-red">
-                  {error}
-                </p>
-              ))
-            ) : null}
+            {customError && customError.length > 0
+              ? customError?.map((error, index) => (
+                  <p key={index} className="text-red">
+                    {error}
+                  </p>
+                ))
+              : null}
             <div className="flex items-center">
               <input
                 id="register"

@@ -33,7 +33,6 @@ router.route('/').get(async (req, res) => {
     console.log('articleOTW not found in cache');
   }
 
-
   try {
     const article = await getArticleOfTheWeek();
     if(!exists){
@@ -44,6 +43,5 @@ router.route('/').get(async (req, res) => {
     handleRouteError(error, res);
   }
   return;
-})
+});
 export { router as articleOTWRouter };
-

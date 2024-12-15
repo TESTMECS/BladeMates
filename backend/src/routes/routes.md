@@ -67,28 +67,6 @@
 ```
 
 
-
-## /api/user/notifications
-
-### POST - Body
-```typescript
-{}
-```
-
-#### Response
-```typescript
-type Notification = {
-  _id: string,
-  friendId: string,
-  articleId: string,
-  read: boolean
-}
-{
-  "notifications": Notification[]
-}
-```
-
-
 ## /api/friend/follow
 
 ### POST - Body

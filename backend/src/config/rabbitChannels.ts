@@ -1,13 +1,17 @@
-import { rabbitConnection } from './rabbitConnection';
+import { rabbitConnection } from "./rabbitConnection";
 
 const createChannel = async () => {
   const connection = await rabbitConnection();
 
   if (!connection) {
-    throw new Error('RabbitMQ connection not found');
+    throw new Error("RabbitMQ connection not found");
   }
 
-  return await connection.createChannel();
+  const channel = await connection.createChannel();
+  const exchangeName = "notification_exchange";
+  const exchangeType = "fanout";
+  await channel.assertExchange(exchangeName, exchangeType, { durable: true });
+  return { channel, exchangeName };
 };
 
 let _notifications = createChannel();
