@@ -7,29 +7,36 @@ import apiArticlesListResponse from "../../types/apiArticlesListResponse";
 const ArticlesFeed: React.FC = () => {
   const [trends, setTrends] = useState<Article[]>([]);
   const [articleOfTheWeek, setArticleOfTheWeek] = useState<Article>();
+
   async function fetchTrends() {
     // FETCH ARTICLES
     const response = await fetch("http://localhost:3001/api/global/articles", {
       method: "GET",
-      credentials: 'include',
+      credentials: "include",
     });
     if (response.ok) {
       const data: apiArticlesListResponse[] = await response.json();
-      setTrends(data.map((article) => ({
-        id: article._id,
-        author: article.author,
-        publishedAt: article.publishedAt,
-        title: article.title
-      })));
+
+      setTrends(
+        data.map((article) => ({
+          id: article._id,
+          author: article.author,
+          publishedAt: article.publishedAt,
+          title: article.title,
+        })),
+      );
     }
   }
   async function fetchArticleOfTheWeek() {
-    // FETCH OF THE WEEK 
+    // FETCH OF THE WEEK
     try {
-      const response = await fetch("http://localhost:3001/api/article-of-the-week", {
-        method: "GET",
-        credentials: 'include',
-      });
+      const response = await fetch(
+        "http://localhost:3001/api/article-of-the-week",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
       if (response.ok) {
         const data: apiArticleOfTheWeekResponse = await response.json();
         setArticleOfTheWeek({
@@ -39,7 +46,7 @@ const ArticlesFeed: React.FC = () => {
           title: data.data.title,
           image: data.data.urlToImage,
           description: data.data.description,
-          url: data.data.url
+          url: data.data.url,
         });
       }
     } catch (error) {
@@ -50,21 +57,20 @@ const ArticlesFeed: React.FC = () => {
     // ON COMPONENT MOUNT, FETCH ARTICLES and ARTICLE OF THE WEEK
     fetchTrends();
     fetchArticleOfTheWeek();
-  },
-    []);
+  }, []);
   if (!trends.length) return <p>Loading articles...</p>;
   return (
     <div>
       <div>
         <ArticleCard
           key={articleOfTheWeek?.id}
-          article={articleOfTheWeek} isLive />
+          article={articleOfTheWeek}
+          isLive
+        />
       </div>
       <div>
         {trends.map((article) => (
-          <ArticleCard
-            key={article.id}
-            article={article} />
+          <ArticleCard key={article.id} article={article} />
         ))}
       </div>
     </div>

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import socket from "../../hooks/socket";
+
 import { useParams } from "react-router-dom";
 import Article from "../../types/Article";
 import Message from "../../types/Message";
 import { useAuth } from "../../context/userContext";
 import { validateUserInput } from "../../utils/validation";
 import apiArticleOfTheWeekResponse from "../../types/apiArticleOfTheWeekResponse";
+import useSocket from "../../hooks/useSocket";
 
 const LiveChat: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth();
+  const { sendMessage, message } = useSocket();
   const [article, setArticle] = useState<Article>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
@@ -17,10 +19,13 @@ const LiveChat: React.FC = () => {
     const fetchArticle = async () => {
       if (!id) return;
       try {
-        const response = await fetch("http://localhost:3001/api/article-of-the-week", {
-          method: "GET",
-          credentials: 'include',
-        });
+        const response = await fetch(
+          "http://localhost:3001/api/article-of-the-week",
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
         if (response.ok) {
           const data: apiArticleOfTheWeekResponse = await response.json();
           setArticle({
@@ -31,34 +36,24 @@ const LiveChat: React.FC = () => {
             image: data.data.urlToImage,
             description: data.data.description,
             url: data.data.url,
-            content: data.data.content
+            content: data.data.content,
           });
         }
       } catch (error) {
         console.error("Error fetching article of the week:", error);
       }
-    }
-    fetchArticle();
-    // Listen for incoming messages
-    socket.on("receive_message", (message: Message) => {
-      const newMessage: Message = {
-        userId: message.userId,
-        username: message.username,
-        message: message.message,
-        timestamp: message.timestamp,
-      };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
-    // Cleanup on component unmount
-    return () => {
-      socket.off("receive_message");
     };
+    fetchArticle();
   }, []);
-  const sendMessage = () => {
+  useEffect(() => {
+    // Update the messages when the message state changes
+    setMessages(message);
+  }, [message]);
+  const sendMessageFunc = () => {
     // validate the user input.
     const result: {
       isValid: boolean;
-      message: string
+      message: string;
     } = validateUserInput(newMessage);
     if (result.isValid && isAuthenticated) {
       // Send the new message
@@ -67,7 +62,8 @@ const LiveChat: React.FC = () => {
         username: user.username,
         message: newMessage.trim(),
       };
-      socket.emit("send_message", message_json); // Emit the new message
+      console.log("Sending message");
+      sendMessage(message_json);
       setNewMessage(""); // Clear input field
     } else {
       alert(result.message);
@@ -75,22 +71,14 @@ const LiveChat: React.FC = () => {
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      sendMessage();
+      sendMessageFunc();
     }
   };
   return (
-    <div
-      className="h-fit"
-    >
+    <div className="h-fit">
       {/* Article Information */}
-      <div
-        className="pt-16 p-4 border-b border-lightblue shadow-md"
-      >
-        <h1
-          className="text-3xl font-bold mb-4"
-        >
-          {article?.title}
-        </h1>
+      <div className="pt-16 p-4 border-b border-lightblue shadow-md">
+        <h1 className="text-3xl font-bold mb-4">{article?.title}</h1>
         <p className="text-lg "> By: {article?.author}</p>
         <p className="text-lg "> Published: {article?.publishedAt}</p>
         <img
@@ -98,11 +86,15 @@ const LiveChat: React.FC = () => {
           alt={article?.title}
           className="w-full h-auto mb-4"
         />
-        <p className="text-lg font-bold mb-4"> Preview: {article?.description}</p>
+        <p className="text-lg font-bold mb-4">
+          {" "}
+          Preview: {article?.description}
+        </p>
         <a
           href={article?.url}
           target="_blank"
-          className="mb-4 text-3xl font-bold underline pointer text-lightblue">
+          className="mb-4 text-3xl font-bold underline pointer text-lightblue"
+        >
           {article?.url}
         </a>
       </div>
@@ -137,7 +129,7 @@ const LiveChat: React.FC = () => {
             className="input-field flex-grow p-2 text-white border border-lightblue rounded-l-lg focus:outline-none focus:ring-2 focus:ring-lightblue bg-gray dark:bg-darkgray pr-6"
           />
           <button
-            onClick={sendMessage}
+            onClick={sendMessageFunc}
             className="p-2 text-2xl rounded-r-lg bg-lightpink hover:bg-lightblue dark:bg-purple dark:hover:bg-green w-60"
           >
             Send

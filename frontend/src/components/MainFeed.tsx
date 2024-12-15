@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FeedSelector from "./FeedSelector";
 import Feed from "./Feed";
 import Navbar from "./Navbar";
+import useSocket from "../hooks/useSocket";
+
 const MainFeed: React.FC = () => {
   const [currentFeed, setCurrentFeed] = useState<string>("Discover");
   const [selectedFeed, setSelectedFeed] = useState<string[]>([
     "Discover",
     "Following",
   ]);
+  const { connectSocket, socket } = useSocket();
+  useEffect(() => {
+    if (!socket) connectSocket();
+  }, [socket, connectSocket]);
+
   return (
     <div className="grid grid-cols-5 h-full">
       <div className="col-span-1 md:fixed md:h-full flex items-center justify-center">

@@ -67,28 +67,6 @@
 ```
 
 
-
-## /api/user/notifications
-
-### POST - Body
-```typescript
-{}
-```
-
-#### Response
-```typescript
-type Notification = {
-  _id: string,
-  friendId: string,
-  articleId: string,
-  read: boolean
-}
-{
-  "notifications": Notification[]
-}
-```
-
-
 ## /api/friend/follow
 
 ### POST - Body
@@ -171,3 +149,79 @@ tags: comma separated strings. case sensitive
 }
 ```
 
+## /api/comments/:articleId
+
+### GET
+
+#### Response
+```typescript
+{
+  "data": {
+    "_id": string,
+    "articleId": string,
+    "userId": string,
+    "username": string,
+    "content": string,
+    "datePosted": string // iso-format
+  }[]
+}
+```
+
+## /api/comment/:articleId
+
+### POST
+```typescript
+{
+  "content": string,
+}
+```
+
+#### Response
+```typescript
+{
+  "data": {
+    "_id": string,
+    "articleId": string,
+    "userId": string,
+    "username": string,
+    "content": string,
+    "datePosted": string // iso-format
+  }
+}
+```
+
+### PUT
+```typescript
+{
+  "content": string,
+  "commentId": string
+}
+```
+
+#### Response
+```typescript
+{
+  "data": {
+    "_id": string,
+    "articleId": string,
+    "userId": string,
+    "username": string,
+    "content": string,
+    "datePosted": string // iso-format
+  }
+}
+```
+
+### DELETE
+```typescript
+{
+  "commentId": string
+}
+```
+
+#### Response
+```typescript
+{
+  "commentId": string
+}
+```

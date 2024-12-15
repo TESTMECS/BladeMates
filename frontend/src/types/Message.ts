@@ -1,8 +1,8 @@
 type Message = {
-  userId: number; //change later.Q
+  userId: string;
   username: string;
   message: string;
-  timestamp: string;
+  timestamp?: string;
 };
 
 export default Message;

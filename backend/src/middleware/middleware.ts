@@ -1,7 +1,8 @@
-import express from 'express';
-import session from 'express-session';
-import cors from 'cors';
-import { frontendConfig } from '../config/settings';
+import express from "express";
+import session from "express-session";
+import cors from "cors";
+import { frontendConfig } from "../config/settings";
+import { credentials } from "amqplib";
 /**
  *
  * @param {express.Express} app
@@ -11,17 +12,17 @@ export function createMiddlewaresWith(app: express.Express) {
     cors({
       origin: frontendConfig.url,
       credentials: true,
-    })
+    }),
   );
 
   app.use(express.json());
   app.use(
     session({
-      secret: 'Unemployment-Gang',
+      secret: "Unemployment-Gang",
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: false },
-    })
+      cookie: { secure: false, sameSite: true },
+    }),
   );
 
   // Middleware to log the requester's URL
@@ -55,4 +56,3 @@ export function createMiddlewaresWith(app: express.Express) {
 //     next();
 //   }
 // }
-

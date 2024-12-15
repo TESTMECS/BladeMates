@@ -1,14 +1,10 @@
 export type Notification = {
-  _id: string;
-  friendId: string;
-  articleId: string;
+  message: string;
   read: boolean;
 };
-
 export type User = {
   username: string;
   hashedPassword: string;
-
   comments: string[];
   favoriteArticles: string[];
   friends: User[];

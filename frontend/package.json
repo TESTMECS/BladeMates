@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -12,12 +12,12 @@
     "build-and-run": "npm run build && npm run serve"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^1.0.6",
     "mongodb": "^6.11.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
-    "react-uuid": "^2.0.0",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {

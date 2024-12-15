@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/userContext";
+
 import { HomeIcon, UserIcon } from "@heroicons/react/outline";
+
 interface NavbarProps {
   setCurrentFeed: (feed: string) => void;
 }
@@ -22,19 +24,21 @@ const Navbar: React.FC<NavbarProps> = () => {
             {isAuthenticated && (
               <>
                 <Link
-                  to="/home"
-                  className="flex items-center hover:text-lightblue dark:hover:text-purple px-3 py-2 rounded-md text-lg font-semibold transition-colors duration-200"
-                >
-                  <HomeIcon className="h-5 w-5 mr-1" aria-hidden="true" />
-                  Home
-                </Link>
-                <Link
-                  to={`/profile/${user.username}`} // Use dynamic username
+                  to={`/profile/${user?.id}`}
                   className="flex items-center hover:text-lightblue dark:hover:text-purple px-3 py-2 rounded-md text-lg font-semibold transition-colors duration-200"
                 >
                   <UserIcon className="h-5 w-5 mr-1" aria-hidden="true" />
                   Profile
                 </Link>
+
+                {/* Notifications */}
+                <button
+                  className="flex items-center hover:text-lightblue dark:hover:text-purple px-3 py-2 rounded-md text-lg font-semibold transition-colors duration-200"
+                  onClick={() => setCurrentFeed("Notifications")}
+                >
+                  <BellIcon className="h-5 w-5 mr-1" aria-hidden="true" />
+                  Notifcations
+                </button>
               </>
             )}
           </div>
