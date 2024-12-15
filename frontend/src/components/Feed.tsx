@@ -1,18 +1,13 @@
 import ArticlesFeed from "./Articles/ArticlesFeed";
-import ListOfTrends from "./ListOfTrends";
 import TrendList from "./TrendList";
 import Notifications from "./Notifications";
+import FollowingFeed from "./FollowingFeed";
 interface FeedProps {
   currentFeed: string;
   selectedFeed: string[];
   setSelectedFeed: (feed: string[]) => void;
 }
-const Feed: React.FC<FeedProps> = ({
-  currentFeed = "Discover",
-  selectedFeed,
-  setSelectedFeed,
-}) => {
-  // TODO: add rendering based on the feed type
+const Feed: React.FC<FeedProps> = ({ currentFeed = "Discover" }) => {
   return (
     <div>
       {/* Display the ArticlesFeed component if feed is "discover" or default */}
@@ -21,15 +16,7 @@ const Feed: React.FC<FeedProps> = ({
       {currentFeed === "Following" && <TrendList />}
       {currentFeed === "AI" && <p>Showing Articles with AI Trend Tag...</p>}
       {currentFeed === "IoT" && <p>Showing Articles with IoT Trend Tag...</p>}
-      {currentFeed === "Blockchain" && (
-        <p>Showing Articles with Blockchain Trend Tag...</p>
-      )}
-      {currentFeed === "ListOfTrends" && (
-        <ListOfTrends
-          selectedFeed={selectedFeed}
-          setSelectedFeed={setSelectedFeed}
-        />
-      )}
+      {currentFeed === "Following" && <FollowingFeed />}
       {currentFeed === "Notifications" && <Notifications />}
     </div>
   );
