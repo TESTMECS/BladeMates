@@ -1,6 +1,6 @@
 import { users } from "../config/mongoCollections";
-import { validateWithType, StatusError, validate } from "../utils/Error";
-import { ObjectId, PushOperator } from "mongodb";
+import { validateWithType, StatusError } from "../utils/Error";
+import { ObjectId } from "mongodb";
 import { userSchema } from "../validation/user";
 import { User } from "../types/mongo";
 import { sendNotification } from "../services/rabbitmqProducer";
@@ -17,29 +17,10 @@ const addNotifications = async (userId: string, articleId: string) => {
       friends: { $elemMatch: { _id: new ObjectId(userId) } },
     })
     .toArray();
-  // const notification = {
-  //   _id: new ObjectId(),
-  //   friendId: new ObjectId(userId),
-  //   articleId: articleId,
-  //   read: false,
-  // };
   const followerIds = followers.map((follower) => follower._id);
   if (followerIds.length === 0) {
     return;
   }
-  // const insertedInfo = await usersCollection.updateMany(
-  //   {
-  //     _id: { $in: followerIds },
-  //   },
-  //   {
-  //     $push: {
-  //       notifications: notification,
-  //     } as unknown as PushOperator<User>,
-  //   },
-  // );
-  // if (insertedInfo.modifiedCount === 0) {
-  //   throw new StatusError(500, "Failed to add notifications to database.");
-  // }
   for (const follower of followers) {
     console.log("Sending notification to", follower._id.toHexString());
     sendNotification(

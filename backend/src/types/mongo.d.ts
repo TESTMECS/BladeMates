@@ -1,19 +1,11 @@
-export type Notification = {
-  _id: ObjectId;
-  friendId: ObjectId;
-  articleId: string;
-  read: boolean;
-};
-
 export type User = {
   _id: ObjectId;
   username: string;
   hashedPassword: string;
   comments: ObjectId[];
   favoriteArticles: string[];
-  friends: { _id: ObjectId; name: string }[];
+  friends: { _id: ObjectId; username: string }[];
   trends: string[];
-  notifications: Notification[];
 };
 
 export type Comment = {
@@ -26,7 +18,7 @@ export type Comment = {
   datePosted: string;
 };
 
-export type UserOptionalId = Omit<User, '_id'> & Partial<Pick<User, '_id'>>;
+export type UserOptionalId = Omit<User, "_id"> & Partial<Pick<User, "_id">>;
 
-export type CommentOptionalId = Omit<Comment, '_id'> &
-  Partial<Pick<Comment, '_id'>>;
+export type CommentOptionalId = Omit<Comment, "_id"> &
+  Partial<Pick<Comment, "_id">>;

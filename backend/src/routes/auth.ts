@@ -1,9 +1,9 @@
-import express from 'express';
-import { handleRouteError, validate } from '../utils/Error';
-import { authSchema } from '../validation/auth';
-import { login, register } from '../data/auth';
+import express from "express";
+import { handleRouteError, validate } from "../utils/Error";
+import { authSchema } from "../validation/auth";
+import { login, register, getUsernameFromId } from "../data/auth";
 
-declare module 'express-session' {
+declare module "express-session" {
   interface SessionData {
     userId: string;
   }
@@ -11,20 +11,20 @@ declare module 'express-session' {
 
 const router = express.Router();
 
-router.route('/login').post(async (req, res) => {
+router.route("/login").post(async (req, res) => {
   try {
     const loginCredentials = validate(authSchema, req.body);
 
     const userId = await login(
       loginCredentials.username,
-      loginCredentials.password
+      loginCredentials.password,
     );
     if (userId) {
       req.session.userId = userId;
 
       res.json({ userId });
     } else {
-      res.status(500).send('Login Failed');
+      res.status(500).send("Login Failed");
     }
   } catch (error) {
     handleRouteError(error, res);
@@ -33,13 +33,13 @@ router.route('/login').post(async (req, res) => {
   return;
 });
 
-router.route('/register').post(async (req, res) => {
+router.route("/register").post(async (req, res) => {
   try {
     const registerCredentials = validate(authSchema, req.body);
 
     const userId = await register(
       registerCredentials.username,
-      registerCredentials.password
+      registerCredentials.password,
     );
 
     if (userId) {
@@ -47,7 +47,19 @@ router.route('/register').post(async (req, res) => {
 
       res.json({ userId });
     } else {
-      res.status(500).send('Register Failed');
+      res.status(500).send("Register Failed");
+    }
+  } catch (error) {
+    handleRouteError(error, res);
+  }
+  return;
+});
+
+router.route("/checkAuth").get(async (req, res) => {
+  try {
+    if (req.session.userId) {
+      const username = await getUsernameFromId(req.session.userId);
+      res.json({ userId: req.session.userId, username });
     }
   } catch (error) {
     handleRouteError(error, res);

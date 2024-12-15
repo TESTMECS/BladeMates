@@ -8,17 +8,7 @@ declare module "express-session" {
   }
 }
 const router = express.Router();
-// maybe should be GET?
-// router.route("/notifications").post(async (req, res) => {
-//   try {
-//     const userIdData = validate(stringObjectIdSchema, req.session.userId);
-//     const notifications = await getNotifications(userIdData);
-//     res.status(200).send({ notifications });
-//   } catch (error) {
-//     handleRouteError(error, res);
-//   }
-//   return;
-// });
+
 router.route("/profileData/:id").get(async (req, res) => {
   try {
     const userIdData = validate(stringObjectIdSchema, req.params.id);

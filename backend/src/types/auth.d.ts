@@ -1,10 +1,3 @@
-export type Notification = {
-  _id: string;
-  friendId: string;
-  articleId: string;
-  read: boolean;
-};
-
 export type User = {
   username: string;
   hashedPassword: string;
@@ -13,5 +6,4 @@ export type User = {
   favoriteArticles: string[];
   friends: User[];
   trends: string[];
-  // notifications: Notification[];
 };
