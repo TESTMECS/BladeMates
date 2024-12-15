@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/userContext";
 import { UserIcon, TrendingUpIcon, BellIcon } from "@heroicons/react/outline";
+
 interface NavbarProps {
   setCurrentFeed: (feed: string) => void;
 }

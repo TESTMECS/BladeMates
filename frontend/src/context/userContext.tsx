@@ -30,6 +30,7 @@ interface AuthContextProps {
 type checkAuthResponse = {
   userId: string;
   username: string;
+  friends: { _id: string; username: string }[];
 };
 //CREATE CONTEXT
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -54,7 +55,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         );
         if (response.ok) {
           const data: checkAuthResponse = await response.json();
-          updateUser({ id: data.userId, username: data.username });
+          console.log("friends", data.friends);
+          updateUser({
+            id: data.userId,
+            username: data.username,
+            friends: data.friends,
+          });
           setIsAuthenticated(true);
         }
       } catch (error) {

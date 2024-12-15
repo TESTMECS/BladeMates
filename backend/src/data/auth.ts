@@ -55,3 +55,15 @@ export async function getUsernameFromId(userId: string): Promise<string> {
   }
   return user.username;
 }
+export async function getFriendsFromId(
+  userId: string,
+): Promise<{ _id: string; username: string }[]> {
+  const usersCollection = await users();
+  const user = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(userId),
+  });
+  if (user === null) {
+    throw new StatusError(404, "User not found");
+  }
+  return user.friends;
+}

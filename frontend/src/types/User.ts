@@ -9,8 +9,7 @@ export type User = {
   profileImage: string;
   favoriteArticles?: Article[];
   comments?: Comment[];
-  friends?: User[];
+  friends?: { _id: string; username: string }[];
   Trends?: Trends[];
   // Notifications: Notifications[]; maybe use this later
 };
-

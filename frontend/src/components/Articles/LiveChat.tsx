@@ -11,7 +11,7 @@ import useSocket from "../../hooks/useSocket";
 const LiveChat: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth();
-  const { socket, message } = useSocket();
+  const { sendMessage, message } = useSocket();
   const [article, setArticle] = useState<Article>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
@@ -44,17 +44,18 @@ const LiveChat: React.FC = () => {
       }
     };
     fetchArticle();
-    // Listen for incoming messages using Hook
-    if (!socket) return; //maybe return error
+  }, []);
+  useEffect(() => {
+    // Update the messages when the message state changes
     setMessages(message);
-  }, [messages, socket, message]);
-  const sendMessage = () => {
+  }, [message]);
+  const sendMessageFunc = () => {
     // validate the user input.
     const result: {
       isValid: boolean;
       message: string;
     } = validateUserInput(newMessage);
-    if (result.isValid && isAuthenticated && socket) {
+    if (result.isValid && isAuthenticated) {
       // Send the new message
       const message_json = {
         userId: user?.id,
@@ -62,7 +63,7 @@ const LiveChat: React.FC = () => {
         message: newMessage.trim(),
       };
       console.log("Sending message");
-      socket.emit("send_message", message_json); // Emit the new message
+      sendMessage(message_json);
       setNewMessage(""); // Clear input field
     } else {
       alert(result.message);
@@ -70,7 +71,7 @@ const LiveChat: React.FC = () => {
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      sendMessage();
+      sendMessageFunc();
     }
   };
   return (
@@ -128,7 +129,7 @@ const LiveChat: React.FC = () => {
             className="input-field flex-grow p-2 text-white border border-lightblue rounded-l-lg focus:outline-none focus:ring-2 focus:ring-lightblue bg-gray dark:bg-darkgray pr-6"
           />
           <button
-            onClick={sendMessage}
+            onClick={sendMessageFunc}
             className="p-2 text-2xl rounded-r-lg bg-lightpink hover:bg-lightblue dark:bg-purple dark:hover:bg-green w-60"
           >
             Send

@@ -62,7 +62,8 @@ export async function follow(
   if (insertedInfo2.modifiedCount === 0) {
     throw new StatusError(500, "Failed to add follow");
   }
-  // sendNotification(followerId, `${userId} followed ${userToFollow}!`);
+  // Send following Notification
+  sendNotification(followeeId, `${followerId} followed ${followeeId}`);
 }
 
 export async function unfollow(

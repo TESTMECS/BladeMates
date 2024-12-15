@@ -10,7 +10,7 @@ import { sendNotification } from "../services/rabbitmqProducer";
  * @param articleId
  */
 const addNotifications = async (userId: string, articleId: string) => {
-  sendNotification(userId, `${userId} favorited ${articleId}!`);
+  sendNotification(userId, `${userId} favorited ${articleId}`);
   const usersCollection = await users();
   const followers = await usersCollection
     .find({
@@ -25,7 +25,7 @@ const addNotifications = async (userId: string, articleId: string) => {
     console.log("Sending notification to", follower._id.toHexString());
     sendNotification(
       follower._id.toHexString(),
-      `${userId} favorited ${articleId}!`,
+      `${userId} favorited ${articleId}`,
     );
   }
 };

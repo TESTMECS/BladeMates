@@ -1,6 +1,10 @@
 import express from "express";
 import { handleRouteError, validate } from "../utils/Error";
-import { getUserProfileData, getFavoriteArticles } from "../data/user";
+import {
+  getUserProfileData,
+  getFavoriteArticles,
+  getNotifications,
+} from "../data/user";
 import { stringObjectIdSchema } from "../validation/mongo";
 declare module "express-session" {
   interface SessionData {
@@ -25,6 +29,16 @@ router.route("/favorites/:id").get(async (req, res) => {
     const articles: string[] = await getFavoriteArticles(userId);
 
     res.status(200).send({ articles });
+  } catch (error) {
+    handleRouteError(error, res);
+  }
+  return;
+});
+router.route("/notifications/:id").get(async (req, res) => {
+  try {
+    const userId = validate(stringObjectIdSchema, req.params.id);
+    const notifications = await getNotifications(userId);
+    res.status(200).send({ notifications });
   } catch (error) {
     handleRouteError(error, res);
   }
