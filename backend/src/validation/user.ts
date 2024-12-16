@@ -22,7 +22,7 @@ export const userSchema = z.object({
   friends: z.array(
     z.object({
       _id: objectIdSchema,
-      name: usernameSchema,
+      username: usernameSchema,
     }),
   ),
   trends: z.array(stringSchema),

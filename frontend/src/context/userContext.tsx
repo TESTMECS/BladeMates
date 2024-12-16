@@ -63,8 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           });
           setIsAuthenticated(true);
         }
-      } catch (error) {
-        console.log(error);
+      } catch (_error) {
         setIsAuthenticated(false);
       } finally {
         setloading(false);

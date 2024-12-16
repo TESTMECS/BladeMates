@@ -28,6 +28,14 @@ function handleNotification(notification: string, userId: string) {
         read: false,
       };
     }
+    if (action === "unfollowed") {
+      const link = `/profile/${from}`; // link to the user that unfollowed
+      return {
+        message: `One of your friends: ${from} unfollowed you!`,
+        link,
+        read: false,
+      };
+    }
   }
 }
 export default handleNotification;

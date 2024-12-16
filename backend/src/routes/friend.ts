@@ -33,21 +33,17 @@ router.route("/follow").post(async (req, res) => {
 
 router.route("/unfollow").post(async (req, res) => {
   try {
-    const userToUnfollow = validate(stringObjectIdSchema, req.body.userId);
-    console.log(userToUnfollow);
-
-    if (req.session.userId === undefined) {
+    const unfolloweeId = validate(stringObjectIdSchema, req.body.unfolloweeId);
+    const unfollowerId = validate(stringObjectIdSchema, req.body.unfollowerId);
+    if (unfollowerId === undefined) {
       res.status(400).send("User not logged in");
       return;
     }
-
-    if (req.session.userId === userToUnfollow) {
+    if (unfollowerId === unfolloweeId) {
       res.status(400).send("Cannot unfollow yourself");
       return;
     }
-
-    await unfollow(req.session.userId, userToUnfollow);
-
+    await unfollow(unfollowerId, unfolloweeId);
     res.status(200).send("Unfollow Successful");
   } catch (error) {
     handleRouteError(error, res);

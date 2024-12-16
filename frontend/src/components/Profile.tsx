@@ -21,6 +21,7 @@ const Profile: React.FC = () => {
   const [otherUser, setOtherUser] = useState<boolean>(false);
   const [customError, setCustomError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
+  const [areFriends, setAreFriends] = useState<boolean>(false);
   const fetchData = async () => {
     try {
       const response = await fetch(
@@ -61,7 +62,7 @@ const Profile: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [customError, success]);
-
+  // Handle following a user.
   const followUser = async () => {
     try {
       const response = await fetch("http://localhost:3001/api/friend/follow", {
@@ -74,6 +75,7 @@ const Profile: React.FC = () => {
       });
       if (response.ok) {
         setSuccess("Successfully followed user");
+        setAreFriends(true);
         fetchData(); // Fetch the updated data
       } else {
         const errorData = await response.json();
@@ -81,6 +83,31 @@ const Profile: React.FC = () => {
       }
     } catch (error) {
       console.error("Error following user:", error);
+    }
+  };
+  const unFollowUser = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/friend/unfollow",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ unfolloweeId: id, unfollowerId: user.id }),
+        },
+      );
+      if (response.ok) {
+        setSuccess("Successfully unfollowed user");
+        setAreFriends(false);
+        fetchData(); // Fetch the updated data
+      } else {
+        const errorData = await response.json();
+        setCustomError(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error unfollowing user:", error);
     }
   };
 
@@ -94,12 +121,20 @@ const Profile: React.FC = () => {
           <div>
             <p className="text-gray dark:text-white">@{username}</p>
           </div>
-          {otherUser && (
+          {otherUser && !areFriends && (
             <button
               onClick={() => followUser()}
               className="px-4 py-2 bg-lightblue text-white rounded hover:bg-blue-700"
             >
               Follow
+            </button>
+          )}
+          {otherUser && areFriends && (
+            <button
+              onClick={() => unFollowUser()}
+              className="px-4 py-2 bg-lightblue text-white rounded hover:bg-blue-700"
+            >
+              Unfollow
             </button>
           )}
           {customError && <p className="text-red">{customError}</p>}
