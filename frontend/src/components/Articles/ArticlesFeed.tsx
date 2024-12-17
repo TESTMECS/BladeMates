@@ -64,7 +64,7 @@ const ArticlesFeed: React.FC = () => {
     if (response.ok) {
       const data: apiArticlesListResponse[] = await response.json();
       console.log("Search results in React:", data);
-      
+
       setTrends(
         data.map((article) => ({
           id: article._id,
@@ -74,7 +74,7 @@ const ArticlesFeed: React.FC = () => {
         })),
       );
     }
-    };
+  };
 
 
   useEffect(() => {
@@ -85,15 +85,14 @@ const ArticlesFeed: React.FC = () => {
   if (!trends.length) return <p>Loading articles...</p>;
   return (
     <div>
-
-      <div className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-md shadow-md">
-        <span className="mb-2 text-lg font-medium text-gray-700">Search for articles:</span>
+      <div className="flex items-center justify-center p-4 bg-gray-100 rounded-md shadow-md space-x-4">
+        <span className="text-lg font-medium text-gray-700">Search for articles:</span>
         <input
           type="text"
           placeholder="Search articles..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-64 p-2 mb-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-64 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <button
           onClick={searchArticles}
@@ -102,7 +101,6 @@ const ArticlesFeed: React.FC = () => {
           Search
         </button>
       </div>
-
 
       <div>
         {articleOfTheWeek && (
