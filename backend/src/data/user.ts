@@ -4,7 +4,6 @@ import { ObjectId } from "mongodb";
 import { Notification } from "../types/mongo";
 import { PushOperator } from "mongodb";
 import { getArticlesByTags, getDocumentByID } from "./articles";
-
 export async function getUserProfileData(userId: string) {
   const usersCollection = await users();
 
@@ -52,7 +51,11 @@ export async function getFavoriteArticles(userId: string) {
   return user.favoriteArticles;
 }
 
-export async function addNotification(userId: string, message: string) {
+export async function addNotification(
+  type: string,
+  userId: string,
+  message: string,
+) {
   const usersCollection = await users();
   console.log("User ID: ", userId);
   const user = await usersCollection.findOne({
@@ -67,7 +70,7 @@ export async function addNotification(userId: string, message: string) {
     },
     {
       $push: {
-        notifications: { message, read: false },
+        notifications: { type, message, timestamp: new Date().toISOString() },
       } as unknown as PushOperator<Notification>,
     },
   );
@@ -166,4 +169,30 @@ export async function getFollowingFeed(userId: string) {
     }
   }
   return articles;
+}
+export async function getFriends(userId: string) {
+  const usersCollection = await users();
+  const user = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(userId),
+  });
+  if (user === null) {
+    throw new StatusError(404, "User not found");
+  }
+  const friends = user.friends.map((friend) => {
+    return friend._id.toString();
+  });
+  return friends;
+}
+export async function checkFriendshipStatus(userId: string, friendId: string) {
+  const usersCollection = await users();
+  const user = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(userId),
+  });
+  if (user === null) {
+    throw new StatusError(404, "User not found");
+  }
+  const friend = user.friends.find(
+    (friend) => friend._id.toString() === friendId,
+  );
+  return friend !== undefined;
 }

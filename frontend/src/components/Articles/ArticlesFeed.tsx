@@ -62,11 +62,13 @@ const ArticlesFeed: React.FC = () => {
   return (
     <div>
       <div>
-        <ArticleCard
-          key={articleOfTheWeek?.id}
-          article={articleOfTheWeek}
-          isLive
-        />
+        {articleOfTheWeek && (
+          <ArticleCard
+            key={articleOfTheWeek?.id}
+            article={articleOfTheWeek}
+            isLive
+          />
+        )}
       </div>
       <div>
         {trends.map((article) => (

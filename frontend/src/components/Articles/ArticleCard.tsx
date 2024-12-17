@@ -4,19 +4,20 @@ import Article from "../../types/Article";
 import { useAuth } from "../../context/userContext";
 import { StarIcon } from "@heroicons/react/outline";
 interface ArticlesPageProps {
-  article?: Article;
+  article: Article;
   isLive?: boolean;
 }
 const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
-  const [toggleFavorite, setToggleFavorite] = useState<boolean>(false);
+  // CONTEXT
   const { isAuthenticated, user } = useAuth();
+  // State
+  const [toggleFavorite, setToggleFavorite] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  // Fields to display
+  // Display
   const [articleId, setArticleId] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
   const [publishedAt, setPublishedAt] = useState<string>("");
   const [title, setTitle] = useState<string>("");
-  // On component mount, check if the article is already a favorite
   useEffect(() => {
     const checkFavorite = async () => {
       if (!isAuthenticated || !user) return;
@@ -44,13 +45,16 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
         setTitle(article.title);
       }
     };
+    // Set the article fields
     setFields();
+    // Check if the article is a favorite already
     checkFavorite();
   }, [isAuthenticated, user, article?.id]);
   // HANDLE FAVORITE
   async function handleFavorite() {
     if (!isAuthenticated) return;
     setLoading(true);
+    const articleId: string = article?.id;
     try {
       if (toggleFavorite) {
         // console.log("deleting favorite", article?.id);
@@ -62,16 +66,13 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
               "Content-Type": "application/json",
             },
             credentials: "include",
-            body: JSON.stringify({ articleId: article?.id }),
+            body: JSON.stringify({ articleId }),
           },
         );
         if (response.ok) {
-          // console.log("Favorite removed successfully");
           setToggleFavorite(false);
         }
-        // console.log("this is the response from DELETE /api/article/favorite", response);
       } else {
-        // console.log("posting favorite", article?.id);
         const response = await fetch(
           `http://localhost:3001/api/article/favorite`,
           {
@@ -80,12 +81,13 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
               "Content-Type": "application/json",
             },
             credentials: "include",
-            body: JSON.stringify({ articleId: article?.id }),
+            body: JSON.stringify({ articleId }),
           },
         );
         if (response.ok) {
           // console.log("Favorite added successfully");
           setToggleFavorite(true);
+          // Send the notification
         }
         // console.log("this is the response from POST /api/article/favorite", response);
       }

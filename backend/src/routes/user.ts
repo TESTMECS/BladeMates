@@ -10,6 +10,7 @@ import {
   getFollowingFeed,
 } from "../data/user";
 import { stringObjectIdSchema } from "../validation/mongo";
+
 declare module "express-session" {
   interface SessionData {
     userId: string;

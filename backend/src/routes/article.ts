@@ -3,7 +3,7 @@ import express from "express";
 import { handleRouteError, validate, validateWithType } from "../utils/Error";
 import { favoriteArticle, unfavoriteArticle } from "../data/article";
 import { stringSchema } from "../validation/common";
-
+import { emitFavorite } from "../services/emit";
 declare module "express-session" {
   interface SessionData {
     userId: string;
@@ -19,14 +19,13 @@ router
         return;
       }
       const userId = req.session.userId;
-
       const articleId = validateWithType<string>(
         stringSchema,
         req.body.articleId,
       );
-
       const articles = await favoriteArticle(userId, articleId);
-
+      // send notification
+      await emitFavorite(userId, articleId);
       res.status(200).send({ data: articles });
     } catch (error) {
       handleRouteError(error, res);
@@ -41,7 +40,6 @@ router
       }
       const userId = req.session.userId;
       const articleId = validate(stringSchema, req.body.articleId);
-
       const articles = await unfavoriteArticle(userId, articleId);
       console.log(
         "this is the response from DELETE /api/article/favorite",

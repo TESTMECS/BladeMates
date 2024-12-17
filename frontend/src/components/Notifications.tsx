@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import notification from "../types/notification";
 import { useAuth } from "../context/userContext";
-import handleNotification from "../utils/handleNotification";
+// import handleNotification from "../utils/handleNotification";
 const Notifications = () => {
   const [notificationList, setNotificationList] = useState<notification[]>([]);
   const { user } = useAuth();
@@ -13,13 +13,13 @@ const Notifications = () => {
           "http://localhost:3001/api/user/notifications/" + user.id,
         );
         const data = await response.json();
-
-        const transformedNotifications = data.notifications.map(
-          (notification: { message: { data: string }; read: string }) => {
-            return handleNotification(notification.message.data, user.id);
-          },
-        );
-        setNotificationList(transformedNotifications);
+        console.log(data);
+        // const transformedNotifications = data.notifications.map(
+        //   (notification: { message: { data: string }; read: string }) => {
+        //     return handleNotification(notification.message.data, user.id);
+        //   },
+        // );
+        setNotificationList([]);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }

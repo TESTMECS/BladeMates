@@ -1,9 +1,7 @@
 import { ObjectId, PullOperator, PushOperator } from "mongodb";
-import { sendNotification } from "../services/rabbitmqProducer";
 import { users } from "../config/mongoCollections";
 import { StatusError } from "../utils/Error";
 import { User } from "../types/mongo";
-
 export async function follow(
   followeeId: string,
   followerId: string,
@@ -63,9 +61,7 @@ export async function follow(
     throw new StatusError(500, "Failed to add follow");
   }
   // Send following Notification
-  sendNotification(followeeId, `${followerId} followed ${followeeId}`);
 }
-
 export async function unfollow(
   unfollowerId: string,
   unfolloweeId: string,
@@ -122,5 +118,4 @@ export async function unfollow(
     throw new StatusError(500, "Failed to unfollow");
   }
   // send notification to the person being unfollowed.
-  sendNotification(unfolloweeId, `${unfollowerId} unfollowed ${unfolloweeId}`);
 }

@@ -7,6 +7,7 @@ import {
   getUsernameFromId,
   getFriendsFromId,
 } from "../data/auth";
+
 declare module "express-session" {
   interface SessionData {
     userId: string;
@@ -16,7 +17,6 @@ const router = express.Router();
 router.route("/login").post(async (req, res) => {
   try {
     const loginCredentials = validate(authSchema, req.body);
-
     const userId = await login(
       loginCredentials.username,
       loginCredentials.password,
@@ -36,7 +36,6 @@ router.route("/login").post(async (req, res) => {
 router.route("/register").post(async (req, res) => {
   try {
     const registerCredentials = validate(authSchema, req.body);
-
     const userId = await register(
       registerCredentials.username,
       registerCredentials.password,
@@ -44,7 +43,6 @@ router.route("/register").post(async (req, res) => {
 
     if (userId) {
       req.session.userId = userId;
-
       res.json({ userId });
     } else {
       res.status(500).send("Register Failed");
