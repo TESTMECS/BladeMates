@@ -3,32 +3,11 @@ import { validateWithType, StatusError } from "../utils/Error";
 import { ObjectId } from "mongodb";
 import { userSchema } from "../validation/user";
 import { User } from "../types/mongo";
-import { sendNotification } from "../services/rabbitmqProducer";
 /**
  * A function that adds a notification to all users who have followed the user with id `userId`
  * @param userId
  * @param articleId
  */
-const addNotifications = async (userId: string, articleId: string) => {
-  sendNotification(userId, `${userId} favorited ${articleId}`);
-  const usersCollection = await users();
-  const followers = await usersCollection
-    .find({
-      friends: { $elemMatch: { _id: new ObjectId(userId) } },
-    })
-    .toArray();
-  const followerIds = followers.map((follower) => follower._id);
-  if (followerIds.length === 0) {
-    return;
-  }
-  for (const follower of followers) {
-    console.log("Sending notification to", follower._id.toHexString());
-    sendNotification(
-      follower._id.toHexString(),
-      `${userId} favorited ${articleId}`,
-    );
-  }
-};
 export async function favoriteArticle(
   userId: string,
   articleId: string,
@@ -63,7 +42,6 @@ export async function favoriteArticle(
   if (insertedInfo.modifiedCount === 0) {
     throw new StatusError(500, "Failed to favorite article");
   }
-  addNotifications(userId, articleId);
   return favoriteArticles;
 }
 export async function unfavoriteArticle(
@@ -100,6 +78,5 @@ export async function unfavoriteArticle(
   if (insertedInfo.modifiedCount === 0) {
     throw new StatusError(500, "Failed to unfavorite article");
   }
-
   return favoriteArticles;
 }

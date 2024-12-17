@@ -1,5 +1,5 @@
 type message = {
-  userId: number; //change later.
+  userId: string; //change later.
   username: string;
   message: string;
   timestamp: string;

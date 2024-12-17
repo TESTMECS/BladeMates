@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import FeedSelector from "./FeedSelector";
 import Feed from "./Feed";
 import Navbar from "./Navbar";
-import useSocket from "../hooks/useSocket";
 
 const MainFeed: React.FC = () => {
   const [currentFeed, setCurrentFeed] = useState<string>("Discover");
@@ -10,10 +9,6 @@ const MainFeed: React.FC = () => {
     "Discover",
     "Following",
   ]);
-  const { connectSocket, socket } = useSocket();
-  useEffect(() => {
-    if (!socket) connectSocket();
-  }, [socket, connectSocket]);
 
   return (
     <div className="grid grid-cols-5 h-full">

@@ -3,7 +3,6 @@ import Article from "../../types/Article";
 import { useParams } from "react-router-dom";
 import apiArticlePageResponse from "../../types/apiArticlePageResponse";
 import Comments from "./comments/Comments";
-
 const ArticlesPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [article, setArticle] = useState<Article>();
@@ -39,7 +38,7 @@ const ArticlesPage: React.FC = () => {
   if (!article) return <div>Loading article...</div>;
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 h-fit">
-      <div className="rounded-lg shadow-lg p-8 pt-6 border border-lightblue">
+      <div className="rounded-lg shadow-lg p-8 pt-10 border border-lightblue">
         {article && (
           <div>
             <div>
@@ -70,5 +69,4 @@ const ArticlesPage: React.FC = () => {
     </div>
   );
 };
-
 export default ArticlesPage;

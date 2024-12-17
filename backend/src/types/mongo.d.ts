@@ -1,7 +1,8 @@
 export type Notification = {
   _id: ObjectId;
+  type: string;
   message: string;
-  read: boolean;
+  timestamp: string;
 };
 export type User = {
   _id: ObjectId;
