@@ -7,7 +7,6 @@ import {
   getUsernameFromId,
   getFriendsFromId,
 } from "../data/auth";
-
 declare module "express-session" {
   interface SessionData {
     userId: string;
@@ -40,7 +39,6 @@ router.route("/register").post(async (req, res) => {
       registerCredentials.username,
       registerCredentials.password,
     );
-
     if (userId) {
       req.session.userId = userId;
       res.json({ userId });

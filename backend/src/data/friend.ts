@@ -60,7 +60,6 @@ export async function follow(
   if (insertedInfo2.modifiedCount === 0) {
     throw new StatusError(500, "Failed to add follow");
   }
-  // Send following Notification
 }
 export async function unfollow(
   unfollowerId: string,
@@ -117,5 +116,4 @@ export async function unfollow(
   if (insertedInfo2.modifiedCount === 0) {
     throw new StatusError(500, "Failed to unfollow");
   }
-  // send notification to the person being unfollowed.
 }

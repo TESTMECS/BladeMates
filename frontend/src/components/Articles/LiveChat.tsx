@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import { useParams } from "react-router-dom";
 import Article from "../../types/Article";
 import Message from "../../types/Message";
@@ -7,7 +6,6 @@ import { useAuth } from "../../context/userContext";
 import { validateUserInput } from "../../utils/validation";
 import apiArticleOfTheWeekResponse from "../../types/apiArticleOfTheWeekResponse";
 import useSocket from "../../hooks/useSocket";
-
 const LiveChat: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth();

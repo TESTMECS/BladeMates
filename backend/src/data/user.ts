@@ -6,11 +6,9 @@ import { PushOperator } from "mongodb";
 import { getArticlesByTags, getDocumentByID } from "./articles";
 export async function getUserProfileData(userId: string) {
   const usersCollection = await users();
-
   const user = await usersCollection.findOne({
     _id: ObjectId.createFromHexString(userId),
   });
-
   if (user === null) {
     throw new StatusError(404, "User not found");
   }
@@ -39,25 +37,20 @@ export async function getUserProfileData(userId: string) {
 }
 export async function getFavoriteArticles(userId: string) {
   const usersCollection = await users();
-
   const user = await usersCollection.findOne({
     _id: ObjectId.createFromHexString(userId),
   });
-
   if (user === null) {
     throw new StatusError(404, "User not found");
   }
-
   return user.favoriteArticles;
 }
-
 export async function addNotification(
   type: string,
   userId: string,
   message: string,
 ) {
   const usersCollection = await users();
-  console.log("User ID: ", userId);
   const user = await usersCollection.findOne({
     _id: ObjectId.createFromHexString(userId),
   });

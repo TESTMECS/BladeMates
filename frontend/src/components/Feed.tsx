@@ -21,5 +21,4 @@ const Feed: React.FC<FeedProps> = ({ currentFeed = "Discover" }) => {
     </div>
   );
 };
-
 export default Feed;

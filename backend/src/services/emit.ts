@@ -4,14 +4,12 @@ import { getFriendsFromId } from "../data/auth";
 import { addNotification, checkFriendshipStatus } from "../data/user";
 export async function emitFollow(followerId: string, followeeId: string) {
   let connection: amqp.Connection | null = null;
-
   let channel: amqp.Channel | null = null;
   let followeeChannel: amqp.Channel | null = null;
   try {
     // console.log(
     //   `[DEBUG] Starting emitFollow for follower ${followerId}, followee ${followeeId}`,
     // );
-
     // Setup a consumer BEFORE publishing the message for follower
     const followerConsumePromise = new Promise<void>(async (resolve, _) => {
       connection = await amqp.connect(config.url);
@@ -42,7 +40,6 @@ export async function emitFollow(followerId: string, followeeId: string) {
       // console.log(
       //   `[DEBUG] Bound queue for follower ${followerId} with routing key: ${followerRoutingKey}`,
       // );
-
       // Setup the consumer for follower
       channel.consume(
         followerQueue,
@@ -74,7 +71,6 @@ export async function emitFollow(followerId: string, followeeId: string) {
       //   `[DEBUG] Published message for follower ${followerId}: ${message}`,
       // );
     });
-    // Wait for the follower message to be consumed
     await followerConsumePromise;
   } catch (error) {
     console.log(error);
@@ -170,7 +166,6 @@ export async function emitUnfollow(followerId: string, followeeId: string) {
         config.exchangeName,
         followerRoutingKey,
       );
-
       // Setup the consumer for follower
       channel.consume(
         followerQueue,
@@ -257,32 +252,26 @@ export async function emitUnfollow(followerId: string, followeeId: string) {
 export async function emitFavorite(userId: string, articleId: string) {
   let connection: amqp.Connection | null = null;
   let channel: amqp.Channel | null = null;
-
   // console.log(
   //   `[DEBUG] Starting emitFavorite for user ${userId}, article ${articleId}`,
   // );
-
   try {
     // Setup a consumer BEFORE publishing the message
     const consumePromise = new Promise<void>(async (resolve, _) => {
       connection = await amqp.connect(config.url);
       channel = await connection.createChannel();
-
       // Assert the exchange
       await channel.assertExchange(config.exchangeName, config.exchangeType, {
         durable: true,
       });
-
       // Create a queue for this specific user
       const { queue } = await channel.assertQueue(`favorite.${userId}`, {
         durable: true,
       });
       // console.log(`[DEBUG] Created queue for user ${userId}: `, queue);
-
       // Bind the queue to the exchange with the specific routing key
       const userRoutingKey = `favorite.${userId}`;
       await channel.bindQueue(queue, config.exchangeName, userRoutingKey);
-
       // Get friends
       const friendIds = await getFriendsFromId(userId);
       // console.log(`[DEBUG] Friends for user ${userId}: `, friendIds);
@@ -294,19 +283,14 @@ export async function emitFavorite(userId: string, articleId: string) {
               userId,
               friendId.toString(),
             );
-
             // console.log(
             //   `[DEBUG] Friendship status between ${userId} and ${friendId}: ${isStillFriends}`,
             // );
-
             return isStillFriends ? friendId : null;
           }),
         );
-
         activeFriends = currentFriends.filter((friend) => friend !== null);
-
         // console.log(`[DEBUG] Active friends for user ${userId}: `, activeFriends);
-
         if (activeFriends.length > 0) {
           for (const friendId of activeFriends) {
             const friendRoutingKey = `favorite.${friendId.toString()}`;
@@ -324,20 +308,16 @@ export async function emitFavorite(userId: string, articleId: string) {
         if (msg) {
           // console.log(`[DEBUG] Received message with routing key: ${msg.fields.routingKey}`,);
           // console.log(`[DEBUG] Message content: ${msg.content.toString()}`);
-
           const routingKey = msg.fields.routingKey;
-
           // Re-check friendship status
           const updatedFriendIds = await getFriendsFromId(userId);
           const matchingFriendId = updatedFriendIds.find(
             (friendId) => routingKey === `favorite.${friendId.toString()}`,
           );
-
           // console.log(`[DEBUG] Updated friend IDs: `, updatedFriendIds);
           // console.log(`[DEBUG] Matching friend ID: `, matchingFriendId);
           // console.log(`[DEBUG] User routing key: ${userRoutingKey}`);
           // console.log(`[DEBUG] Current routing key: ${routingKey}`);
-
           if (routingKey === userRoutingKey || matchingFriendId !== undefined) {
             // console.log(`[DEBUG] Adding notification for message`);
             await addNotification("favorite", userId, msg.content.toString());
@@ -352,12 +332,10 @@ export async function emitFavorite(userId: string, articleId: string) {
               );
             }
           }
-
           channel?.ack(msg);
           resolve();
         }
       });
-
       // Publish the message
       channel.publish(
         config.exchangeName,
@@ -365,7 +343,6 @@ export async function emitFavorite(userId: string, articleId: string) {
         Buffer.from(`${userId} favorited ${articleId}`),
       );
     });
-
     // Wait for the message to be consumed
     await consumePromise;
   } catch (error) {

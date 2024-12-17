@@ -57,7 +57,6 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
     const articleId: string = article?.id;
     try {
       if (toggleFavorite) {
-        // console.log("deleting favorite", article?.id);
         const response = await fetch(
           `http://localhost:3001/api/article/favorite`,
           {
@@ -85,11 +84,8 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
           },
         );
         if (response.ok) {
-          // console.log("Favorite added successfully");
           setToggleFavorite(true);
-          // Send the notification
         }
-        // console.log("this is the response from POST /api/article/favorite", response);
       }
     } catch (error) {
       console.error("Error updating favorite status:", error);
@@ -97,7 +93,6 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
       setLoading(false);
     }
   }
-
   return (
     <div className="flex justify-center items-center p-4 shadow-sm">
       <button

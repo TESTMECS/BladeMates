@@ -22,8 +22,8 @@ router.route("/follow").post(async (req, res) => {
       return;
     }
     await follow(followeeId, followerId);
+    // send notification
     emitFollow(followerId, followeeId);
-
     res.status(200).send("Follow Successful");
   } catch (error) {
     handleRouteError(error, res);
@@ -43,6 +43,7 @@ router.route("/unfollow").post(async (req, res) => {
       return;
     }
     await unfollow(unfollowerId, unfolloweeId);
+    // send notification
     emitUnfollow(unfollowerId, unfolloweeId);
     res.status(200).send("Unfollow Successful");
   } catch (error) {
@@ -50,5 +51,4 @@ router.route("/unfollow").post(async (req, res) => {
   }
   return;
 });
-
 export { router as friendRouter };

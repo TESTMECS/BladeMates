@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useAuth } from "../context/userContext";
 import Message from "../types/Message";
-
 const useSocket = () => {
   const { isAuthenticated } = useAuth();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [message, setMessage] = useState<Message[]>([]);
-
   useEffect(() => {
     if (isAuthenticated) {
       const newSocket = io("http://localhost:4001", {
@@ -31,11 +29,9 @@ const useSocket = () => {
       setSocket(null);
     };
   }, [isAuthenticated]);
-
   return {
     message,
     socket,
   };
 };
-
 export default useSocket;

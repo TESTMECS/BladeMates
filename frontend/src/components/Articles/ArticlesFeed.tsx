@@ -3,11 +3,9 @@ import Article from "../../types/Article";
 import ArticleCard from "./ArticleCard";
 import apiArticleOfTheWeekResponse from "../../types/apiArticleOfTheWeekResponse";
 import apiArticlesListResponse from "../../types/apiArticlesListResponse";
-
 const ArticlesFeed: React.FC = () => {
   const [trends, setTrends] = useState<Article[]>([]);
   const [articleOfTheWeek, setArticleOfTheWeek] = useState<Article>();
-
   async function fetchTrends() {
     // FETCH ARTICLES
     const response = await fetch("http://localhost:3001/api/global/articles", {
@@ -16,7 +14,6 @@ const ArticlesFeed: React.FC = () => {
     });
     if (response.ok) {
       const data: apiArticlesListResponse[] = await response.json();
-
       setTrends(
         data.map((article) => ({
           id: article._id,
@@ -78,5 +75,4 @@ const ArticlesFeed: React.FC = () => {
     </div>
   );
 };
-
 export default ArticlesFeed;

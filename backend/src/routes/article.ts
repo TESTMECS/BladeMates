@@ -51,5 +51,4 @@ router
     }
     return;
   });
-
 export { router as articleRouter };
