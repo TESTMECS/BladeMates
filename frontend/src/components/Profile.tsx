@@ -123,12 +123,15 @@ const Profile: React.FC = () => {
 
   return (
     <div>
+      <div>
       <Link
         to="/home"
         className="flex items-center hover:text-lightblue dark:hover:text-purple px-3 py-2 rounded-md text-lg font-semibold transition-colors duration-200"
       >
         HOME
       </Link>
+      </div>
+
       <div className="max-w-2xl mx-auto p-6 rounded-lg shadow-md h-screen border border-lightblue">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">My Profile</h1>
@@ -173,7 +176,7 @@ const Profile: React.FC = () => {
                 {recentArticles &&
                   recentArticles.map((article, index) => (
                     <li key={index} className="p-2 border-b border-lightblue">
-                      {article}
+                      <Link to={`/articles/${article}`}>{article}</Link>
                     </li>
                   ))}
               </ul>

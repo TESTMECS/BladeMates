@@ -36,7 +36,8 @@ router.route('/').get(async (req, res) => {
   try {
     const article = await getArticleOfTheWeek();
     if(!exists){
-      await client?.set('articleOTW', JSON.stringify(article), 'EX', 3600);
+      await client?.set('articleOTW', JSON.stringify(article));
+      await client?.expireat('articleOTW', Math.floor(new Date().setDate(new Date().getDate() + 7) / 1000));
     }
     res.status(200).send({ data: article });
   } catch (error) {

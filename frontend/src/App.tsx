@@ -29,7 +29,7 @@ const App: React.FC = () => {
         }
       >
         <button
-          className="absolute top-4 left-4 bg-darkblue text-white dark:text-black dark:bg-beige px-4 py-2 rounded-md z-10"
+          className="absolute top-4 right-4 bg-darkblue text-white dark:text-black dark:bg-beige px-4 py-2 rounded-md z-10"
           onClick={() => toggleDarkMode()}
         >
           {darkMode ? (
