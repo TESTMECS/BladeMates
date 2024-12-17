@@ -1,9 +1,7 @@
 import { ObjectId, PullOperator, PushOperator } from "mongodb";
-import { sendNotification } from "../services/rabbitmqProducer";
 import { users } from "../config/mongoCollections";
 import { StatusError } from "../utils/Error";
 import { User } from "../types/mongo";
-
 export async function follow(
   followeeId: string,
   followerId: string,
@@ -62,54 +60,60 @@ export async function follow(
   if (insertedInfo2.modifiedCount === 0) {
     throw new StatusError(500, "Failed to add follow");
   }
-  // Send following Notification
-  sendNotification(followeeId, `${followerId} followed ${followeeId}`);
 }
-
 export async function unfollow(
-  userId: string,
-  friendId: string,
+  unfollowerId: string,
+  unfolloweeId: string,
 ): Promise<void> {
   const usersCollection = await users();
-  const user = await usersCollection.findOne({
-    _id: ObjectId.createFromHexString(userId),
+  const unfollower = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(unfollowerId),
   });
-  const friend = await usersCollection.findOne({
-    _id: ObjectId.createFromHexString(friendId),
+  const unfollowee = await usersCollection.findOne({
+    _id: ObjectId.createFromHexString(unfolloweeId),
   });
-
-  if (user === null) {
+  if (unfollower === null) {
     throw new StatusError(404, "User not found");
   }
-
-  if (friend === null) {
+  if (unfollowee === null) {
     throw new StatusError(404, "Friend not found");
   }
-
   if (
-    user.friends.filter((friends) => friends._id.toString() === friendId)
-      .length === 0
+    unfollower.friends.filter(
+      (friends) => friends._id.toString() === unfolloweeId,
+    ).length === 0
   ) {
     throw new StatusError(
       400,
       "Can not unfollow a user that has never been followed",
     );
   }
-
+  // remove friend from unfollower
   const insertedInfo = await usersCollection.updateOne(
-    { _id: ObjectId.createFromHexString(userId) },
+    { _id: ObjectId.createFromHexString(unfollowerId) },
     {
       $pull: {
         friends: {
-          _id: ObjectId.createFromHexString(friendId),
+          _id: ObjectId.createFromHexString(unfolloweeId),
         },
       } as unknown as PullOperator<User>,
     },
   );
-
   if (insertedInfo.modifiedCount === 0) {
     throw new StatusError(500, "Failed to unfollow");
   }
-
-  console.log(`Unfollowed ${friendId}`);
+  // remove friend from unfollowee
+  const insertedInfo2 = await usersCollection.updateOne(
+    { _id: ObjectId.createFromHexString(unfolloweeId) },
+    {
+      $pull: {
+        friends: {
+          _id: ObjectId.createFromHexString(unfollowerId),
+        },
+      } as unknown as PullOperator<User>,
+    },
+  );
+  if (insertedInfo2.modifiedCount === 0) {
+    throw new StatusError(500, "Failed to unfollow");
+  }
 }

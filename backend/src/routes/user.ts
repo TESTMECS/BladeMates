@@ -16,7 +16,6 @@ declare module "express-session" {
   }
 }
 const router = express.Router();
-
 router.route("/profileData/:id").get(async (req, res) => {
   try {
     const userIdData = validate(stringObjectIdSchema, req.params.id);
@@ -31,7 +30,6 @@ router.route("/favorites/:id").get(async (req, res) => {
   try {
     const userId = validate(stringObjectIdSchema, req.params.id);
     const articles: string[] = await getFavoriteArticles(userId);
-
     res.status(200).send({ articles });
   } catch (error) {
     handleRouteError(error, res);
@@ -111,5 +109,4 @@ router.route("/followingFeed").get(async (req, res) => {
   }
   return;
 });
-
 export { router as userRouter };

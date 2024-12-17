@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import { useParams } from "react-router-dom";
 import Article from "../../types/Article";
 import Message from "../../types/Message";
@@ -7,11 +6,10 @@ import { useAuth } from "../../context/userContext";
 import { validateUserInput } from "../../utils/validation";
 import apiArticleOfTheWeekResponse from "../../types/apiArticleOfTheWeekResponse";
 import useSocket from "../../hooks/useSocket";
-
 const LiveChat: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth();
-  const { sendMessage, message } = useSocket();
+  const { socket, message } = useSocket();
   const [article, setArticle] = useState<Article>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
@@ -63,7 +61,7 @@ const LiveChat: React.FC = () => {
         message: newMessage.trim(),
       };
       console.log("Sending message");
-      sendMessage(message_json);
+      socket?.emit("send_message", message_json);
       setNewMessage(""); // Clear input field
     } else {
       alert(result.message);

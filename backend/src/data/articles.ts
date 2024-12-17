@@ -2,11 +2,9 @@ import { tryCatch } from "ramda";
 import { elasticConnection } from "../config/elasticConnection";
 import { Article } from "../types/newsApiTypes";
 import seedrandom from "seedrandom";
-
 // query articles published within last 5 daysday
 export async function getArticlesPast5Days() {
-  const client = await elasticConnection();
-
+  const client = elasticConnection();
   try {
     const result = await client.search<Article>({
       index: "articles",
@@ -22,19 +20,16 @@ export async function getArticlesPast5Days() {
         },
       },
     });
-
     return result.hits.hits.map((hit) => hit._source);
   } catch (error) {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
 export async function getArticlesDaysAgoRange(
   daysAgoStart: number,
   daysAgoEnd: number,
 ) {
-  const client = await elasticConnection();
-
+  const client = elasticConnection();
   try {
     const result = await client.search<Article>({
       index: "articles",
@@ -49,16 +44,13 @@ export async function getArticlesDaysAgoRange(
         },
       },
     });
-
     return result.hits.hits.map((hit) => hit._source);
   } catch (error) {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
 export async function getArticlesPastDay() {
-  const client = await elasticConnection();
-
+  const client = elasticConnection();
   try {
     const result = await client.search<Article>({
       index: "articles",
@@ -79,10 +71,8 @@ export async function getArticlesPastDay() {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
 export async function searchHeadlines(query: string) {
-  const client = await elasticConnection();
-
+  const client = elasticConnection();
   try {
     const result = await client.search<Article>({
       index: "articles",
@@ -94,16 +84,13 @@ export async function searchHeadlines(query: string) {
         },
       },
     });
-
     return result.hits.hits.map((hit) => hit._source);
   } catch (error) {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
 export async function searchHeadlinesAndDesc(query: string) {
-  const client = await elasticConnection();
-
+  const client = elasticConnection();
   try {
     const result = await client.search<Article>({
       index: "articles",
@@ -116,25 +103,17 @@ export async function searchHeadlinesAndDesc(query: string) {
         },
       },
     });
-
     return result.hits.hits.map((hit) => hit._source);
   } catch (error) {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
-// options field is an array that can contain any of the following strings:
-// title, description, content
-// if options is empty, searchAcrossFields will search only the title field
-
 /**
- *
  * @param {string} query - the search query
  * @param {string[]} fields - the fields to search in. array can contain: title, description, content
  */
-
 export async function searchAcrossFields(query: string, fields: string[]) {
-  const client = await elasticConnection();
+  const client = elasticConnection();
 
   const validFields = ["title", "description", "content"];
   fields = fields.filter((field) => validFields.includes(field));
@@ -151,13 +130,11 @@ export async function searchAcrossFields(query: string, fields: string[]) {
         },
       },
     });
-
     return result.hits.hits.map((hit) => hit._source);
   } catch (error) {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
 // ID could be an objectID or a string
 export async function getDocumentByID(id: string) {
   const client = elasticConnection();
@@ -179,7 +156,6 @@ export async function getDocumentByID(id: string) {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
 export async function getAllDocuments() {
   const client = elasticConnection();
   try {
@@ -202,9 +178,8 @@ export async function getAllDocuments() {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
 export async function getArticlesByTag(tag: string) {
-  const client = await elasticConnection();
+  const client = elasticConnection();
   try {
     const result = await client.search<Article>({
       index: "articles",
@@ -221,9 +196,8 @@ export async function getArticlesByTag(tag: string) {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
 export async function getArticlesByTags(tags: string[]) {
-  const client = await elasticConnection();
+  const client = elasticConnection();
   try {
     const result = await client.search<Article>({
       index: "articles",
@@ -260,9 +234,8 @@ export async function getArticlesByTags(tags: string[]) {
     console.error("Error during Elasticsearch operation:", error);
   }
 }
-
 export async function getArticlesBetweenMondays(): Promise<any> {
-  const client = await elasticConnection();
+  const client = elasticConnection();
   // this SHOULD get articles published between last Monday and this Monday
   try {
     const result = await client.search<Article>({

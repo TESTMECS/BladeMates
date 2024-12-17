@@ -16,7 +16,6 @@ const router = express.Router();
 router.route("/login").post(async (req, res) => {
   try {
     const loginCredentials = validate(authSchema, req.body);
-
     const userId = await login(
       loginCredentials.username,
       loginCredentials.password,
@@ -36,15 +35,12 @@ router.route("/login").post(async (req, res) => {
 router.route("/register").post(async (req, res) => {
   try {
     const registerCredentials = validate(authSchema, req.body);
-
     const userId = await register(
       registerCredentials.username,
       registerCredentials.password,
     );
-
     if (userId) {
       req.session.userId = userId;
-
       res.json({ userId });
     } else {
       res.status(500).send("Register Failed");

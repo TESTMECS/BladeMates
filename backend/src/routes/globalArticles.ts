@@ -2,7 +2,6 @@ import express from "express";
 import { handleRouteError } from "../utils/Error";
 import { getAllDocuments, getDocumentByID } from "../data/articles";
 import { redisConnection } from "../config/redisConnection";
-
 declare module "express-session" {
   interface SessionData {
     userId: string;
@@ -53,5 +52,4 @@ router.route("/article/:id").get(async (req, res) => {
   }
   return;
 });
-
 export { router as globalArticlesRouter };
