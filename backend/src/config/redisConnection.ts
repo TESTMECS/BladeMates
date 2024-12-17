@@ -1,18 +1,17 @@
-import * as redis from 'redis';
+import Redis, { Redis as RedisType } from 'ioredis';
 import { redisConfig } from './settings';
 
-// let client = null;
+let client: RedisType | null = null;
 
-const client = redis.createClient(redisConfig);
-let connected = false;
-
-const redisConnection = async () => {
+const redisConnection = async (): Promise<RedisType | null> => {
   try {
-    if (!connected) {
-      await client.connect();
-      connected = true;
+    if (!client) {
+      client = new Redis(redisConfig.url);
+      client.on('error', (err) => {
+        console.error('Redis error:', err);
+        client = null;
+      });
     }
-
     return client;
   } catch (e) {
     console.error(e);
@@ -21,8 +20,10 @@ const redisConnection = async () => {
 };
 
 const closeRedisConnection = async () => {
-  connected = false;
-  await client.quit();
+  if (client) {
+    await client.quit();
+    client = null;
+  }
 };
 
 export { redisConnection, closeRedisConnection };

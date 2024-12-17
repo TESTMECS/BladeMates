@@ -1,4 +1,3 @@
-import { tryCatch } from "ramda";
 import { elasticConnection } from "../config/elasticConnection";
 import { Article } from "../types/newsApiTypes";
 import seedrandom from "seedrandom";
@@ -209,13 +208,13 @@ export async function getArticlesByTags(tags: string[]) {
         },
         sort: {
           publishedAt: {
-            order: "desc",
-          },
-        },
-      },
-    });
-    console.log("Elasticsearch query result:", result.hits.hits);
-    return result.hits.hits.map((hit) => {
+            order: 'desc'
+          }
+        }
+      }
+    })
+    // console.log('Elasticsearch query result:', result.hits.hits);
+    return result.hits.hits.map(hit => {
       if (hit._source) {
         return {
           _id: hit._id,
