@@ -132,6 +132,21 @@ tags: comma separated strings. case sensitive
 }
 ```
 
+## /api/global/search/:query
+
+### GET - no parms  
+#### Response
+```typescript
+{
+    _id: string
+    title: string
+    author: string
+    publishedAt: string
+}
+```
+
+
+
 ## /api/global/articles/:id
 
 ### GET - no parms

@@ -1,6 +1,6 @@
 import express from "express";
 import { handleRouteError } from "../utils/Error";
-import { getAllDocuments, getDocumentByID } from "../data/articles";
+import { getAllDocuments, getDocumentByID, searchHeadlinesAndDesc} from "../data/articles";
 import { redisConnection } from "../config/redisConnection";
 declare module "express-session" {
   interface SessionData {
@@ -52,4 +52,25 @@ router.route("/article/:id").get(async (req, res) => {
   }
   return;
 });
+router.route("/search/:query").get(async (req, res) => {
+  try {
+    if (req.session.userId === undefined) {
+      res.status(400).send("User not logged in");
+      return;
+    }
+    const client = await redisConnection();
+    const searchCached = await client?.get(`search:${req.params.query}`);
+    if (searchCached) {
+      res.status(200).json(JSON.parse(searchCached));
+      return;
+    }
+    const searchResults = await searchHeadlinesAndDesc(req.params.query);
+    await client?.set(`search:${req.params.query}`, JSON.stringify(searchResults));
+    res.status(200).json(searchResults);
+  } catch (error) {
+    handleRouteError(error, res);
+  }
+  return;
+});
+
 export { router as globalArticlesRouter };
