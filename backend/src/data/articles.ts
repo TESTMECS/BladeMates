@@ -103,7 +103,12 @@ export async function searchHeadlinesAndDesc(query: string) {
         },
       },
     });
-    return result.hits.hits.map((hit) => hit._source);
+    return result.hits.hits.map((hit) => ({
+      _id: hit._id,
+      title: hit._source?.title,
+      author: hit._source?.author,
+      publishedAt: hit._source?.publishedAt,
+    }));
   } catch (error) {
     console.error("Error during Elasticsearch operation:", error);
   }
