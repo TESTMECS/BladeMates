@@ -19,8 +19,15 @@ export async function getUserProfileData(userId: string) {
     })
     .toArray();
   // 5 Recent Comments articleId so we can link to the article
+  //HERE PRINT TEXT
   const recentComments = userComments.slice(-5).map((comment) => {
     return comment.articleId.toString();
+  });
+  const recentCommentsWithContent = userComments.slice(-5).map((comment) => {
+    return {
+      articleId: comment.articleId.toString(),
+      content: comment.content
+    }
   });
   // returns Articleid
   const recentArticles = user.favoriteArticles.slice(-5).map((article) => {
@@ -51,6 +58,7 @@ export async function getUserProfileData(userId: string) {
     friends: friends,
     trends: trends,
     articlesWithTitles: articlesWithTitles,
+    recentCommentsWithContent: recentCommentsWithContent
   };
   return userData;
 }

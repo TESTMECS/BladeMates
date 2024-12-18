@@ -11,6 +11,7 @@ type apiResponse = {
     friends: { id: string; username: string }[];
     trends: string[]; // List of trend names
     articlesWithTitles: { _id: string; title: string }[];
+    recentCommentsWithContent: { articleId: string; content: string }[];
   };
 };
 const Profile: React.FC = () => {
@@ -19,10 +20,11 @@ const Profile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   // display
   const [username, setUsername] = useState<string>("");
-  const [recentComments, setRecentComments] = useState<string[]>([]);
+  // const [recentComments, setRecentComments] = useState<string[]>([]);
   // const [recentArticles, setRecentArticles] = useState<string[]>([]);
   //an array of objects of form {_id: string, title: string}
   const [recentArticlesWithTitles, setRecentArticlesWithTitles] = useState<{_id: string, title: string}[]>([]);
+  const [recentCommentsWithContent, setRecentCommentsWithContent] = useState<{ articleId: string; content: string }[]>([]);
   const [friends, setFriends] = useState<{ id: string; username: string }[]>(
     [],
   );
@@ -42,11 +44,12 @@ const Profile: React.FC = () => {
         },
       );
       const data: apiResponse = await response.json();
-      setRecentComments(data.user.recentComments);
+      // setRecentComments(data.user.recentComments);
+      setRecentArticlesWithTitles(data.user.articlesWithTitles);
       // setRecentArticles(data.user.recentArticles);
       setFriends(data.user.friends);
       setTrends(data.user.trends);
-      setRecentArticlesWithTitles(data.user.articlesWithTitles);
+      setRecentCommentsWithContent(data.user.recentCommentsWithContent);
       if (user.id !== id) {
         setUsername(data.user.username);
         setOtherUser(true);
@@ -170,14 +173,14 @@ const Profile: React.FC = () => {
             <div>
               <h2 className="text-2xl font-bold mb-4">Recent Comments</h2>
               <ul className="space-y-2">
-                {recentComments &&
-                  recentComments.map((comment, index) => (
-                    <Link to={`/articles/${comment}`}>
+                {recentCommentsWithContent &&
+                  recentCommentsWithContent.map((comment, index) => (
+                    <Link to={`/articles/${comment.articleId}`}>
                       <li
                         key={index}
                         className="p-2 border-b border-lightblue text-lightblue dark:text-green hover:text-lightpink dark:hover:text-purple underline cursor-pointer"
                       >
-                        On Article: {comment}
+                        {comment.content}
                       </li>
                     </Link>
                   ))}
