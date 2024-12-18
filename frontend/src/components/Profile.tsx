@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/userContext";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { HomeIcon } from "@heroicons/react/outline";
 type apiResponse = {
   user: {
     username: string;
-    recentComments: string[]; // List of comment IDs
+    recentComments: string[]; // List of article ID with the comments.
     recentArticles: string[]; // list of article IDs
-    friends: string[]; // List of friend usernames
+    friends: { id: string; username: string }[];
     trends: string[]; // List of trend names
   };
 };
@@ -19,7 +20,9 @@ const Profile: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [recentComments, setRecentComments] = useState<string[]>([]);
   const [recentArticles, setRecentArticles] = useState<string[]>([]);
-  const [friends, setFriends] = useState<string[]>([]);
+  const [friends, setFriends] = useState<{ id: string; username: string }[]>(
+    [],
+  );
   const [trends, setTrends] = useState<string[]>([]);
   const [customError, setCustomError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
@@ -36,7 +39,6 @@ const Profile: React.FC = () => {
         },
       );
       const data: apiResponse = await response.json();
-      console.log("this is the profile data", data);
       setRecentComments(data.user.recentComments);
       setRecentArticles(data.user.recentArticles);
       setFriends(data.user.friends);
@@ -54,8 +56,9 @@ const Profile: React.FC = () => {
   };
   // Fetch the profile data when the component mounts
   useEffect(() => {
+    if (!id) return;
     fetchData();
-  }, []);
+  }, [id]);
   // Clear the error message and success message after 3 seconds
   useEffect(() => {
     if (customError || success) {
@@ -109,7 +112,6 @@ const Profile: React.FC = () => {
       if (response.ok) {
         setSuccess("Successfully unfollowed user");
         setAreFriends(false);
-        // Send the notification
         // Fetch the updated data
         fetchData();
       } else {
@@ -120,31 +122,29 @@ const Profile: React.FC = () => {
       console.error("Error unfollowing user:", error);
     }
   };
-
   return (
-    <div>
-      <div>
-      <Link
-        to="/home"
-        className="flex items-center hover:text-lightblue dark:hover:text-purple px-3 py-2 rounded-md text-lg font-semibold transition-colors duration-200"
-      >
-        HOME
-      </Link>
+    <div className="flex">
+      {/* Home Icon */}
+      <div className="fixed top-1/2 left-4 transform -translate-y-1/2">
+        <Link
+          to="/home"
+          className="flex flex-col items-center hover:text-lightblue dark:hover:text-purple px-3 py-2 rounded-md text-lg font-semibold transition-colors duration-200"
+        >
+          <HomeIcon className="h-8 w-8" aria-hidden="true" />
+          <span className="text-sm">Home</span>
+        </Link>
       </div>
-
-      <div className="max-w-2xl mx-auto p-6 rounded-lg shadow-md h-screen border border-lightblue">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">My Profile</h1>
-        </div>
-        <div className="space-y-4">
-          <div className="flex items-center space-x-4">
-            <div>
-              <p className="text-gray dark:text-white">@{username}</p>
-            </div>
+      {/* Profile Section */}
+      <div className="flex-grow max-w-4xl mx-auto p-6 rounded-lg shadow-md h-screen border border-lightblue">
+        <div className="flex flex-col space-y-6">
+          {/* Profile Header */}
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-2">My Profile</h1>
+            <p className="text-gray dark:text-white">@{username}</p>
             {otherUser && !areFriends && (
               <button
                 onClick={() => followUser()}
-                className="px-4 py-2 bg-lightblue text-white rounded hover:bg-blue-700"
+                className="mt-4 px-4 py-2 bg-lightpink text-black rounded hover:bg-lightblue dark:bg-purple dark:text-whitedark:hover:bg-green"
               >
                 Follow
               </button>
@@ -152,50 +152,71 @@ const Profile: React.FC = () => {
             {otherUser && areFriends && (
               <button
                 onClick={() => unFollowUser()}
-                className="px-4 py-2 bg-lightblue text-white rounded hover:bg-blue-700"
+                className="mt-4 px-4 py-2 bg-lightpink text-black rounded hover:bg-lightblue dark:bg-purple dark:text-white dark:hover:bg-green"
               >
                 Unfollow
               </button>
             )}
-            {customError && <p className="text-red">{customError}</p>}
-            {success && <p className="text-green">{success}</p>}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold">Recent Comments</h2>
-              <ul>
+            {customError && <p className="text-red mt-2">{customError}</p>}
+            {success && <p className="text-green mt-2">{success}</p>}
+          </div>
+          {/* Lists Section */}
+          <div className="grid grid-cols-1 gap-6">
+            {/* Recent Comments */}
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Recent Comments</h2>
+              <ul className="space-y-2">
                 {recentComments &&
                   recentComments.map((comment, index) => (
-                    <li key={index} className="p-2 border-b border-lightblue">
-                      {comment}
-                    </li>
+                    <Link to={`/articles/${comment}`}>
+                      <li
+                        key={index}
+                        className="p-2 border-b border-lightblue text-lightblue dark:text-green hover:text-lightpink dark:hover:text-purple underline cursor-pointer"
+                      >
+                        On Article: {comment}
+                      </li>
+                    </Link>
                   ))}
               </ul>
             </div>
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold">Recent Articles</h2>
-              <ul>
+            {/* Recent Articles */}
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Recent Articles</h2>
+              <ul className="space-y-2">
                 {recentArticles &&
                   recentArticles.map((article, index) => (
-                    <li key={index} className="p-2 border-b border-lightblue">
-                      <Link to={`/articles/${article}`}>{article}</Link>
-                    </li>
+                    <Link to={`/articles/${article}`}>
+                      <li
+                        key={index}
+                        className="p-2 border-b border-lightblue text-lightblue dark:text-green hover:text-lightpink dark:hover:text-purple underline cursor-pointer"
+                      >
+                        {article}
+                      </li>
+                    </Link>
                   ))}
               </ul>
             </div>
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold">Friends</h2>
-              <ul>
+            {/* Friends */}
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Friends</h2>
+              <ul className="space-y-2">
                 {friends &&
                   friends.map((friend, index) => (
-                    <li key={index} className="p-2 border-b border-lightblue">
-                      {friend}
-                    </li>
+                    <Link to={`/profile/${friend.id}`}>
+                      <li
+                        key={index}
+                        className="p-2 border-b border-lightblue underline cursor-pointer text-lightblue dark:text-green hover:text-lightpink dark:hover:text-purple"
+                      >
+                        {friend.username}
+                      </li>
+                    </Link>
                   ))}
               </ul>
             </div>
-
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold">Trends</h2>
-              <ul>
+            {/* Trends */}
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Trends</h2>
+              <ul className="space-y-2">
                 {trends &&
                   trends.map((trend, index) => (
                     <li key={index} className="p-2 border-b border-lightblue">

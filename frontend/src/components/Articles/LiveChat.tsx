@@ -6,6 +6,7 @@ import { useAuth } from "../../context/userContext";
 import { validateUserInput } from "../../utils/validation";
 import apiArticleOfTheWeekResponse from "../../types/apiArticleOfTheWeekResponse";
 import useSocket from "../../hooks/useSocket";
+import { Link } from "react-router-dom";
 const LiveChat: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth();
@@ -29,7 +30,14 @@ const LiveChat: React.FC = () => {
           setArticle({
             id,
             author: data.data.author,
-            publishedAt: data.data.publishedAt,
+            publishedAt: new Date(data.data.publishedAt).toLocaleString(
+              "en-US",
+              {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              },
+            ),
             title: data.data.title,
             image: data.data.urlToImage,
             description: data.data.description,
@@ -73,28 +81,38 @@ const LiveChat: React.FC = () => {
     }
   };
   return (
-    <div className="h-fit">
+    <div className="min-h-screen">
       {/* Article Information */}
-      <div className="pt-16 p-4 border-b border-lightblue shadow-md">
-        <h1 className="text-3xl font-bold mb-4">{article?.title}</h1>
-        <p className="text-lg "> By: {article?.author}</p>
-        <p className="text-lg "> Published: {article?.publishedAt}</p>
+      <div className="pt-16 p-4 border-b border-lightblue shadow-md flex">
+        <div className="flex-grow">
+          <h1 className="text-3xl font-bold mb-4 text-black dark:text-white">
+            {article?.title}
+          </h1>
+          <p className="text-lg text-black dark:text-white">
+            {" "}
+            By: {article?.author}
+          </p>
+          <p className="text-lg text-black dark:text-white">
+            {" "}
+            Published: {article?.publishedAt}
+          </p>
+          <p className="text-lg font-bold mb-4 text-black dark:text-white">
+            {" "}
+            Preview: {article?.description}
+          </p>
+          <a
+            href={article?.url}
+            target="_blank"
+            className="mb-4 text-3xl font-bold underline pointer text-lightblue hover:text-lightpink dark:text-green dark:hover:text-purple"
+          >
+            {article?.url}
+          </a>
+        </div>
         <img
           src={article?.image}
           alt={article?.title}
-          className="w-full h-auto mb-4"
+          className="w-full h-64 border border-lightblue object-cover ml-4"
         />
-        <p className="text-lg font-bold mb-4">
-          {" "}
-          Preview: {article?.description}
-        </p>
-        <a
-          href={article?.url}
-          target="_blank"
-          className="mb-4 text-3xl font-bold underline pointer text-lightblue"
-        >
-          {article?.url}
-        </a>
       </div>
       {/* Live Chat */}
       <div className="pt-6 p-4 rounded-lg shadow-md">
@@ -109,9 +127,11 @@ const LiveChat: React.FC = () => {
                 <span className="text-xs text-gray-400 mr-2">
                   {message.timestamp}
                 </span>
-                <strong className="text-blue-700 mr-2">
-                  {message.username}
-                </strong>
+                <Link to={`/profile/${message.userId}`}>
+                  <strong className="text-lightblue hover:text-lightpink dark:text-green dark:hover:text-purple underline mr-2">
+                    {message.username}
+                  </strong>
+                </Link>
                 <p className="text-sm text-gray-800">{message.message}</p>
               </div>
             ))}

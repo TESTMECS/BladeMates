@@ -1,5 +1,3 @@
-
-
 type Comment = {
   id: string;
   articleId: string;

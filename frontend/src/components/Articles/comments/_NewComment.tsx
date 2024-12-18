@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { CommentType, createComment } from './_var';
+import { useRef } from "react";
+import { CommentType, createComment } from "./_var";
 
 interface NewCommentProps {
   articleId: string;
@@ -17,7 +17,7 @@ const NewComment: React.FC<NewCommentProps> = ({
     const check = comment.trim();
 
     if (check.length === 0) {
-      window.alert('Comment cannot be empty');
+      window.alert("Comment cannot be empty");
       return;
     }
 
@@ -36,7 +36,7 @@ const NewComment: React.FC<NewCommentProps> = ({
         ></textarea>
         <button
           className="p-2 text-2xl rounded-r-lg bg-lightpink hover:bg-lightblue dark:bg-purple dark:hover:bg-green w-60"
-          onClick={() => createCommentHelper(ref.current?.value || '')}
+          onClick={() => createCommentHelper(ref.current?.value || "")}
         >
           Submit
         </button>

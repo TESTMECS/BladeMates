@@ -1,4 +1,4 @@
-import { users } from "../config/mongoCollections";
+import { users, comments } from "../config/mongoCollections";
 import { StatusError } from "../utils/Error";
 import { ObjectId } from "mongodb";
 import { Notification } from "../types/mongo";
@@ -12,16 +12,23 @@ export async function getUserProfileData(userId: string) {
   if (user === null) {
     throw new StatusError(404, "User not found");
   }
-  // 5 Recent Comments
-  const recentComments = user.comments.slice(-5).map((comment) => {
-    return comment;
+  const commentsCollection = await comments();
+  const userComments = await commentsCollection
+    .find({
+      userId: ObjectId.createFromHexString(userId),
+    })
+    .toArray();
+  // 5 Recent Comments articleId so we can link to the article
+  const recentComments = userComments.slice(-5).map((comment) => {
+    return comment.articleId.toString();
   });
+  // returns Articleid
   const recentArticles = user.favoriteArticles.slice(-5).map((article) => {
     return article;
   });
   // All friends.
   const friends = user.friends.map((friend) => {
-    return friend.username;
+    return { id: friend._id.toString(), username: friend.username };
   });
   const trends = user.trends.map((trend) => {
     return trend;
@@ -149,6 +156,15 @@ export async function getFollowingFeed(userId: string) {
       publishedAt: article?.publishedAt,
     };
   });
+  for (const article of user.favoriteArticles) {
+    const fullArticle = await getDocumentByID(article);
+    articles?.push({
+      _id: article,
+      title: fullArticle?.title,
+      author: fullArticle?.author,
+      publishedAt: fullArticle?.publishedAt,
+    });
+  }
   for (const friend of user.friends) {
     const friendArticles = await getFavoriteArticles(friend._id.toString());
     for (const article of friendArticles) {

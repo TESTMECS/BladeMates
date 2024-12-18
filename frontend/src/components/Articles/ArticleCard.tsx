@@ -116,10 +116,12 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
             src={article?.image}
           />
           <div className="px-6 py-4">
+            {publishedAt && (
+              <span className="ml-2 text-gray text-base">{publishedAt}</span>
+            )}
             <div className="font-bold text-xl mb-2">
               {title && <span>{title}</span>}
-              {author && <span className="ml-2">{author}</span>}
-              {publishedAt && <span className="ml-2">{publishedAt}</span>}
+              {author && <span className="ml-2"> By: {author}</span>}
             </div>
             <p className="text-gray text-base">{article?.description}</p>
           </div>
@@ -134,10 +136,12 @@ const ArticlesPage: React.FC<ArticlesPageProps> = ({ article, isLive }) => {
           <div className="px-6 py-4">
             <div className="font-bold text-xl mb-2 ">
               {title && <span>{title}</span>}
-              {author && <span className="ml-2">{author}</span>}
-              {isLive && <span className="ml-2 text-red-500">LIVE</span>}
+              {author && <span className="ml-2"> By: {author}</span>}
+              {isLive && <span className="ml-2 text-red">LIVE</span>}
             </div>
-            <p>{publishedAt && <span>{publishedAt}</span>}</p>
+            <p>
+              {publishedAt && <span className="text-gray">{publishedAt}</span>}
+            </p>
           </div>
         </Link>
       )}

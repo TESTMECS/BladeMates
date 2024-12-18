@@ -13,12 +13,9 @@ const Navbar: React.FC<NavbarProps> = ({ setCurrentFeed }) => {
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex flex-col h-16 space-y-4">
           <div className="flex flex-col space-y-4">
-            <Link
-              to="/home"
-              className="flex items-center hover:text-lightblue dark:hover:text-purple px-3 py-2 rounded-md text-lg font-semibold transition-colors duration-200"
-            >
-              LOGO HERE
-            </Link>
+            <h2 className="flex items-center text-gradient px-3 py-2 rounded-md text-lg font-semibold">
+              Tech Trends
+            </h2>
 
             {isAuthenticated && (
               <>

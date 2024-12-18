@@ -1,10 +1,8 @@
-import { Link } from "react-router-dom";
 interface FeedSelectorProps {
   currentFeed: string;
   setCurrentFeed: (feed: string) => void;
   selectedFeed: string[];
 }
-
 const FeedSelector: React.FC<FeedSelectorProps> = ({
   currentFeed,
   setCurrentFeed,
@@ -12,12 +10,9 @@ const FeedSelector: React.FC<FeedSelectorProps> = ({
 }) => {
   return (
     <div className="flex justify-center items-center flex-col rounded-lg shadow-lg">
-      <Link
-        to="/home"
-        className="flex items-center hover:text-lightblue dark:hover:text-purple px-3 py-2 pb-2 rounded-md text-lg font-semibold transition-colors duration-200"
-      >
-        LOGO HERE
-      </Link>
+      <h2 className="flex items-center text-gradient px-3 py-2 pb-2 rounded-md text-lg font-semibold">
+        Tech Trends
+      </h2>
       <div className="flex justify-center space-x-4">
         {selectedFeed.map((type) => (
           <button
@@ -36,5 +31,4 @@ const FeedSelector: React.FC<FeedSelectorProps> = ({
     </div>
   );
 };
-
 export default FeedSelector;
