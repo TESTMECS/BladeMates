@@ -17,7 +17,7 @@ External Technology:
 - **ElasticSearch** - We will use ElasticSearch to store the content and titles of articles to allow for faster and more specific
 
 # Instructions for running with docker
-- Rename .env.example to .env
+- Rename .env.example to .env in the backend directory and insert your news API key which you can get from registering an account at newsapi.org
 - Ensure docker desktop is running
 - build the images : docker-compose up --build
 - visit `http://localhost:3000` on the browser
