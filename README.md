@@ -16,7 +16,31 @@ External Technology:
 - **RabbitMQ** - We will use RabbitMQ to allow multiple users to subscribe to both the main news feed as well as their friends favorite feed and receive notifications.
 - **ElasticSearch** - We will use ElasticSearch to store the content and titles of articles to allow for faster and more specific
 
-# Docker
-
+# Instructions for running with docker
+- Rename .env.example to .env
+- Ensure docker desktop is running
 - build the images : docker-compose up --build
-- run the existing ones: docker-compose up
+- visit `http://localhost:3000` on the browser
+
+# Instructions for locally running. 
+- Rename .env.example to .env
+- All of the following services run on the default port with installation on the latest versions. 
+	- Ensure **Mongodb** is installed and running on port 27017
+	- Ensure **ElasticSearch** is installed and running on port 9200
+	- Ensure **Redis** is installed and running on port 6379
+	- Ensure **RabbitMQ** is installed and running on the port 5672 and 15672. (listen and receive)
+- To start the backend
+	- `npm install` (dependencies)
+	- `npm run build` to build dependencies, a pre built file should already be available in `dist` so this command is not necessary. 
+	- `npm run seed` to seed **elasticSearch**
+	- `npm run start` to start the backend. 
+	- *For Ease of use:*
+		1. `npm install && npm run build` then run
+		2. `npm run seed && npm run start`  to start the server.
+- To start the Frontend open a separate terminal:
+	-  `npm install` (dependencies)
+	- `npm run build` to build dependencies, a pre built file should already be available in `dist` so this command is not necessary.
+	- *For Ease of use*
+	- `npm install && npm run build`
+	- `npm run serve` to start the production application. 
+- To access the frontend go to `http://localhost:3000` on the browser
