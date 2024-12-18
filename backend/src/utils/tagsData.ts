@@ -1,17 +1,17 @@
 export const tags: {
     [key: string]: string[];
 } = {
-    "AI": ["ai", "artificial intelligence", "machine learning"],
+    "AI": ["ai", "artificial intelligence", "machine learning", "OpenAI"],
     "Blockchain": ["blockchain", "cryptocurrency", "bitcoin"],
     "Big Data": ["big data", "data analytics", "data science"],
-    "Cloud": ["cloud", "cloud computing"],
+    "Cloud": ["cloud computing", "azure", "AWS"],
     "Quantum Computing": ["quantum computing"],
     "Internet of Things": ["iot", "internet of things"],
     "Cybersecurity": ["cybersecurity", "cybercrime", "cyber attack", "hacking", "data breach"],
     "Virtual Reality": ["virtual reality", "vr"],
     "Video Games": ["video games", "gaming"],
     "Metaverse": ["metaverse"],
-    "Space": ["space", "nasa", "rover"],
+    "Space": ["nasa", "rover", "mars", "solar system"],
     "Apple": ["apple", "iphone", "macbook"],
     "Biometrics": ["facial recognition", "FRS", "biometrics"],
     // "FCC": ["fcc", "federal communications commission"],
