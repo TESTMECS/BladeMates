@@ -156,15 +156,15 @@ export async function getFollowingFeed(userId: string) {
       publishedAt: article?.publishedAt,
     };
   });
-  for (const article of user.favoriteArticles) {
-    const fullArticle = await getDocumentByID(article);
-    articles?.push({
-      _id: article,
-      title: fullArticle?.title,
-      author: fullArticle?.author,
-      publishedAt: fullArticle?.publishedAt,
-    });
-  }
+  // for (const article of user.favoriteArticles) {
+  //   const fullArticle = await getDocumentByID(article);
+  //   articles?.push({
+  //     _id: article,
+  //     title: fullArticle?.title,
+  //     author: fullArticle?.author,
+  //     publishedAt: fullArticle?.publishedAt,
+  //   });
+  // }
   for (const friend of user.friends) {
     const friendArticles = await getFavoriteArticles(friend._id.toString());
     for (const article of friendArticles) {
@@ -177,6 +177,13 @@ export async function getFollowingFeed(userId: string) {
       });
     }
   }
+  //remove duplicates from articles using the _id as key.
+  articles = articles?.filter(
+    (article, index) =>
+      index ===
+      articles?.findIndex((t) => t._id === article._id),
+  );
+  
   return articles;
 }
 export async function getFriends(userId: string) {
