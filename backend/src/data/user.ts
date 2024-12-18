@@ -33,12 +33,24 @@ export async function getUserProfileData(userId: string) {
   const trends = user.trends.map((trend) => {
     return trend;
   });
+
+  const articlesWithTitles = await Promise.all(
+    recentArticles.map(async (articleID) => {
+      const document = await getDocumentByID(articleID);
+      return {
+        _id: articleID,
+        title: document?.title,
+      };
+    })
+  );
+
   const userData = {
     username: user.username,
     recentComments: recentComments,
     recentArticles: recentArticles,
     friends: friends,
     trends: trends,
+    articlesWithTitles: articlesWithTitles,
   };
   return userData;
 }

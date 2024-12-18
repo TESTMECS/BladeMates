@@ -10,6 +10,7 @@ type apiResponse = {
     recentArticles: string[]; // list of article IDs
     friends: { id: string; username: string }[];
     trends: string[]; // List of trend names
+    articlesWithTitles: { _id: string; title: string }[];
   };
 };
 const Profile: React.FC = () => {
@@ -19,7 +20,9 @@ const Profile: React.FC = () => {
   // display
   const [username, setUsername] = useState<string>("");
   const [recentComments, setRecentComments] = useState<string[]>([]);
-  const [recentArticles, setRecentArticles] = useState<string[]>([]);
+  // const [recentArticles, setRecentArticles] = useState<string[]>([]);
+  //an array of objects of form {_id: string, title: string}
+  const [recentArticlesWithTitles, setRecentArticlesWithTitles] = useState<{_id: string, title: string}[]>([]);
   const [friends, setFriends] = useState<{ id: string; username: string }[]>(
     [],
   );
@@ -40,9 +43,10 @@ const Profile: React.FC = () => {
       );
       const data: apiResponse = await response.json();
       setRecentComments(data.user.recentComments);
-      setRecentArticles(data.user.recentArticles);
+      // setRecentArticles(data.user.recentArticles);
       setFriends(data.user.friends);
       setTrends(data.user.trends);
+      setRecentArticlesWithTitles(data.user.articlesWithTitles);
       if (user.id !== id) {
         setUsername(data.user.username);
         setOtherUser(true);
@@ -183,14 +187,14 @@ const Profile: React.FC = () => {
             <div>
               <h2 className="text-2xl font-bold mb-4">Recent Articles</h2>
               <ul className="space-y-2">
-                {recentArticles &&
-                  recentArticles.map((article, index) => (
-                    <Link to={`/articles/${article}`}>
+                {recentArticlesWithTitles &&
+                  recentArticlesWithTitles.map((article, index) => (
+                    <Link to={`/articles/${article._id}`}>
                       <li
                         key={index}
                         className="p-2 border-b border-lightblue text-lightblue dark:text-green hover:text-lightpink dark:hover:text-purple underline cursor-pointer"
                       >
-                        {article}
+                        {article.title}
                       </li>
                     </Link>
                   ))}
