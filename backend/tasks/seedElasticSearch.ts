@@ -12,7 +12,6 @@ import dotenv from "dotenv";
 import { articleSchema } from "../src/validation/newsApi";
 import { tags } from "../src/utils/tagsData";
 dotenv.config(); //this is the path it would need from the dist folder. not current folder
-
 async function getArticlesWithFullContent() {
   const apiKey = process.env.NEWSAPI_KEY;
   let allArticles: Article[] = [];
@@ -39,7 +38,6 @@ async function getArticlesWithFullContent() {
 
   return allArticles;
 }
-
 async function getFullContentForArticles(newsApiResponse: NewsApiResponse) {
   let resultDump: Article[] = [];
 

@@ -66,7 +66,7 @@ const ArticlesFeed: React.FC = () => {
       console.log("Search results in React:", data);
       if (data.length === 0) {
         alert("No articles found");
-      } else{
+      } else {
         setTrends(
           data.map((article) => ({
             id: article._id,
@@ -79,7 +79,6 @@ const ArticlesFeed: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
     // ON COMPONENT MOUNT, FETCH ARTICLES and ARTICLE OF THE WEEK
     fetchTrends();
@@ -88,18 +87,20 @@ const ArticlesFeed: React.FC = () => {
   if (!trends.length) return <p>Loading articles...</p>;
   return (
     <div>
-      <div className="flex items-center justify-center p-4 bg-gray-100 rounded-md shadow-md space-x-4">
-        <span className="text-lg font-medium text-gray-700">Search for articles:</span>
+      <div className="flex items-center justify-center p-4 rounded-md shadow-md space-x-4">
+        <span className="text-lg font-medium text-black dark:text-white">
+          Search for articles:
+        </span>
         <input
           type="text"
           placeholder="Search articles..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-64 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-64 p-2 border bg-lightpink dark:bg-purple dark:text-black hover:bg-lightblue text-white border-lightblue rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-darkblue"
         />
         <button
           onClick={searchArticles}
-          className="px-4 py-2 font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="px-4 py-2 font-bold text-white bg-lightpink hover:bg-lightblue dark:bg-purple dark:hover:bg-green dark:text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-darkblue"
         >
           Search
         </button>

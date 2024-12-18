@@ -31,6 +31,20 @@ function handleNotification(notification: notification, userId: string) {
         read: false,
       };
     }
+    if (action === "unfollowed") {
+      const link = `/profile/${to}`; // link to the user that unfollowed
+      return {
+        message: `You unfollowed a user!`,
+        link,
+        timestamp: new Date(notification.timestamp).toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        }),
+        type: notification.type,
+        read: false,
+      };
+    }
   } else {
     if (action === "favorited") {
       const link = `/articles/${to}`;
@@ -49,7 +63,7 @@ function handleNotification(notification: notification, userId: string) {
     if (action === "followed") {
       const link = `/profile/${to}`;
       return {
-        message: `One of your friends followed you!`,
+        message: `You have a new follower!`,
         link,
         timestamp: new Date(notification.timestamp).toLocaleString("en-US", {
           hour: "numeric",

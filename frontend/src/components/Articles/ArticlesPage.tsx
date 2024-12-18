@@ -3,9 +3,11 @@ import Article from "../../types/Article";
 import { useParams } from "react-router-dom";
 import apiArticlePageResponse from "../../types/apiArticlePageResponse";
 import Comments from "./comments/Comments";
+import { StarIcon } from "@heroicons/react/outline";
 const ArticlesPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [article, setArticle] = useState<Article>();
+  const [favorite, toggleFavorite] = useState(false);
   useEffect(() => {
     if (!id) return;
     const fetchArticle = async () => {
@@ -35,9 +37,16 @@ const ArticlesPage: React.FC = () => {
     };
     fetchArticle();
   }, []);
+
   if (!article) return <div>Loading article...</div>;
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
+      <button
+        onClick={() => toggleFavorite(!favorite)}
+        className={`${favorite ? "text-yellow" : "text-gray"}`}
+      >
+        <StarIcon className="h-6 w-6" aria-hidden="true" />
+      </button>
       <div className="rounded-lg shadow-lg p-8 pt-10 border border-lightblue">
         {article && (
           <div className="flex flex-col lg:flex-row">
