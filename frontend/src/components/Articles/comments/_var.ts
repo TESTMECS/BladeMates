@@ -6,8 +6,8 @@ const createCommentsUrl = (articleId: string) =>
 
 export const getComments = async (articleId: string) => {
   const response = await fetch(createCommentsUrl(articleId), {
-    method: 'GET',
-    credentials: 'include',
+    method: "GET",
+    credentials: "include",
   });
   const obj = await response.json();
   return obj.data;
@@ -15,11 +15,11 @@ export const getComments = async (articleId: string) => {
 
 export const createComment = async (articleId: string, comment: string) => {
   const response = await fetch(createCommentUrl(articleId), {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    credentials: 'include',
+    credentials: "include",
     body: JSON.stringify({ content: comment }),
   });
   const obj = await response.json();
@@ -29,14 +29,14 @@ export const createComment = async (articleId: string, comment: string) => {
 export const editComment = async (
   articleId: string,
   commentId: string,
-  comment: string
+  comment: string,
 ) => {
   const response = await fetch(createCommentUrl(articleId), {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    credentials: 'include',
+    credentials: "include",
     body: JSON.stringify({ commentId, content: comment }),
   });
   const obj = await response.json();
@@ -45,11 +45,11 @@ export const editComment = async (
 
 export const deleteComment = async (articleId: string, commentId: string) => {
   const response = await fetch(createCommentUrl(articleId), {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    credentials: 'include',
+    credentials: "include",
     body: JSON.stringify({ commentId }),
   });
   const obj = await response.json();

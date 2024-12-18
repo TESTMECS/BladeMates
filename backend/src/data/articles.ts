@@ -94,12 +94,16 @@ export async function searchHeadlinesAndDesc(query: string) {
     const result = await client.search<Article>({
       index: "articles",
       body: {
-        query: {
+      query: {
+        bool: {
+        must: query.split(" ").map((word) => ({
           multi_match: {
-            query: query,
-            fields: ["title", "description"],
+          query: word,
+          fields: ["title", "description"],
           },
+        })),
         },
+      },
       },
     });
     return result.hits.hits.map((hit) => ({

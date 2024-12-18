@@ -37,34 +37,42 @@ const ArticlesPage: React.FC = () => {
   }, []);
   if (!article) return <div>Loading article...</div>;
   return (
-    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 h-fit">
+    <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
       <div className="rounded-lg shadow-lg p-8 pt-10 border border-lightblue">
         {article && (
-          <div>
-            <div>
-              <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
-              <p>
-                By {article.author}
-                Published: {article.publishedAt}
+          <div className="flex flex-col lg:flex-row">
+            <div className="lg:w-2/3">
+              <h1 className="text-4xl font-extrabold mb-6 text-black dark:text-white">
+                {article.title}
+              </h1>
+              <p className="text-lg text-gray dark:text-white mb-2">
+                By <span className="font-semibold">{article.author}</span>
               </p>
-              <p className="mb-4">{article.description}</p>
-              <img
-                src={article.image}
-                alt={article.title}
-                className="border border-lightblue rounded mb-4 w-full h-auto"
-              />
+              <p className="text-md text-gray dark:text-white mb-4">
+                {new Date(article.publishedAt).toLocaleDateString()}
+              </p>
+              <p className="text-lg text-gray dark:text-white mb-6">
+                {article.description}
+              </p>
               <a
-                className="mb-4 text-3xl font-bold underline pointer text-lightblue"
+                className="mb-4 text-2xl font-bold underline text-lightblue hover:text-lightpink dark:text-green dark:hover:text-purple"
                 href={article.url}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {article.url}
               </a>
             </div>
-            <div className="p-[1px] border border-black/0 rounded-lg bg-black/10 dark:bg-white/10 my-8"></div>
-            <Comments articleId={article.id} />
+            <div className="lg:w-1/3 lg:pl-8">
+              <img
+                src={article.image}
+                alt={article.title}
+                className="border border-lightblue rounded mb-4 w-full h-64 object-cover"
+              />
+            </div>
           </div>
         )}
+        <Comments articleId={article.id} />
       </div>
     </div>
   );

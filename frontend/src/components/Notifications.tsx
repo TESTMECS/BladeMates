@@ -38,18 +38,24 @@ const Notifications = () => {
     setNotificationList((prevList) => prevList.filter((_, i) => i !== index));
   };
   return (
-    <div className="p-4 h-screen">
+    <div className="p-4 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Notifications</h1>
       {notificationList &&
         notificationList.map((notification, index) => (
-          <div key={index} className="mb-4 p-4 border rounded shadow">
-            <Link to={notification.link} className="text-blue hover:underline">
+          <div
+            key={index}
+            className="mb-4 p-4 border border-lightblue rounded shadow"
+          >
+            <Link
+              to={notification.link}
+              className="text-lightblue dark:text-green hover:underline"
+            >
               {notification.message}
             </Link>
             <p className="text-gray">{notification.timestamp}</p>
             <button
               onClick={() => handleRead(index)}
-              className="p-2 text-2xl rounded-r-lg bg-lightpink hover:bg-lightblue dark:bg-purple dark:hover:bg-green"
+              className="p-2 text-lg rounded-full bg-lightpink hover:bg-lightblue dark:bg-purple dark:hover:bg-green"
             >
               Mark as read
             </button>

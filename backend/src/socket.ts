@@ -24,7 +24,7 @@ export const initializeSocket = (app: express.Application) => {
         timestamp: new Date().toLocaleTimeString(),
       };
       console.log("Message sent:", chat_message);
-      socket.emit("receive_message", chat_message); // sending message to all clients.
+      io.emit("receive_message", chat_message); // sending message to all clients.
     });
     socket.on("disconnect", () => {
       console.log("User disconnected");

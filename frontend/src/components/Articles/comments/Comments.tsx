@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { CommentType, getComments } from './_var';
-import Cell from './_Cell';
-import NewComment from './_NewComment';
+import React, { useEffect, useState } from "react";
+import { CommentType, getComments } from "./_var";
+import Cell from "./_Cell";
+import NewComment from "./_NewComment";
 
 interface CommentsProps {
   articleId: string;
@@ -28,14 +28,12 @@ const Comments: React.FC<CommentsProps> = ({ articleId }) => {
   const addCommentToState = (comment: CommentType) => {
     setComments([...comments, comment]);
   };
-
   useEffect(() => {
     (async () => {
       const comments = await getComments(articleId);
       setComments(comments);
     })();
   }, []);
-
   return (
     <div>
       <h3 className="text-2xl text-black/50 dark:text-white/50">Comments</h3>
@@ -48,13 +46,14 @@ const Comments: React.FC<CommentsProps> = ({ articleId }) => {
                 key={comment._id}
                 className={
                   i == 0
-                    ? 'mt-0 mb-4'
+                    ? "mt-0 mb-4"
                     : i == arr.length - 1
-                    ? 'mt-4 mb-0'
-                    : 'my-4'
+                      ? "mt-4 mb-0"
+                      : "my-4"
                 }
               >
                 <Cell
+                  userId={comment.userId}
                   username={comment.username}
                   timestamp={comment.datePosted}
                   comment={comment.content}

@@ -16,12 +16,13 @@ const FollowingFeed: React.FC = () => {
     );
     if (response.ok) {
       const data: apiArticlesListResponse[] = await response.json();
-      console.log(data);
       setArticles(
         data.map((article) => {
           return {
             id: article._id,
-            ...article,
+            title: article.title,
+            author: article.author,
+            publishedAt: new Date(article.publishedAt).toLocaleString(),
           };
         }),
       );
@@ -74,45 +75,71 @@ const FollowingFeed: React.FC = () => {
     }
   };
   return (
-    <div>
-      <h1>Select Trend to Follow!</h1>
-      <form onSubmit={handleSubmit}>
-        <select name="trend">
-          {trends.map((trend: any) => (
-            <option key={trend} value={trend}>
-              {trend}
-            </option>
-          ))}
-        </select>
-        <button type="submit">Follow</button>
-      </form>
-      <h1>List of Trends You Follow...</h1>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        {userTrends.map((trend) => (
-          <div
-            key={trend}
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              margin: "5px",
-            }}
+    <div className="max-w-4xl mx-auto p-6 space-y-6 min-h-screen">
+      {/* Header and Form */}
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">Select Trend to Follow!</h1>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col items-center space-y-4 mt-4"
+        >
+          <select
+            name="trend"
+            className="px-4 py-2 border rounded bg-lightpink text-white dark:bg-purple dark:text-black hover:bg-lightblue hover:dark:bg-green"
           >
-            <p>{trend}</p>
-            <button onClick={() => handleTrendDelete(trend)}>Delete</button>
-          </div>
-        ))}
+            {trends.map((trend: any) => (
+              <option
+                key={trend}
+                value={trend}
+                className="hover:bg-lightblue dark:hover:bg-green"
+              >
+                {trend}
+              </option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            className="px-4 py-2 border rounded bg-lightpink text-white hover:bg-lightblue dark:bg-purple dark:text-black dark:hover:bg-green"
+          >
+            Follow
+          </button>
+        </form>
       </div>
-      {articles.length === 0 && <p>You haven't followed any trends...</p>}
-      {articles.map((article) => (
-        <ArticleCard key={article.id} article={article} />
-      ))}
+      {/* List of Followed Trends */}
+      <div>
+        <h1 className="text-2xl font-bold mb-4">
+          List of Trends You Follow...
+        </h1>
+        {userTrends.length === 0 ? (
+          <p>You haven't followed any trends...</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {userTrends.map((trend) => (
+              <div
+                key={trend}
+                className="flex items-center justify-between border border-lightblue p-4 rounded"
+              >
+                <p>{trend}</p>
+                <button
+                  onClick={() => handleTrendDelete(trend)}
+                  className="px-2 py-1 rounded bg-lightpink text-white dark:text-black hover:bg-blue dark:bg-purple dark:hover:bg-green"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <h1 className="text-2xl font-bold">Following Feed</h1>
+      {/* Articles */}
+      {articles.length > 0 && (
+        <div>
+          {articles.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

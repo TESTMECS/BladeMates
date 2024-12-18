@@ -64,15 +64,18 @@ const ArticlesFeed: React.FC = () => {
     if (response.ok) {
       const data: apiArticlesListResponse[] = await response.json();
       console.log("Search results in React:", data);
-
-      setTrends(
-        data.map((article) => ({
-          id: article._id,
-          author: article.author,
-          publishedAt: article.publishedAt,
-          title: article.title,
-        })),
-      );
+      if (data.length === 0) {
+        alert("No articles found");
+      } else{
+        setTrends(
+          data.map((article) => ({
+            id: article._id,
+            author: article.author,
+            publishedAt: article.publishedAt,
+            title: article.title,
+          })),
+        );
+      }
     }
   };
 
