@@ -23,7 +23,7 @@ External Technology:
 - visit `http://localhost:3000` on the browser
 
 # Instructions for locally running. 
-- Rename .env.example to .env
+- Rename .env.example to .env Rename .env.example to .env in the backend directory and insert your news API key which you can get from registering an account at newsapi.org
 - All of the following services run on the default port with installation on the latest versions. 
 	- Ensure **Mongodb** is installed and running on port 27017
 	- Ensure **ElasticSearch** is installed and running on port 9200
